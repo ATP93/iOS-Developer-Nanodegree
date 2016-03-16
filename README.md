@@ -14,3 +14,10 @@ Uses the [Flickr API](https://www.flickr.com/services/developer/api/)
 to retrieve and display images of peoples that are sleeping in the library.
 
 <img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/SleepingInTheLibrary/IMG_1085.png" width="320" height="568">
+
+### FlickrFinder
+Uses the [Flickr API](https://www.flickr.com/services/developer/api/)
+to retrieve and display images for a specific ***phrase*** or ***location***.
+
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/FlickFinder/screenshot.png"
+width="320" height="568">
