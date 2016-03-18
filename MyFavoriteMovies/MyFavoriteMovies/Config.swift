@@ -115,13 +115,6 @@ class Config: NSObject, NSCoding {
                 print("No data was returned by the request!")
                 return
             }
-
-            
-            /* GUARD: Was there an error? */
-            guard (error == nil) else {
-                print("There was an error with your request: \(error)")
-                return
-            }
             
             /* Parse the data! */
             let parsedResult: AnyObject!
