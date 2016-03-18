@@ -21,3 +21,14 @@ to retrieve and display images for a specific ***phrase*** or ***location***.
 
 <img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/FlickFinder/screenshot.png"
 width="320" height="568">
+
+### MyFavoriteMovies
+Uses [The Movie Database API](http://docs.themoviedb.apiary.io/#reference/account/accountidfavoritemovies)
+to login in user account and retrieve user favorite movies, also get lists of movies by genre and display them.
+
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/MyFavoriteMovies/LogIn.png"
+width="240" height="426">
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/MyFavoriteMovies/MoviesList.png"
+width="240" height="426" hspace="8">
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/MyFavoriteMovies/Detail.png"
+width="240" height="426" hspace="8">
