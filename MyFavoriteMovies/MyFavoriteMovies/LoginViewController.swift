@@ -69,6 +69,7 @@ class LoginViewController: UIViewController {
                 Step 4: Get the user id ;)
                 Step 5: Go to the next view!            
             */
+            
             getRequestToken()
         }
     }
