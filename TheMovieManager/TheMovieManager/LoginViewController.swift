@@ -11,22 +11,18 @@ import UIKit
 // MARK: - LoginViewController: UIViewController
 
 class LoginViewController: UIViewController {
-
+    
     // MARK: Properties
     
     @IBOutlet weak var debugTextLabel: UILabel!
     @IBOutlet weak var loginButton: BorderedButton!
-
-    var tmdbClient: TMDBClient!
+    
+    var session: NSURLSession!
     
     // MARK: Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // get the TMDB client
-        tmdbClient = TMDBClient.sharedInstance()
-        
         configureBackground()
     }
     
@@ -38,24 +34,12 @@ class LoginViewController: UIViewController {
     // MARK: Actions
     
     @IBAction func loginPressed(sender: AnyObject) {
-        
-        // MARK: Authentication (GET) Methods
-        /*
-            Steps for Authentication...
-            https://www.themoviedb.org/documentation/api/sessions
-            
-            Step 1: Create a new request token
-            Step 2a: Ask the user for permission via the website
-            Step 3: Create a session ID
-            Bonus Step: Go ahead and get the user id 😄!
-        */
-
-        TMDBClient.sharedInstance().authenticateWithViewController(self) { (success, error) in
+        TMDBClient.sharedInstance().authenticateWithViewController(self) { (success, errorString) in
             performUIUpdatesOnMain {
                 if success {
                     self.completeLogin()
                 } else {
-                    self.displayError(error)
+                    self.displayError(errorString)
                 }
             }
         }
