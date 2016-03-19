@@ -23,6 +23,7 @@ extension TMDBClient {
         Step 3: Create a session ID
         Bonus Step: Go ahead and get the user id 😄!
     */
+    
     func authenticateWithViewController(hostViewController: UIViewController, completionHandlerForAuth: (success: Bool, errorString: String?) -> Void) {
         
         // chain completion handlers for each request so that they run one after the other
@@ -74,16 +75,32 @@ extension TMDBClient {
     private func getRequestToken(completionHandlerForToken: (success: Bool, requestToken: String?, errorString: String?) -> Void) {
         
         /* 1. Specify parameters, the API method, and the HTTP body (if POST) */
+        let parameters = [String: AnyObject]()
+        
         /* 2. Make the request */
-        /* 3. Send the desired value(s) to completion handler */
-        
-        /*
-        
-        taskForGETMethod(method, parameters: parameters) { (results, error) in
-        
+        taskForGETMethod(TMDBClient.Methods.AuthenticationTokenNew, parameters: parameters) { (resultData, error) in
+            func sendError(error: String) {
+                completionHandlerForToken(success: false, requestToken: nil, errorString: error)
+            }
+            
+            guard error == nil else {
+                sendError(error!.localizedDescription)
+                return
+            }
+            
+            guard let status = resultData[TMDBClient.JSONResponseKeys.Status] as? Bool where status == true else {
+                sendError("Failed to request a new token. Status is `false`")
+                return
+            }
+            
+            guard let requestToken = resultData[TMDBClient.JSONResponseKeys.RequestToken] as? String else {
+                sendError("Could not access `request_token` key")
+                return
+            }
+            
+            /* 3. Send the desired value(s) to completion handler */
+            completionHandlerForToken(success: true, requestToken: requestToken, errorString: nil)
         }
-        
-        */
     }
     
     private func loginWithToken(requestToken: String?, hostViewController: UIViewController, completionHandlerForLogin: (success: Bool, errorString: String?) -> Void) {
@@ -106,31 +123,58 @@ extension TMDBClient {
     private func getSessionID(requestToken: String?, completionHandlerForSession: (success: Bool, sessionID: String?, errorString: String?) -> Void) {
         
         /* 1. Specify parameters, the API method, and the HTTP body (if POST) */
+        let parameters = [TMDBClient.ParameterKeys.RequestToken: requestToken!]
+        
         /* 2. Make the request */
-        /* 3. Send the desired value(s) to completion handler */
-        
-        /*
-        
-        taskForGETMethod(method, parameters: parameters) { (results, error) in
-        
+        taskForGETMethod(TMDBClient.Methods.AuthenticationSessionNew, parameters: parameters) { (results, error) in
+            func sendError(error: String) {
+                completionHandlerForSession(success: false, sessionID: nil, errorString: error)
+            }
+            
+            guard error == nil else {
+                sendError(error!.localizedDescription)
+                return
+            }
+            
+            guard let status = results[TMDBClient.JSONResponseKeys.Status] as? Bool where status == true else {
+                sendError("Failed to request for a new session id. Status is `false`")
+                return
+            }
+            
+            guard let sessionID = results[TMDBClient.JSONResponseKeys.SessionID] as? String else {
+                sendError("Could not access `request_token` key")
+                return
+            }
+            
+            /* 3. Send the desired value(s) to completion handler */
+            completionHandlerForSession(success: true, sessionID: sessionID, errorString: nil)
         }
-        
-        */
     }
     
     private func getUserID(completionHandlerForUserID: (success: Bool, userID: Int?, errorString: String?) -> Void) {
         
         /* 1. Specify parameters, the API method, and the HTTP body (if POST) */
+        let parameters = [TMDBClient.ParameterKeys.SessionID: TMDBClient.sharedInstance().sessionID!]
+        
         /* 2. Make the request */
-        /* 3. Send the desired value(s) to completion handler */
-        
-        /*
-        
-        taskForGETMethod(method, parameters: parameters) { (results, error) in
-        
+        taskForGETMethod(TMDBClient.Methods.Account, parameters: parameters) { (results, error) in
+            func sendError(error: String) {
+                completionHandlerForUserID(success: false, userID: nil, errorString: error)
+            }
+            
+            guard error == nil else {
+                sendError(error!.localizedDescription)
+                return
+            }
+            
+            guard let userID = results[TMDBClient.JSONResponseKeys.UserID] as? Int else {
+                sendError("Could not access `id` key")
+                return
+            }
+            
+            /* 3. Send the desired value(s) to completion handler */
+            completionHandlerForUserID(success: true, userID: userID, errorString: nil)
         }
-        
-        */
     }
     
     // MARK: GET Convenience Methods

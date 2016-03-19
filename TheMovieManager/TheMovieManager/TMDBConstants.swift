@@ -72,6 +72,7 @@ extension TMDBClient {
         // MARK: General
         static let StatusMessage = "status_message"
         static let StatusCode = "status_code"
+        static let Status = "success"
         
         // MARK: Authorization
         static let RequestToken = "request_token"
