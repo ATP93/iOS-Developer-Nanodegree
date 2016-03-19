@@ -32,3 +32,17 @@ width="240" height="426">
 width="240" height="426" hspace="8">
 <img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/MyFavoriteMovies/Detail.png"
 width="240" height="426" hspace="8">
+
+### TheMovieManager
+Uses [The Movie Database API](http://docs.themoviedb.apiary.io/#reference/account/accountidfavoritemovies)
+to login in user account via Website and retrieve user favorite movies, watchlist, also search for movies by a search text and display
+them in a detail controller.
+
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/TheMovieManager/LogIn.png"
+width="240" height="426" hspace="8">
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/TheMovieManager/Search.png"
+width="240" height="426"> <br>
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/TheMovieManager/Detail.png"
+width="240" height="426" hspace="8">
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/TheMovieManager/Favorites.png"
+width="240" height="426" hspace="8">
