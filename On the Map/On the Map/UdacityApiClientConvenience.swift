@@ -16,7 +16,7 @@ import UIKit
 extension UdacityApiClient {
     
     //----------------------------------------------------
-    // MARK: Authentication (POST) methods
+    // MARK: Authentication (POST) method
     //----------------------------------------------------
     
     func authenticateWithUsername(username: String, password: String, andCompletionHandler block: (Bool, NSError?) -> Void) {
@@ -24,7 +24,7 @@ extension UdacityApiClient {
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
-        dataTaskForPOSTMethod(UdacityApiClient.Methods.AuthenticationSession, parameters: nil, jsonBody: jsonBody, completionHandlerForPOST: { (result, error) in
+        dataTaskForPOSTMethod(UdacityApiClient.Methods.AuthenticationSession, parameters: nil, jsonBody: jsonBody, completionHandler: { (result, error) in
             func sendError(error: String) {
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                 print(error)
@@ -61,14 +61,56 @@ extension UdacityApiClient {
             self.userID = userId
             
             // Persist information about the user account .
-            self.setUserValue(userId, forKey: UdacityApiClient.UserDefaults.UserID)
-            self.setUserValue(sessionID, forKey: UdacityApiClient.UserDefaults.SessionID)
-            self.setUserValue(expirationDate, forKey: UdacityApiClient.UserDefaults.ExpirationDate)
+            UdacityApiClient.setUserValue(userId, forKey: UdacityApiClient.UserDefaults.UserID)
+            UdacityApiClient.setUserValue(sessionID, forKey: UdacityApiClient.UserDefaults.SessionID)
+            UdacityApiClient.setUserValue(expirationDate, forKey: UdacityApiClient.UserDefaults.ExpirationDate)
             
             UIApplication.sharedApplication().networkActivityIndicatorVisible = false
             
             block(true, nil)
         })
+    }
+    
+    //----------------------------------------------------
+    // MARK: Logging Out (DELETE) method
+    //----------------------------------------------------
+    
+    func logOutWithCompletionHandler(block: (Bool, NSError?) -> Void) {
+        var xsrfCookie: NSHTTPCookie? = nil
+        let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+        
+        for cookie in sharedCookieStorage.cookies! {
+            if cookie.name == "XSRF-TOKEN" {
+                xsrfCookie = cookie
+            }
+        }
+        
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        
+        dataTaskForDELETEMethod(UdacityApiClient.Methods.LoggingOut, parameters: nil, headerFields: ["X-XSRF-TOKEN": xsrfCookie?.value]) { (result, error) in
+            func sendError(error: String) {
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                print(error)
+                let userInfo = [NSLocalizedDescriptionKey : error]
+                block(false, NSError(domain: "com.ivanmagda.On-the-Map.logout", code: 16, userInfo: userInfo))
+            }
+            
+            guard error == nil else {
+                sendError(error!.localizedDescription)
+                return
+            }
+            
+            guard let _ = result else {
+                sendError("Empty response")
+                return
+            }
+            
+            UdacityApiClient.logoutUser()
+            
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+            
+            block(true, nil)
+        }
     }
     
 }

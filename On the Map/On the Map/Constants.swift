@@ -18,4 +18,11 @@ struct Constants {
         static let KeyboardDidHide: Selector = "keyboardDidHide:"
     }
     
+    // MARK: HTTTPMethod
+    struct HTTTPMethod {
+        static let Get = "GET"
+        static let Post = "POST"
+        static let DELETE = "DELETE"
+    }
+    
 }

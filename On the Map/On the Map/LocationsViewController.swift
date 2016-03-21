@@ -8,11 +8,11 @@
 
 import UIKit
 
-//------------------------------------------------
-// MARK: - SecondViewController: UIViewController
-//------------------------------------------------
+//---------------------------------------------------
+// MARK: - LocationsViewController: UIViewController
+//---------------------------------------------------
 
-class SecondViewController: UIViewController {
+class LocationsViewController: UIViewController {
     
     //--------------------------------------------
     // MARK: View Life Cycle

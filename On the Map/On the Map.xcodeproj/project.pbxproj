@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		7500AFEE1C9E88130067DEAD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500AFED1C9E88130067DEAD /* AppDelegate.swift */; };
-		7500AFF01C9E88130067DEAD /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500AFEF1C9E88130067DEAD /* FirstViewController.swift */; };
-		7500AFF21C9E88130067DEAD /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500AFF11C9E88130067DEAD /* SecondViewController.swift */; };
+		7500AFF01C9E88130067DEAD /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500AFEF1C9E88130067DEAD /* MapViewController.swift */; };
+		7500AFF21C9E88130067DEAD /* LocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500AFF11C9E88130067DEAD /* LocationsViewController.swift */; };
 		7500AFF51C9E88130067DEAD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7500AFF31C9E88130067DEAD /* Main.storyboard */; };
 		7500AFF71C9E88130067DEAD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7500AFF61C9E88130067DEAD /* Assets.xcassets */; };
 		7500AFFA1C9E88130067DEAD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7500AFF81C9E88130067DEAD /* LaunchScreen.storyboard */; };
@@ -24,13 +24,14 @@
 		7500B0221C9EF9040067DEAD /* UdacityConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0211C9EF9040067DEAD /* UdacityConstants.swift */; };
 		7500B0241C9F15380067DEAD /* UdacityApiClientConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0231C9F15380067DEAD /* UdacityApiClientConvenience.swift */; };
 		755D540C1C9FC57A0087D9F7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 755D540B1C9FC57A0087D9F7 /* Constants.swift */; };
+		756583761CA0093B0033326E /* UserAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756583751CA0093B0033326E /* UserAccountViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		7500AFEA1C9E88130067DEAD /* On the Map.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "On the Map.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7500AFED1C9E88130067DEAD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7500AFEF1C9E88130067DEAD /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		7500AFF11C9E88130067DEAD /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		7500AFEF1C9E88130067DEAD /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		7500AFF11C9E88130067DEAD /* LocationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsViewController.swift; sourceTree = "<group>"; };
 		7500AFF41C9E88130067DEAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7500AFF61C9E88130067DEAD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7500AFF91C9E88130067DEAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -46,6 +47,7 @@
 		7500B0211C9EF9040067DEAD /* UdacityConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConstants.swift; sourceTree = "<group>"; };
 		7500B0231C9F15380067DEAD /* UdacityApiClientConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityApiClientConvenience.swift; sourceTree = "<group>"; };
 		755D540B1C9FC57A0087D9F7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		756583751CA0093B0033326E /* UserAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAccountViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,8 +114,9 @@
 			isa = PBXGroup;
 			children = (
 				7500B0041C9ECBB20067DEAD /* LoginViewController.swift */,
-				7500AFEF1C9E88130067DEAD /* FirstViewController.swift */,
-				7500AFF11C9E88130067DEAD /* SecondViewController.swift */,
+				7500AFEF1C9E88130067DEAD /* MapViewController.swift */,
+				7500AFF11C9E88130067DEAD /* LocationsViewController.swift */,
+				756583751CA0093B0033326E /* UserAccountViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -238,8 +241,9 @@
 				7500B0081C9ECC3C0067DEAD /* BorderedButton.swift in Sources */,
 				7500B01A1C9EDFFE0067DEAD /* JSON.swift in Sources */,
 				7500B0051C9ECBB20067DEAD /* LoginViewController.swift in Sources */,
-				7500AFF21C9E88130067DEAD /* SecondViewController.swift in Sources */,
+				7500AFF21C9E88130067DEAD /* LocationsViewController.swift in Sources */,
 				7500B0151C9EDFC30067DEAD /* ApiClient.swift in Sources */,
+				756583761CA0093B0033326E /* UserAccountViewController.swift in Sources */,
 				7500AFEE1C9E88130067DEAD /* AppDelegate.swift in Sources */,
 				7500B01D1C9EE1720067DEAD /* JSONParselable.swift in Sources */,
 				7500B0161C9EDFC30067DEAD /* ApiClientResult.swift in Sources */,
@@ -248,7 +252,7 @@
 				7500B0241C9F15380067DEAD /* UdacityApiClientConvenience.swift in Sources */,
 				755D540C1C9FC57A0087D9F7 /* Constants.swift in Sources */,
 				7500B0091C9ECC3C0067DEAD /* GCDBlackBox.swift in Sources */,
-				7500AFF01C9E88130067DEAD /* FirstViewController.swift in Sources */,
+				7500AFF01C9E88130067DEAD /* MapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

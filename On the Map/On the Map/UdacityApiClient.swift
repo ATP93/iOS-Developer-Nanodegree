@@ -17,7 +17,7 @@ typealias UdacityTaskCompletionHandler = (result: JSONDictionary?, error: NSErro
 final class UdacityApiClient: ApiClient {
 
     //------------------------------------
-    // MARK: - Properties -
+    // MARK: - Properties
     //------------------------------------
     
     // Authentication.
@@ -48,72 +48,63 @@ final class UdacityApiClient: ApiClient {
     }
     
     //------------------------------------
-    // MARK: - POST -
+    // MARK: - POST
     //------------------------------------
     
-    func dataTaskForPOSTMethod(method: String, parameters: [String: AnyObject]?, jsonBody: String, completionHandlerForPOST: UdacityTaskCompletionHandler) {
+    func dataTaskForPOSTMethod(method: String, parameters: [String: AnyObject]?, jsonBody: String, completionHandler: UdacityTaskCompletionHandler) {
         let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
-        request.HTTPMethod = "POST"
+        request.HTTPMethod = Constants.HTTTPMethod.Post
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
         
-        fetch(request) { (data, httpResponse, error) in
-            func sendError(error: String) {
-                print(error)
-                let userInfo = [NSLocalizedDescriptionKey : error]
-                completionHandlerForPOST(result: nil, error: NSError(domain: "com.ivanmagda.On-the-Map.taskForPOSTMethod", code: 1, userInfo: userInfo))
-            }
-            
-            /* GUARD: Was there an error? */
-            guard (error == nil) else {
-                sendError("There was an error with your request: \(error)")
-                return
-            }
-            
-            /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = httpResponse?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-                sendError("Failed to Login, try again")
-                return
-            }
-            
-            /* GUARD: Was there any data returned? */
-            guard let data = data else {
-                sendError("No data was returned by the request!")
-                return
-            }
-            
-            let newData = self.skipSecurityCharactersInData(data)
-            
-            /* Parse the data and use the data (happens in completion handler) */
-            self.convertDataWithCompletionHandler(newData) { (result, error) in
-                if let _ = error {
-                    sendError("Could not parse the data as JSON: '\(newData)'")
-                } else {
-                    if let json = result as? JSONDictionary {
-                        completionHandlerForPOST(result: json, error: nil)
-                    } else {
-                        sendError("Failed to cast type of the json object: \(result)")
-                    }
-                }
-            }
+        fetch(request) { (data, response, error) in
+            self.checkRespose(data, httpResponse: response, error: error, completionHandler: completionHandler)
         }
     }
     
     //------------------------------------
-    // MARK: - Helpers -
+    // MARK: - DELETE
     //------------------------------------
     
-    func setUserValue(value: AnyObject?, forKey key: String) {
+    func dataTaskForDELETEMethod(method: String, parameters: [String: AnyObject]?, headerFields: [String: String?]?, completionHandler: UdacityTaskCompletionHandler) {
+        let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
+        request.HTTPMethod = Constants.HTTTPMethod.DELETE
+    
+        if let headerFields = headerFields {
+            for (key, value) in headerFields {
+                request.setValue(value, forHTTPHeaderField: key)
+            }
+        }
+        
+        fetch(request) { (data, response, error) in
+            self.checkRespose(data, httpResponse: response, error: error, completionHandler: completionHandler)
+        }
+
+    }
+    
+    //------------------------------------
+    // MARK: - Helpers
+    //------------------------------------
+    
+    class func setUserValue(value: AnyObject?, forKey key: String) {
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject(value, forKey: key)
+        defaults.synchronize()
+    }
+    
+    class func logoutUser() {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.removeObjectForKey(UserDefaults.UserID)
+        defaults.removeObjectForKey(UserDefaults.SessionID)
+        defaults.removeObjectForKey(UserDefaults.ExpirationDate)
         defaults.synchronize()
     }
     
     /// Create a URL from parameters.
     private func udacityURLFromParameters(parameters: JSONDictionary?, withPathExtension: String? = nil) -> NSURL {
         let components = NSURLComponents()
-        components.scheme = UdacityApiClient.Constants.ApiScheme
-        components.host = UdacityApiClient.Constants.ApiHost
-        components.path = UdacityApiClient.Constants.ApiPath + (withPathExtension ?? "")
+        components.scheme = UdacityApiClient.Constant.ApiScheme
+        components.host = UdacityApiClient.Constant.ApiHost
+        components.path = UdacityApiClient.Constant.ApiPath + (withPathExtension ?? "")
         
         if let parameters = parameters {
             components.queryItems = [NSURLQueryItem]()
@@ -130,6 +121,47 @@ final class UdacityApiClient: ApiClient {
         // Subset response data.
         let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
         return newData
+    }
+    
+    private func checkRespose(data: NSData?, httpResponse: NSHTTPURLResponse?, error: NSError?, completionHandler: UdacityTaskCompletionHandler) {
+        func sendError(error: String) {
+            print(error)
+            let userInfo = [NSLocalizedDescriptionKey : error]
+            completionHandler(result: nil, error: NSError(domain: "com.ivanmagda.On-the-Map.taskForPOSTMethod", code: 1, userInfo: userInfo))
+        }
+        
+        /* GUARD: Was there an error? */
+        guard (error == nil) else {
+            sendError("There was an error with your request: \(error)")
+            return
+        }
+        
+        /* GUARD: Did we get a successful 2XX response? */
+        guard let statusCode = httpResponse?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+            sendError("Failed to Login, try again")
+            return
+        }
+        
+        /* GUARD: Was there any data returned? */
+        guard let data = data else {
+            sendError("No data was returned by the request!")
+            return
+        }
+        
+        let newData = self.skipSecurityCharactersInData(data)
+        
+        /* Parse the data and use the data (happens in completion handler) */
+        self.convertDataWithCompletionHandler(newData) { (result, error) in
+            if let _ = error {
+                sendError("Could not parse the data as JSON: '\(newData)'")
+            } else {
+                if let json = result as? JSONDictionary {
+                    completionHandler(result: json, error: nil)
+                } else {
+                    sendError("Failed to cast type of the json object: \(result)")
+                }
+            }
+        }
     }
 
 }

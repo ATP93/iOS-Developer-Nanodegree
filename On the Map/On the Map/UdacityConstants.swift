@@ -10,8 +10,8 @@ import Foundation
 
 extension UdacityApiClient {
     
-    // MARK: Constants
-    struct Constants {
+    // MARK: Constant
+    struct Constant {
         
         // MARK: URLs
         static let ApiScheme = "https"
@@ -26,6 +26,7 @@ extension UdacityApiClient {
         static let Account = "/users/{id}"
         
         // MARK: Authentication
+        static let LoggingOut = "/session"
         static let AuthenticationSession = "/session"
     }
     

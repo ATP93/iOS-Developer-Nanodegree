@@ -9,10 +9,10 @@
 import UIKit
 
 //------------------------------------------------
-// MARK: - FirstViewController: UIViewController
+// MARK: - MapViewController: UIViewController
 //------------------------------------------------
 
-class FirstViewController: UIViewController {
+class MapViewController: UIViewController {
 
     //------------------------------------------------
     // MARK: View Life Cycle

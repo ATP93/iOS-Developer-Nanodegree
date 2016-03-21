@@ -43,6 +43,10 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         
         configureUI()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         
         subscribeToNotification(UIKeyboardWillShowNotification, selector: Constants.Selectors.KeyboardWillShow)
         subscribeToNotification(UIKeyboardWillHideNotification, selector: Constants.Selectors.KeyboardWillHide)
@@ -108,6 +112,9 @@ class LoginViewController: UIViewController {
         performOnMain {
             self.setUIEnabled(true)
             self.performSegueWithIdentifier(SegueIdentifier.DoneWithLogin.rawValue, sender: self)
+            
+            self.usernameTextField.text = nil
+            self.passwordTextField.text = nil
         }
     }
     
