@@ -13,6 +13,17 @@
 		7500AFF51C9E88130067DEAD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7500AFF31C9E88130067DEAD /* Main.storyboard */; };
 		7500AFF71C9E88130067DEAD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7500AFF61C9E88130067DEAD /* Assets.xcassets */; };
 		7500AFFA1C9E88130067DEAD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7500AFF81C9E88130067DEAD /* LaunchScreen.storyboard */; };
+		7500B0051C9ECBB20067DEAD /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0041C9ECBB20067DEAD /* LoginViewController.swift */; };
+		7500B0081C9ECC3C0067DEAD /* BorderedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0061C9ECC3C0067DEAD /* BorderedButton.swift */; };
+		7500B0091C9ECC3C0067DEAD /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0071C9ECC3C0067DEAD /* GCDBlackBox.swift */; };
+		7500B0151C9EDFC30067DEAD /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0131C9EDFC30067DEAD /* ApiClient.swift */; };
+		7500B0161C9EDFC30067DEAD /* ApiClientResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0141C9EDFC30067DEAD /* ApiClientResult.swift */; };
+		7500B01A1C9EDFFE0067DEAD /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0191C9EDFFE0067DEAD /* JSON.swift */; };
+		7500B01D1C9EE1720067DEAD /* JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B01C1C9EE1720067DEAD /* JSONParselable.swift */; };
+		7500B01F1C9EF85C0067DEAD /* UdacityApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B01E1C9EF85C0067DEAD /* UdacityApiClient.swift */; };
+		7500B0221C9EF9040067DEAD /* UdacityConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0211C9EF9040067DEAD /* UdacityConstants.swift */; };
+		7500B0241C9F15380067DEAD /* UdacityApiClientConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0231C9F15380067DEAD /* UdacityApiClientConvenience.swift */; };
+		755D540C1C9FC57A0087D9F7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 755D540B1C9FC57A0087D9F7 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +35,17 @@
 		7500AFF61C9E88130067DEAD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7500AFF91C9E88130067DEAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7500AFFB1C9E88130067DEAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7500B0041C9ECBB20067DEAD /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		7500B0061C9ECC3C0067DEAD /* BorderedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BorderedButton.swift; sourceTree = "<group>"; };
+		7500B0071C9ECC3C0067DEAD /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
+		7500B0131C9EDFC30067DEAD /* ApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
+		7500B0141C9EDFC30067DEAD /* ApiClientResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiClientResult.swift; sourceTree = "<group>"; };
+		7500B0191C9EDFFE0067DEAD /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
+		7500B01C1C9EE1720067DEAD /* JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParselable.swift; sourceTree = "<group>"; };
+		7500B01E1C9EF85C0067DEAD /* UdacityApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityApiClient.swift; sourceTree = "<group>"; };
+		7500B0211C9EF9040067DEAD /* UdacityConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConstants.swift; sourceTree = "<group>"; };
+		7500B0231C9F15380067DEAD /* UdacityApiClientConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityApiClientConvenience.swift; sourceTree = "<group>"; };
+		755D540B1C9FC57A0087D9F7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +79,11 @@
 			isa = PBXGroup;
 			children = (
 				7500AFED1C9E88130067DEAD /* AppDelegate.swift */,
+				7500B0071C9ECC3C0067DEAD /* GCDBlackBox.swift */,
+				755D540B1C9FC57A0087D9F7 /* Constants.swift */,
+				7500B0171C9EDFCA0067DEAD /* Model */,
 				7500B0031C9E88A70067DEAD /* Controllers */,
+				7500B00A1C9ECC420067DEAD /* View */,
 				7500B0011C9E888F0067DEAD /* Assets */,
 				7500B0021C9E88980067DEAD /* Supporting Files */,
 			);
@@ -85,10 +111,57 @@
 		7500B0031C9E88A70067DEAD /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				7500B0041C9ECBB20067DEAD /* LoginViewController.swift */,
 				7500AFEF1C9E88130067DEAD /* FirstViewController.swift */,
 				7500AFF11C9E88130067DEAD /* SecondViewController.swift */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		7500B00A1C9ECC420067DEAD /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7500B0061C9ECC3C0067DEAD /* BorderedButton.swift */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		7500B0171C9EDFCA0067DEAD /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7500B01B1C9EE00E0067DEAD /* JSON */,
+				7500B0181C9EDFD90067DEAD /* API */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		7500B0181C9EDFD90067DEAD /* API */ = {
+			isa = PBXGroup;
+			children = (
+				7500B0131C9EDFC30067DEAD /* ApiClient.swift */,
+				7500B0141C9EDFC30067DEAD /* ApiClientResult.swift */,
+				7500B0201C9EF8660067DEAD /* Udacity */,
+			);
+			name = API;
+			sourceTree = "<group>";
+		};
+		7500B01B1C9EE00E0067DEAD /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				7500B0191C9EDFFE0067DEAD /* JSON.swift */,
+				7500B01C1C9EE1720067DEAD /* JSONParselable.swift */,
+			);
+			name = JSON;
+			sourceTree = "<group>";
+		};
+		7500B0201C9EF8660067DEAD /* Udacity */ = {
+			isa = PBXGroup;
+			children = (
+				7500B01E1C9EF85C0067DEAD /* UdacityApiClient.swift */,
+				7500B0231C9F15380067DEAD /* UdacityApiClientConvenience.swift */,
+				7500B0211C9EF9040067DEAD /* UdacityConstants.swift */,
+			);
+			name = Udacity;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -162,8 +235,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7500B0081C9ECC3C0067DEAD /* BorderedButton.swift in Sources */,
+				7500B01A1C9EDFFE0067DEAD /* JSON.swift in Sources */,
+				7500B0051C9ECBB20067DEAD /* LoginViewController.swift in Sources */,
 				7500AFF21C9E88130067DEAD /* SecondViewController.swift in Sources */,
+				7500B0151C9EDFC30067DEAD /* ApiClient.swift in Sources */,
 				7500AFEE1C9E88130067DEAD /* AppDelegate.swift in Sources */,
+				7500B01D1C9EE1720067DEAD /* JSONParselable.swift in Sources */,
+				7500B0161C9EDFC30067DEAD /* ApiClientResult.swift in Sources */,
+				7500B01F1C9EF85C0067DEAD /* UdacityApiClient.swift in Sources */,
+				7500B0221C9EF9040067DEAD /* UdacityConstants.swift in Sources */,
+				7500B0241C9F15380067DEAD /* UdacityApiClientConvenience.swift in Sources */,
+				755D540C1C9FC57A0087D9F7 /* Constants.swift in Sources */,
+				7500B0091C9ECC3C0067DEAD /* GCDBlackBox.swift in Sources */,
 				7500AFF01C9E88130067DEAD /* FirstViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -312,6 +396,7 @@
 				7500B0001C9E88130067DEAD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
