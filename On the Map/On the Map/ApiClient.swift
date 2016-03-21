@@ -8,8 +8,6 @@
 
 import Foundation
 
-public typealias JSONDictionary = [String: AnyObject]
-
 typealias JSONTaskCompletionHandler = (JSONDictionary?, NSHTTPURLResponse?, NSError?) -> Void
 typealias TaskCompletionHandler = (NSData?, NSHTTPURLResponse?, NSError?) -> Void
 
@@ -20,7 +18,7 @@ typealias TaskCompletionHandler = (NSData?, NSHTTPURLResponse?, NSError?) -> Voi
 class ApiClient {
 
     //---------------------------------
-    // MARK: Properties
+    // MARK: - Properties -
     //---------------------------------
     
     let configuration: NSURLSessionConfiguration
@@ -35,7 +33,7 @@ class ApiClient {
     var loggingEnabled = false
     
     //---------------------------------
-    // MARK: Initializers
+    // MARK: - Initializers -
     //---------------------------------
     
     init(configuration: NSURLSessionConfiguration) {
@@ -43,7 +41,7 @@ class ApiClient {
     }
     
     //---------------------------------
-    // MARK: Network
+    // MARK: - Network -
     //---------------------------------
     
     func cancelAllRequests() {
@@ -53,7 +51,9 @@ class ApiClient {
         self.currentTasks = []
     }
     
+    //---------------------------------
     // MARK: Data Tasks
+    //---------------------------------
     
     func fetch(request: NSURLRequest, completion: TaskCompletionHandler) {
         let task = dataTaskWithRequest(request, completion: completion)
@@ -88,9 +88,11 @@ class ApiClient {
         return task!
     }
     
-    // MARK: JSON Task
+    //---------------------------------
+    // MARK: With JSON Tasks
+    //---------------------------------
     
-    func fetchJSON(request: NSURLRequest, completion: ApiClientResult -> Void) {
+    func fetchWithResult(request: NSURLRequest, completion: ApiClientResult -> Void) {
         let task = jsonDataTaskWithRequest(request) { (json, response, error) in
             performOnMain {
                 if let error = error {
@@ -140,7 +142,9 @@ class ApiClient {
         return task
     }
     
+    //---------------------------------
     // MARK: Helpers
+    //---------------------------------
     
     func convertDataWithCompletionHandler(data: NSData, block: (AnyObject?, NSError?) -> Void) {
         var parsedResult: AnyObject!
@@ -155,7 +159,9 @@ class ApiClient {
         block(parsedResult, nil)
     }
     
+    //---------------------------------
     // MARK: Debug Logging
+    //---------------------------------
     
     func debugLog(msg: String) {
         guard loggingEnabled else { return }

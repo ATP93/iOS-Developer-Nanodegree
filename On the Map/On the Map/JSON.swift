@@ -8,6 +8,8 @@
 
 import Foundation
 
+public typealias JSONDictionary = [String: AnyObject]
+
 /// Takes a double optional and removes one level of optional-ness.
 private func flatten<A>(x: A??) -> A? {
     if let y = x { return y }

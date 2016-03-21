@@ -19,7 +19,7 @@ private enum SegueIdentifier: String {
 class LoginViewController: UIViewController {
     
     //-------------------------------------------
-    // MARK: Properties
+    // MARK: - Properties
     //-------------------------------------------
     
     var keyboardOnScreen = false
@@ -36,7 +36,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     //-------------------------------------------
-    // MARK: View Life Cycle
+    // MARK: - View Life Cycle
     //-------------------------------------------
     
     override func viewDidLoad() {
@@ -64,7 +64,7 @@ class LoginViewController: UIViewController {
     }
 
     //-------------------------------------------
-    // MARK: Login
+    // MARK: - Login
     //-------------------------------------------
     
     @IBAction func loginWithUdacityDidPressed(sender: AnyObject) {
@@ -113,7 +113,9 @@ class LoginViewController: UIViewController {
     
 }
 
-// MARK: - LoginViewController (Configure UI)
+//---------------------------------------------
+// MARK: - LoginViewController (Configure UI) -
+//---------------------------------------------
 
 extension LoginViewController {
     
@@ -148,9 +150,9 @@ extension LoginViewController {
     
 }
 
-//--------------------------------------------------
-// MARK: - LoginViewController: UITextFieldDelegate
-//--------------------------------------------------
+//---------------------------------------------------
+// MARK: - LoginViewController: UITextFieldDelegate -
+//---------------------------------------------------
 
 extension LoginViewController: UITextFieldDelegate {
     
@@ -208,9 +210,9 @@ extension LoginViewController: UITextFieldDelegate {
     
 }
 
-//---------------------------------------------
-// MARK: - LoginViewController (Notifications)
-//---------------------------------------------
+//----------------------------------------------
+// MARK: - LoginViewController (Notifications) -
+//----------------------------------------------
 
 extension LoginViewController {
     

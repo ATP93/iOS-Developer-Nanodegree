@@ -9,11 +9,15 @@
 import Foundation
 import UIKit
 
+//--------------------------------------------------------
 // MARK: - UdacityApiClient (Convenient Resource Methods)
+//--------------------------------------------------------
 
 extension UdacityApiClient {
     
-    // MARK: Authentication
+    //----------------------------------------------------
+    // MARK: Authentication (POST) methods
+    //----------------------------------------------------
     
     func authenticateWithUsername(username: String, password: String, andCompletionHandler block: (Bool, NSError?) -> Void) {
         let jsonBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"

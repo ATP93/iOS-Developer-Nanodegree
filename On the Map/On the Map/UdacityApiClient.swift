@@ -10,13 +10,17 @@ import Foundation
 
 typealias UdacityTaskCompletionHandler = (result: JSONDictionary?, error: NSError?) -> Void
 
+//----------------------------------------
 // MARK: - UdacityApiClient: ApiClient
+//----------------------------------------
 
 final class UdacityApiClient: ApiClient {
+
+    //------------------------------------
+    // MARK: - Properties -
+    //------------------------------------
     
-    // MARK: Properties
-    
-    // Authentication state.
+    // Authentication.
     var sessionID: String? = nil
     var userID: String? = nil
     var expirationDate: String? = nil
@@ -43,7 +47,9 @@ final class UdacityApiClient: ApiClient {
         return true
     }
     
-    // MARK: POST
+    //------------------------------------
+    // MARK: - POST -
+    //------------------------------------
     
     func dataTaskForPOSTMethod(method: String, parameters: [String: AnyObject]?, jsonBody: String, completionHandlerForPOST: UdacityTaskCompletionHandler) {
         let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
@@ -92,7 +98,9 @@ final class UdacityApiClient: ApiClient {
         }
     }
     
-    // MARK: Helpers
+    //------------------------------------
+    // MARK: - Helpers -
+    //------------------------------------
     
     func setUserValue(value: AnyObject?, forKey key: String) {
         let defaults = NSUserDefaults.standardUserDefaults()
