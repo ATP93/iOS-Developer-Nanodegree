@@ -100,7 +100,7 @@ final class UdacityApiClient: ApiClient {
     }
     
     /// Create a URL from parameters.
-    private func udacityURLFromParameters(parameters: JSONDictionary?, withPathExtension: String? = nil) -> NSURL {
+    private func udacityURLFromParameters(parameters: [String: AnyObject]?, withPathExtension: String? = nil) -> NSURL {
         let components = NSURLComponents()
         components.scheme = UdacityApiClient.Constant.ApiScheme
         components.host = UdacityApiClient.Constant.ApiHost

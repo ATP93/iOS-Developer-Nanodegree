@@ -39,11 +39,65 @@
                     <view key="view" contentMode="scaleToFill" id="QS5-Rx-YEW">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mRo-ki-NyK">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="StudentLocationCell" textLabel="gWv-wk-Mxs" imageView="VkJ-iv-J8H" style="IBUITableViewCellStyleDefault" id="fEQ-gz-ujx">
+                                        <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fEQ-gz-ujx" id="ZfH-2K-Kds">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gWv-wk-Mxs">
+                                                    <rect key="frame" x="63" y="0.0" width="522" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="MarkerBlue" id="VkJ-iv-J8H">
+                                                    <rect key="frame" x="15" y="5" width="33" height="33"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </imageView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="8rJ-Kc-sve" id="Rta-an-Ip0"/>
+                                    <outlet property="delegate" destination="8rJ-Kc-sve" id="Mum-JP-uBD"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="mRo-ki-NyK" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leading" id="CrO-Hp-Iof"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="mRo-ki-NyK" secondAttribute="bottom" id="NWH-Jc-pLX"/>
+                            <constraint firstItem="mRo-ki-NyK" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="SuQ-ci-uJD"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="mRo-ki-NyK" secondAttribute="trailing" id="ZaI-aB-R3g"/>
+                            <constraint firstAttribute="trailing" secondItem="mRo-ki-NyK" secondAttribute="trailing" id="mH0-0B-5TN"/>
+                            <constraint firstItem="mRo-ki-NyK" firstAttribute="top" secondItem="QS5-Rx-YEW" secondAttribute="topMargin" id="p4v-xh-6DX"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="SuQ-ci-uJD"/>
+                                <exclude reference="ZaI-aB-R3g"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" title="On The Map" id="N1a-4B-l8V">
-                        <barButtonItem key="rightBarButtonItem" image="Synchronize" id="d62-dN-FDh" userLabel="Sunchronize"/>
+                        <barButtonItem key="rightBarButtonItem" image="Synchronize" id="d62-dN-FDh" userLabel="Sunchronize">
+                            <connections>
+                                <action selector="syncronizeDidPressed:" destination="8rJ-Kc-sve" id="AtI-HJ-4Km"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="tableView" destination="mRo-ki-NyK" id="oLe-8g-U4H"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
             </objects>
@@ -333,6 +387,7 @@
         <image name="List" width="30" height="30"/>
         <image name="MapMarker" width="30" height="30"/>
         <image name="Marker" width="22" height="22"/>
+        <image name="MarkerBlue" width="33" height="33"/>
         <image name="Synchronize" width="22" height="22"/>
         <image name="UdacityLogo" width="100" height="100"/>
         <image name="User" width="30" height="30"/>
