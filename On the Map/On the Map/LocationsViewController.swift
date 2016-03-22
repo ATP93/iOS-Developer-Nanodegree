@@ -103,6 +103,10 @@ extension LocationsViewController: UITableViewDataSource {
     
 }
 
+//------------------------------------------------------
+// MARK: LocationsViewController: UITableViewDelegate
+//------------------------------------------------------
+
 extension LocationsViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

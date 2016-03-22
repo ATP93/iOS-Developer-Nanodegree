@@ -24,6 +24,7 @@ class UserAccountViewController: UIViewController {
     // MARK: Outlets
     //--------------------------------------------
     
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var logOutBarButtonItem: UIBarButtonItem!
     
     //--------------------------------------------
@@ -42,6 +43,7 @@ class UserAccountViewController: UIViewController {
                     if let user = user {
                         print("Fetched user: \(user)")
                         self.user = user
+                        self.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
                     }
                 }
             }
@@ -84,6 +86,58 @@ class UserAccountViewController: UIViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .Cancel, handler: nil))
         presentViewController(alert, animated: true, completion: nil)
+    }
+    
+}
+
+//------------------------------------------------------
+// MARK: UserAccountViewController: UITableViewDataSource
+//------------------------------------------------------
+
+extension UserAccountViewController: UITableViewDataSource {
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        if UdacityApiClient.sharedInstance.isUserLoggedIn {
+            return 1
+        }
+        return 0
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return  3
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("UserCell") as! UserTableViewCell
+        
+        let undefined = "(Undefined)"
+        switch indexPath.row {
+        case 0:
+            cell.leftTitleLabel.text = "First name"
+            cell.rightDetailLabel.text = user?.firstName ?? undefined
+        case 1:
+            cell.leftTitleLabel.text = "Last name"
+            cell.rightDetailLabel.text = user?.lastName ?? undefined
+        case 2:
+            cell.leftTitleLabel.text = "Email"
+            cell.rightDetailLabel.text = user?.email ?? undefined
+        default:
+            print("Unexpected error")
+        }
+        
+        return cell
+    }
+    
+}
+
+//------------------------------------------------------
+// MARK: UserAccountViewController: UITableViewDelegate
+//------------------------------------------------------
+
+extension UserAccountViewController: UITableViewDelegate {
+    
+    func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+        return nil
     }
     
 }

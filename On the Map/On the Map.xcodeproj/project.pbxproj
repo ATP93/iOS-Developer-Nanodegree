@@ -39,6 +39,7 @@
 		758794A81CA115DF00E8B10E /* GeoLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A71CA115DF00E8B10E /* GeoLocation.swift */; };
 		75C84D711CA1883300B14210 /* SubmitLocationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75C84D701CA1883300B14210 /* SubmitLocationView.xib */; };
 		75C84D731CA18BC600B14210 /* SubmitLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C84D721CA18BC600B14210 /* SubmitLocationView.swift */; };
+		75C84D751CA1B97500B14210 /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C84D741CA1B97500B14210 /* UserTableViewCell.swift */; };
 		75FCED611CA12A3F00C3DD98 /* PostLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FCED601CA12A3F00C3DD98 /* PostLocationViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -77,6 +78,7 @@
 		758794A71CA115DF00E8B10E /* GeoLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoLocation.swift; sourceTree = "<group>"; };
 		75C84D701CA1883300B14210 /* SubmitLocationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SubmitLocationView.xib; sourceTree = "<group>"; };
 		75C84D721CA18BC600B14210 /* SubmitLocationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubmitLocationView.swift; sourceTree = "<group>"; };
+		75C84D741CA1B97500B14210 /* UserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		75FCED601CA12A3F00C3DD98 /* PostLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLocationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -157,6 +159,7 @@
 				7500B0061C9ECC3C0067DEAD /* BorderedButton.swift */,
 				75C84D721CA18BC600B14210 /* SubmitLocationView.swift */,
 				75C84D701CA1883300B14210 /* SubmitLocationView.xib */,
+				75C84D741CA1B97500B14210 /* UserTableViewCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -320,6 +323,7 @@
 				7500B0081C9ECC3C0067DEAD /* BorderedButton.swift in Sources */,
 				758794A41CA1117E00E8B10E /* StudentLocation+Alertable.swift in Sources */,
 				7500B01A1C9EDFFE0067DEAD /* JSON.swift in Sources */,
+				75C84D751CA1B97500B14210 /* UserTableViewCell.swift in Sources */,
 				7500B0051C9ECBB20067DEAD /* LoginViewController.swift in Sources */,
 				756B8BCC1CA0E49E009C7355 /* UserKey.swift in Sources */,
 				7500AFF21C9E88130067DEAD /* LocationsViewController.swift in Sources */,

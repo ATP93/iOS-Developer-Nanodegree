@@ -522,7 +522,58 @@
                     <view key="view" contentMode="scaleToFill" id="ia7-6J-ce4">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="VLc-V6-nNO">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="UserCell" id="3eF-Sn-78r" customClass="UserTableViewCell" customModule="On_the_Map" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="114" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3eF-Sn-78r" id="19O-Ae-d7P">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uw1-pL-OjE">
+                                                    <rect key="frame" x="15" y="11" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(Undefined)" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DSD-py-XWu">
+                                                    <rect key="frame" x="489" y="11" width="91" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.38823529410000002" green="0.42745098040000001" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="DSD-py-XWu" firstAttribute="centerY" secondItem="19O-Ae-d7P" secondAttribute="centerY" id="LoH-lh-sdL"/>
+                                                <constraint firstAttribute="trailing" secondItem="DSD-py-XWu" secondAttribute="trailing" constant="20" symbolic="YES" id="exf-Lk-Tpq"/>
+                                                <constraint firstItem="Uw1-pL-OjE" firstAttribute="centerY" secondItem="19O-Ae-d7P" secondAttribute="centerY" id="g89-22-laC"/>
+                                                <constraint firstItem="Uw1-pL-OjE" firstAttribute="leading" secondItem="19O-Ae-d7P" secondAttribute="leading" constant="15" id="xlr-sR-rD6"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="leftTitleLabel" destination="Uw1-pL-OjE" id="DeG-XX-q6L"/>
+                                            <outlet property="rightDetailLabel" destination="DSD-py-XWu" id="IFA-ze-jT5"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <sections/>
+                                <connections>
+                                    <outlet property="dataSource" destination="MGh-t8-Dfi" id="ttG-QH-ZJz"/>
+                                    <outlet property="delegate" destination="MGh-t8-Dfi" id="HTc-PQ-xMx"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="VLc-V6-nNO" firstAttribute="leading" secondItem="ia7-6J-ce4" secondAttribute="leading" id="RlP-E4-jnt"/>
+                            <constraint firstAttribute="trailing" secondItem="VLc-V6-nNO" secondAttribute="trailing" id="iRJ-4J-5Rj"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="VLc-V6-nNO" secondAttribute="bottom" id="jya-3A-RJV"/>
+                            <constraint firstItem="VLc-V6-nNO" firstAttribute="top" secondItem="ia7-6J-ce4" secondAttribute="top" id="qsa-UB-Qgb"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="On The Map" id="mUl-sQ-BMM">
                         <barButtonItem key="rightBarButtonItem" image="Exit" id="7y2-kG-pYS" userLabel="Exit">
@@ -533,6 +584,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="logOutBarButtonItem" destination="7y2-kG-pYS" id="BIr-NX-6Wq"/>
+                        <outlet property="tableView" destination="VLc-V6-nNO" id="jFJ-z1-NCs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Ph-5P-rZn" sceneMemberID="firstResponder"/>
