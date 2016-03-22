@@ -46,3 +46,20 @@ width="240" height="426"> <br>
 width="240" height="426" hspace="8">
 <img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/TheMovieManager/Favorites.png"
 width="240" height="426" hspace="8">
+
+### On the Map
+This is the final project of the [course](https://www.udacity.com/course/ios-networking-with-swift--ud421) which uses two APIs: Udacity API and Parse API. 
+With this application, you can log into your Udacity account and get your public data. The main objective of this application is to search and display students locations of the course on the map view or using the table view.
+
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/On_the_Map/Login.png"
+width="240" height="426" hspace="8">
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/On_the_Map/Map.png"
+width="240" height="426" >
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/On_the_Map/LocationsList.png"
+width="240" height="426" hspace="8"> <br>
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/On_the_Map/Account.png"
+width="240" height="426" hspace="8">
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/On_the_Map/FindLocation.png"
+width="240" height="426"> 
+<img src="https://github.com/vanyaland/iOS-Networking-with-Swift/blob/master/Screenshots/On_the_Map/SubmitLocation.png"
+width="240" height="426" hspace="8">
