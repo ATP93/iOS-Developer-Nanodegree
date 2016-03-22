@@ -25,8 +25,9 @@ final class UdacityApiClient: ApiClient {
         get {
             return NSUserDefaults.standardUserDefaults().stringForKey(UserDefaults.SessionID)
         }
+        
         set {
-            self.sessionID = newValue
+            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: UserDefaults.SessionID)
         }
     }
     
@@ -36,7 +37,7 @@ final class UdacityApiClient: ApiClient {
         }
         
         set {
-            self.userID = newValue
+            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: UserDefaults.UserID)
         }
     }
     
@@ -46,7 +47,7 @@ final class UdacityApiClient: ApiClient {
         }
         
         set {
-            self.expirationDate = newValue
+            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: UserDefaults.ExpirationDate)
         }
     }
     
