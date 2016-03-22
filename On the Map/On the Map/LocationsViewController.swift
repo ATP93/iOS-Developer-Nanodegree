@@ -37,7 +37,7 @@ class LocationsViewController: UIViewController {
         super.viewDidLoad()
         
         refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: Selector("fetchLocations"), forControlEvents: .ValueChanged)
+        refreshControl.addTarget(self, action: #selector(LocationsViewController.fetchLocations), forControlEvents: .ValueChanged)
         tableView.addSubview(refreshControl)
         
         fetchLocations()

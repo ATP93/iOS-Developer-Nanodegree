@@ -101,7 +101,7 @@ class ApiClient {
                     // Did we get a successful 2XX response?
                     
                     switch response!.statusCode {
-                    case 200:
+                    case 200...299:
                         completion(.Success(json!))
                     case 404: completion(.NotFound)
                     case 400...499: completion(.ClientError(response!.statusCode))

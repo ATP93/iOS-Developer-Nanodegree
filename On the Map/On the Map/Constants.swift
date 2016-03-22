@@ -8,21 +8,9 @@
 
 import Foundation
 
-struct Constants {
-    
-    // MARK: Selectors
-    struct Selectors {
-        static let KeyboardWillShow: Selector = "keyboardWillShow:"
-        static let KeyboardWillHide: Selector = "keyboardWillHide:"
-        static let KeyboardDidShow: Selector = "keyboardDidShow:"
-        static let KeyboardDidHide: Selector = "keyboardDidHide:"
-    }
-    
-    // MARK: HTTTPMethod
-    struct HTTTPMethod {
-        static let Get = "GET"
-        static let Post = "POST"
-        static let DELETE = "DELETE"
-    }
-    
+// MARK: HTTTPMethodName
+struct HTTTPMethodName {
+    static let Get = "GET"
+    static let Post = "POST"
+    static let DELETE = "DELETE"
 }

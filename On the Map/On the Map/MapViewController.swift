@@ -91,6 +91,7 @@ extension MapViewController: MKMapViewDelegate {
                 view.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure) as UIView
             }
             
+            // Is is current user annotation.
             if annotation.uniqueKey == UdacityApiClient.sharedInstance.userID! {
                 view.pinTintColor = MKPinAnnotationView.greenPinColor()
             } else {

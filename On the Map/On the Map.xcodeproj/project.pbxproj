@@ -37,6 +37,9 @@
 		758794A21CA10FC200E8B10E /* Alertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A11CA10FC200E8B10E /* Alertable.swift */; };
 		758794A41CA1117E00E8B10E /* StudentLocation+Alertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A31CA1117E00E8B10E /* StudentLocation+Alertable.swift */; };
 		758794A81CA115DF00E8B10E /* GeoLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A71CA115DF00E8B10E /* GeoLocation.swift */; };
+		75C84D711CA1883300B14210 /* SubmitLocationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75C84D701CA1883300B14210 /* SubmitLocationView.xib */; };
+		75C84D731CA18BC600B14210 /* SubmitLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C84D721CA18BC600B14210 /* SubmitLocationView.swift */; };
+		75FCED611CA12A3F00C3DD98 /* PostLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FCED601CA12A3F00C3DD98 /* PostLocationViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +75,9 @@
 		758794A11CA10FC200E8B10E /* Alertable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alertable.swift; sourceTree = "<group>"; };
 		758794A31CA1117E00E8B10E /* StudentLocation+Alertable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StudentLocation+Alertable.swift"; sourceTree = "<group>"; };
 		758794A71CA115DF00E8B10E /* GeoLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoLocation.swift; sourceTree = "<group>"; };
+		75C84D701CA1883300B14210 /* SubmitLocationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SubmitLocationView.xib; sourceTree = "<group>"; };
+		75C84D721CA18BC600B14210 /* SubmitLocationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubmitLocationView.swift; sourceTree = "<group>"; };
+		75FCED601CA12A3F00C3DD98 /* PostLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLocationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +146,7 @@
 				7500AFEF1C9E88130067DEAD /* MapViewController.swift */,
 				7500AFF11C9E88130067DEAD /* LocationsViewController.swift */,
 				756583751CA0093B0033326E /* UserAccountViewController.swift */,
+				75FCED601CA12A3F00C3DD98 /* PostLocationViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -148,6 +155,8 @@
 			isa = PBXGroup;
 			children = (
 				7500B0061C9ECC3C0067DEAD /* BorderedButton.swift */,
+				75C84D721CA18BC600B14210 /* SubmitLocationView.swift */,
+				75C84D701CA1883300B14210 /* SubmitLocationView.xib */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -296,6 +305,7 @@
 				7500AFFA1C9E88130067DEAD /* LaunchScreen.storyboard in Resources */,
 				7500AFF71C9E88130067DEAD /* Assets.xcassets in Resources */,
 				7500AFF51C9E88130067DEAD /* Main.storyboard in Resources */,
+				75C84D711CA1883300B14210 /* SubmitLocationView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,9 +334,11 @@
 				7500B0221C9EF9040067DEAD /* UdacityConstants.swift in Sources */,
 				7565837D1CA02CCA0033326E /* StudentLocationKey.swift in Sources */,
 				7500B0241C9F15380067DEAD /* UdacityApiClientConvenience.swift in Sources */,
+				75FCED611CA12A3F00C3DD98 /* PostLocationViewController.swift in Sources */,
 				756583831CA0337C0033326E /* ParseApiClient.swift in Sources */,
 				758794A21CA10FC200E8B10E /* Alertable.swift in Sources */,
 				755D540C1C9FC57A0087D9F7 /* Constants.swift in Sources */,
+				75C84D731CA18BC600B14210 /* SubmitLocationView.swift in Sources */,
 				756B8BCE1CA0E5A9009C7355 /* User+JSONParselable.swift in Sources */,
 				7500B0091C9ECC3C0067DEAD /* GCDBlackBox.swift in Sources */,
 				7500AFF01C9E88130067DEAD /* MapViewController.swift in Sources */,

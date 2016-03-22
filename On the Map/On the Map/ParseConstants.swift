@@ -39,9 +39,23 @@ extension ParseApiClient {
         static let order = "order"
     }
     
+    // MARK: JSON Body Keys
+    struct JSONBodyKeys {
+        static let Results = "results"
+        static let UniqueKey = "uniqueKey"
+        static let FirstName = "firstName"
+        static let LastName = "lastName"
+        static let MapString = "mapString"
+        static let MediaURL = "mediaURL"
+        static let Latitude = "latitude"
+        static let Longitude = "longitude"
+    }
+    
     // MARK: JSON Response Keys
     struct JSONResponseKeys {
         static let Results = "results"
+        static let CreatedAt = "createdAt"
+        static let ObjectId = "objectId"
     }
     
 }

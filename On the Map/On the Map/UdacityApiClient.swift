@@ -78,7 +78,7 @@ final class UdacityApiClient: ApiClient {
     
     func dataTaskForGETMethod(method: String, parameters: [String: AnyObject]?, completionHandler block: UdacityTaskCompletionHandler) {
         let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
-        request.HTTPMethod = Constants.HTTTPMethod.Get
+        request.HTTPMethod = HTTTPMethodName.Get
         fetch(request) { (data, response, error) in
             self.checkRespose(data, httpResponse: response, error: error, completionHandler: block)
         }
@@ -90,7 +90,7 @@ final class UdacityApiClient: ApiClient {
     
     func dataTaskForPOSTMethod(method: String, parameters: [String: AnyObject]?, jsonBody: String, completionHandler: UdacityTaskCompletionHandler) {
         let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
-        request.HTTPMethod = Constants.HTTTPMethod.Post
+        request.HTTPMethod = HTTTPMethodName.Post
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
         
         fetch(request) { (data, response, error) in
@@ -104,7 +104,7 @@ final class UdacityApiClient: ApiClient {
     
     func dataTaskForDELETEMethod(method: String, parameters: [String: AnyObject]?, headerFields: [String: String?]?, completionHandler: UdacityTaskCompletionHandler) {
         let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
-        request.HTTPMethod = Constants.HTTTPMethod.DELETE
+        request.HTTPMethod = HTTTPMethodName.DELETE
     
         if let headerFields = headerFields {
             for (key, value) in headerFields {
@@ -142,6 +142,7 @@ final class UdacityApiClient: ApiClient {
         defaults.removeObjectForKey(UserDefaults.UserID)
         defaults.removeObjectForKey(UserDefaults.SessionID)
         defaults.removeObjectForKey(UserDefaults.ExpirationDate)
+        defaults.removeObjectForKey(UserDefaults.CurrentUser)
         defaults.synchronize()
     }
     

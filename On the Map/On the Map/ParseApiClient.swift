@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import MapKit
 
 //-----------------------------------
 // MARK: - ParseApiClient: ApiClient
@@ -40,7 +41,7 @@ class ParseApiClient: ApiClient {
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
         let request = NSMutableURLRequest(URL: parseURLFromParameters(nil, withPathExtension: nil))
-        request.HTTPMethod = Constants.HTTTPMethod.Get
+        request.HTTPMethod = HTTTPMethodName.Get
         
         fetchWithResult(request) { (result) in
             func sendError(error: String) {
@@ -67,6 +68,46 @@ class ParseApiClient: ApiClient {
                 } else {
                     sendError("Failed to sanitized student locations with results: \(results)")
                 }
+            default:
+                sendError("There is an error occured. Try again.")
+            }
+        }
+    }
+    
+    func postStudentLocation(student: User, placemark: CLPlacemark, mediaURL: String, block: (success: Bool, error: NSError?) -> Void) {
+        guard let coordinate = placemark.location?.coordinate else {
+            block(success: false, error: nil)
+            return
+        }
+        
+        let request = NSMutableURLRequest(URL: parseURLFromParameters(nil, withPathExtension: nil))
+        request.HTTPMethod = HTTTPMethodName.Post
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.HTTPBody = "{\"\(JSONBodyKeys.UniqueKey)\": \"\(student.id)\", \"\(JSONBodyKeys.FirstName)\": \"\(student.firstName)\", \"\(JSONBodyKeys.LastName)\": \"\(student.lastName)\",\"\(JSONBodyKeys.MapString)\": \"\(placemark.name!)\", \"\(JSONBodyKeys.MediaURL)\": \"\(mediaURL)\",\"\(JSONBodyKeys.Latitude)\": \(coordinate.latitude), \"\(JSONBodyKeys.Longitude)\": \(coordinate.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
+        
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        
+        fetchWithResult(request) { (result) in
+            func sendError(error: String) {
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                print(error)
+                let userInfo = [NSLocalizedDescriptionKey : error]
+                block(success: false, error: NSError(domain: "com.ivanmagda.On-the-Map.parse.postStudentLocation", code: 20, userInfo: userInfo))
+            }
+            
+            switch result {
+            case .ClientError(let code):
+                sendError("Client's error with code: \(code). Please try again later.")
+            case .Error(let error):
+                sendError(error.localizedDescription)
+            case .Success(let json):
+                guard let createdAt = json[JSONResponseKeys.CreatedAt] as? String,
+                    let objectId = json[JSONResponseKeys.ObjectId] as? String else {
+                        sendError("Failed to access response keys. Probably your locations did not post")
+                      return
+                }
+                print("Posted location id: \(objectId), createdAt: \(createdAt)")
+                block(success: true, error: nil)
             default:
                 sendError("There is an error occured. Try again.")
             }
