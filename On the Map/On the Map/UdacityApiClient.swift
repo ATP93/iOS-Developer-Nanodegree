@@ -21,9 +21,34 @@ final class UdacityApiClient: ApiClient {
     //------------------------------------
     
     // Authentication.
-    var sessionID: String? = nil
-    var userID: String? = nil
-    var expirationDate: String? = nil
+    var sessionID: String? {
+        get {
+            return NSUserDefaults.standardUserDefaults().stringForKey(UserDefaults.SessionID)
+        }
+        set {
+            self.sessionID = newValue
+        }
+    }
+    
+    var userID: String? {
+        get {
+            return NSUserDefaults.standardUserDefaults().stringForKey(UserDefaults.UserID)
+        }
+        
+        set {
+            self.userID = newValue
+        }
+    }
+    
+    var expirationDate: String? {
+        get {
+            return NSUserDefaults.standardUserDefaults().stringForKey(UserDefaults.ExpirationDate)
+        }
+        
+        set {
+            self.expirationDate = newValue
+        }
+    }
     
     static var sharedInstance: UdacityApiClient = {
         let config = NSURLSessionConfiguration.defaultSessionConfiguration()
@@ -45,6 +70,18 @@ final class UdacityApiClient: ApiClient {
         }
         
         return true
+    }
+
+    //------------------------------------
+    // MARK: - GET
+    //------------------------------------
+    
+    func dataTaskForGETMethod(method: String, parameters: [String: AnyObject]?, completionHandler block: UdacityTaskCompletionHandler) {
+        let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
+        request.HTTPMethod = Constants.HTTTPMethod.Get
+        fetch(request) { (data, response, error) in
+            self.checkRespose(data, httpResponse: response, error: error, completionHandler: block)
+        }
     }
     
     //------------------------------------
@@ -84,6 +121,15 @@ final class UdacityApiClient: ApiClient {
     //------------------------------------
     // MARK: - Helpers
     //------------------------------------
+    
+    // Substitute the key for the value that is contained within the method name.
+    func subtituteKeyInMethod(method: String, key: String, value: String) -> String? {
+        if method.rangeOfString("{\(key)}") != nil {
+            return method.stringByReplacingOccurrencesOfString("{\(key)}", withString: value)
+        } else {
+            return nil
+        }
+    }
     
     class func setUserValue(value: AnyObject?, forKey key: String) {
         let defaults = NSUserDefaults.standardUserDefaults()

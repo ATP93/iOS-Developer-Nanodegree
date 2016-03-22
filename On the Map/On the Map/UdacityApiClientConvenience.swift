@@ -9,6 +9,9 @@
 import Foundation
 import UIKit
 
+typealias UdacityConvenientResultBlock = (success: Bool, error: NSError?) -> Void
+typealias UdacityUserResultBlock = (user: User?, error: NSError?) -> Void
+
 //--------------------------------------------------------
 // MARK: - UdacityApiClient (Convenient Resource Methods)
 //--------------------------------------------------------
@@ -19,7 +22,7 @@ extension UdacityApiClient {
     // MARK: Authentication (POST) method
     //----------------------------------------------------
     
-    func authenticateWithUsername(username: String, password: String, andCompletionHandler block: (Bool, NSError?) -> Void) {
+    func authenticateWithUsername(username: String, password: String, completionHandler block: UdacityConvenientResultBlock) {
         let jsonBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
@@ -29,7 +32,7 @@ extension UdacityApiClient {
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                 print(error)
                 let userInfo = [NSLocalizedDescriptionKey : error]
-                block(false, NSError(domain: "com.ivanmagda.On-the-Map.auth", code: 15, userInfo: userInfo))
+                block(success: false, error: NSError(domain: "com.ivanmagda.On-the-Map.auth", code: 15, userInfo: userInfo))
             }
             
             guard error == nil else {
@@ -67,7 +70,7 @@ extension UdacityApiClient {
             
             UIApplication.sharedApplication().networkActivityIndicatorVisible = false
             
-            block(true, nil)
+            block(success: true, error: nil)
         })
     }
     
@@ -75,7 +78,7 @@ extension UdacityApiClient {
     // MARK: Logging Out (DELETE) method
     //----------------------------------------------------
     
-    func logOutWithCompletionHandler(block: (Bool, NSError?) -> Void) {
+    func logOutWithCompletionHandler(block: UdacityConvenientResultBlock) {
         var xsrfCookie: NSHTTPCookie? = nil
         let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
         
@@ -92,7 +95,7 @@ extension UdacityApiClient {
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                 print(error)
                 let userInfo = [NSLocalizedDescriptionKey : error]
-                block(false, NSError(domain: "com.ivanmagda.On-the-Map.logout", code: 16, userInfo: userInfo))
+                block(success: false, error: NSError(domain: "com.ivanmagda.On-the-Map.logout", code: 16, userInfo: userInfo))
             }
             
             guard error == nil else {
@@ -109,7 +112,39 @@ extension UdacityApiClient {
             
             UIApplication.sharedApplication().networkActivityIndicatorVisible = false
             
-            block(true, nil)
+            block(success: true, error: nil)
+        }
+    }
+    
+    func getPublicUserData(userId: String, completionHandler block: UdacityUserResultBlock) {
+        var mutableMethod: String = Methods.UserData
+        mutableMethod = subtituteKeyInMethod(mutableMethod, key: URLKeys.UserID, value: String(UdacityApiClient.sharedInstance.userID!))!
+        
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        
+        dataTaskForGETMethod(mutableMethod, parameters: nil) { (result, error) in
+            func sendError(error: String) {
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                print(error)
+                let userInfo = [NSLocalizedDescriptionKey : error]
+                block(user: nil, error: NSError(domain: "com.ivanmagda.On-the-Map.getPublicUserData", code: 17, userInfo: userInfo))
+            }
+            
+            guard error == nil else {
+                sendError(error!.localizedDescription)
+                return
+            }
+            
+            guard let userJSON = result?[UserKey.UserRootKey.rawValue] as? JSONDictionary else {
+                sendError("Empty response")
+                return
+            }
+            
+            let user = User.decode(userJSON)
+            
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+            
+            block(user: user, error: nil)
         }
     }
     

@@ -22,8 +22,8 @@ extension UdacityApiClient {
     // MARK: Methods
     struct Methods {
         
-        // MARK: Account
-        static let Account = "/users/{id}"
+        // MARK: User
+        static let UserData = "/users/{id}"
         
         // MARK: Authentication
         static let LoggingOut = "/session"

@@ -13,6 +13,12 @@ import UIKit
 //-----------------------------------------------------
 
 class UserAccountViewController: UIViewController {
+    
+    //--------------------------------------------
+    // MARK: Properties
+    //--------------------------------------------
+    
+    var user: User? = nil
  
     //--------------------------------------------
     // MARK: Outlets
@@ -26,6 +32,20 @@ class UserAccountViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let apiClient = UdacityApiClient.sharedInstance
+        apiClient.getPublicUserData(apiClient.userID!) { (user, error) in
+            performOnMain {
+                if let error = error {
+                    print("Failed to get public user data. Error: \(error.localizedDescription)")
+                } else {
+                    if let user = user {
+                        print("Fetched user: \(user)")
+                        self.user = user
+                    }
+                }
+            }
+        }
     }
     
     override func viewWillAppear(animated: Bool) {

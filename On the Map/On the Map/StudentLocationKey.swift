@@ -12,7 +12,7 @@ import Foundation
 // MARK: - StudentLocationKeys: String
 //-------------------------------------
 
-public enum StudentLocationKeys: String {
+public enum StudentLocationKey: String {
     case CreatedAt = "createdAt"
     case UpdatedAt = "updatedAt"
     case FirstName = "firstName"

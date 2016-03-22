@@ -16,17 +16,17 @@ extension StudentLocation: JSONParselable {
     
     static func decode(json: JSONDictionary) -> StudentLocation? {
         guard
-            let objectId = JSON.string(json, key: StudentLocationKeys.ObjectId.rawValue),
-            let uniqueKey = JSON.string(json, key: StudentLocationKeys.UniqueKey.rawValue),
-            let firstName = JSON.string(json, key: StudentLocationKeys.FirstName.rawValue),
-            let lastName = JSON.string(json, key: StudentLocationKeys.LastName.rawValue),
-            let mapString = JSON.string(json, key: StudentLocationKeys.MapString.rawValue),
-            let mediaURLString = JSON.string(json, key: StudentLocationKeys.MediaURL.rawValue),
+            let objectId = JSON.string(json, key: StudentLocationKey.ObjectId.rawValue),
+            let uniqueKey = JSON.string(json, key: StudentLocationKey.UniqueKey.rawValue),
+            let firstName = JSON.string(json, key: StudentLocationKey.FirstName.rawValue),
+            let lastName = JSON.string(json, key: StudentLocationKey.LastName.rawValue),
+            let mapString = JSON.string(json, key: StudentLocationKey.MapString.rawValue),
+            let mediaURLString = JSON.string(json, key: StudentLocationKey.MediaURL.rawValue),
             let mediaURL = NSURL(string: mediaURLString),
-            let latitude = JSON.float(json, key: StudentLocationKeys.Latitude.rawValue),
-            let longitude = JSON.float(json, key: StudentLocationKeys.Longitude.rawValue),
-            let createdAt = JSON.string(json, key: StudentLocationKeys.CreatedAt.rawValue),
-            let updatedAt = JSON.string(json, key: StudentLocationKeys.UpdatedAt.rawValue) else {
+            let latitude = JSON.float(json, key: StudentLocationKey.Latitude.rawValue),
+            let longitude = JSON.float(json, key: StudentLocationKey.Longitude.rawValue),
+            let createdAt = JSON.string(json, key: StudentLocationKey.CreatedAt.rawValue),
+            let updatedAt = JSON.string(json, key: StudentLocationKey.UpdatedAt.rawValue) else {
             return nil
         }
         
