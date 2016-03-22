@@ -17,12 +17,33 @@
                     <view key="view" contentMode="scaleToFill" id="tsR-hK-woN">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="rSD-PA-iiX">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <connections>
+                                    <outlet property="delegate" destination="9pv-A4-QxB" id="fat-Cd-7Rj"/>
+                                </connections>
+                            </mapView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="rSD-PA-iiX" secondAttribute="trailing" id="5i2-c7-dFk"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="rSD-PA-iiX" secondAttribute="bottom" id="HsA-Fb-6kJ"/>
+                            <constraint firstItem="rSD-PA-iiX" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="ODq-za-Ycw"/>
+                            <constraint firstItem="rSD-PA-iiX" firstAttribute="top" secondItem="tsR-hK-woN" secondAttribute="topMargin" id="njo-j9-KYA"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="On The Map" id="NDG-mF-lt2">
                         <barButtonItem key="leftBarButtonItem" image="Marker" id="asz-Bs-p3J" userLabel="PinLocation"/>
-                        <barButtonItem key="rightBarButtonItem" image="Synchronize" id="LFC-BY-DN4" userLabel="Synchronize"/>
+                        <barButtonItem key="rightBarButtonItem" image="Synchronize" id="LFC-BY-DN4" userLabel="Synchronize">
+                            <connections>
+                                <action selector="syncronizeDidPressed:" destination="9pv-A4-QxB" id="TVL-gV-1Es"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="mapView" destination="rSD-PA-iiX" id="cQd-o2-HLK"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
             </objects>
@@ -55,7 +76,7 @@
                                                     <rect key="frame" x="63" y="0.0" width="522" height="43"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="MarkerBlue" id="VkJ-iv-J8H">
@@ -155,7 +176,7 @@
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Username" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="zLL-0W-Cnc">
                                         <rect key="frame" x="20" y="205" width="560" height="44"/>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="SWm-eb-pJ2"/>
                                         </constraints>
@@ -165,7 +186,7 @@
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="NsP-w9-JKy">
                                         <rect key="frame" x="20" y="257" width="560" height="44"/>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="wfF-yE-dT3"/>
                                         </constraints>
@@ -211,7 +232,7 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZzZ-ir-kvB">
                                                 <rect key="frame" x="292" y="1" width="16" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AbT-rj-W3m" userLabel="Separator">

@@ -34,6 +34,9 @@
 		756B8BCA1CA0DF5C009C7355 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756B8BC91CA0DF5C009C7355 /* User.swift */; };
 		756B8BCC1CA0E49E009C7355 /* UserKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756B8BCB1CA0E49E009C7355 /* UserKey.swift */; };
 		756B8BCE1CA0E5A9009C7355 /* User+JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756B8BCD1CA0E5A9009C7355 /* User+JSONParselable.swift */; };
+		758794A21CA10FC200E8B10E /* Alertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A11CA10FC200E8B10E /* Alertable.swift */; };
+		758794A41CA1117E00E8B10E /* StudentLocation+Alertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A31CA1117E00E8B10E /* StudentLocation+Alertable.swift */; };
+		758794A81CA115DF00E8B10E /* GeoLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A71CA115DF00E8B10E /* GeoLocation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +69,9 @@
 		756B8BC91CA0DF5C009C7355 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		756B8BCB1CA0E49E009C7355 /* UserKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserKey.swift; sourceTree = "<group>"; };
 		756B8BCD1CA0E5A9009C7355 /* User+JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+JSONParselable.swift"; sourceTree = "<group>"; };
+		758794A11CA10FC200E8B10E /* Alertable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alertable.swift; sourceTree = "<group>"; };
+		758794A31CA1117E00E8B10E /* StudentLocation+Alertable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StudentLocation+Alertable.swift"; sourceTree = "<group>"; };
+		758794A71CA115DF00E8B10E /* GeoLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoLocation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +157,8 @@
 			children = (
 				7500B01B1C9EE00E0067DEAD /* JSON */,
 				7500B0181C9EDFD90067DEAD /* API */,
+				758794A71CA115DF00E8B10E /* GeoLocation.swift */,
+				758794A11CA10FC200E8B10E /* Alertable.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -181,9 +189,7 @@
 				7500B01E1C9EF85C0067DEAD /* UdacityApiClient.swift */,
 				7500B0231C9F15380067DEAD /* UdacityApiClientConvenience.swift */,
 				7500B0211C9EF9040067DEAD /* UdacityConstants.swift */,
-				756B8BC91CA0DF5C009C7355 /* User.swift */,
-				756B8BCB1CA0E49E009C7355 /* UserKey.swift */,
-				756B8BCD1CA0E5A9009C7355 /* User+JSONParselable.swift */,
+				758794A61CA1119800E8B10E /* User */,
 			);
 			name = Udacity;
 			sourceTree = "<group>";
@@ -193,9 +199,7 @@
 			children = (
 				756583821CA0337C0033326E /* ParseApiClient.swift */,
 				756583841CA035A10033326E /* ParseConstants.swift */,
-				756583771CA029D40033326E /* StudentLocation.swift */,
-				7565837C1CA02CCA0033326E /* StudentLocationKey.swift */,
-				7565837A1CA02C1B0033326E /* StudentLocation+JSONParselable.swift */,
+				758794A51CA1118900E8B10E /* StudentLocation */,
 			);
 			name = Parse;
 			sourceTree = "<group>";
@@ -208,6 +212,27 @@
 				756583801CA030E40033326E /* NSDate+FromString.swift */,
 			);
 			name = Utility;
+			sourceTree = "<group>";
+		};
+		758794A51CA1118900E8B10E /* StudentLocation */ = {
+			isa = PBXGroup;
+			children = (
+				756583771CA029D40033326E /* StudentLocation.swift */,
+				7565837C1CA02CCA0033326E /* StudentLocationKey.swift */,
+				7565837A1CA02C1B0033326E /* StudentLocation+JSONParselable.swift */,
+				758794A31CA1117E00E8B10E /* StudentLocation+Alertable.swift */,
+			);
+			name = StudentLocation;
+			sourceTree = "<group>";
+		};
+		758794A61CA1119800E8B10E /* User */ = {
+			isa = PBXGroup;
+			children = (
+				756B8BC91CA0DF5C009C7355 /* User.swift */,
+				756B8BCB1CA0E49E009C7355 /* UserKey.swift */,
+				756B8BCD1CA0E5A9009C7355 /* User+JSONParselable.swift */,
+			);
+			name = User;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -283,6 +308,7 @@
 			files = (
 				756583781CA029D40033326E /* StudentLocation.swift in Sources */,
 				7500B0081C9ECC3C0067DEAD /* BorderedButton.swift in Sources */,
+				758794A41CA1117E00E8B10E /* StudentLocation+Alertable.swift in Sources */,
 				7500B01A1C9EDFFE0067DEAD /* JSON.swift in Sources */,
 				7500B0051C9ECBB20067DEAD /* LoginViewController.swift in Sources */,
 				756B8BCC1CA0E49E009C7355 /* UserKey.swift in Sources */,
@@ -299,10 +325,12 @@
 				7565837D1CA02CCA0033326E /* StudentLocationKey.swift in Sources */,
 				7500B0241C9F15380067DEAD /* UdacityApiClientConvenience.swift in Sources */,
 				756583831CA0337C0033326E /* ParseApiClient.swift in Sources */,
+				758794A21CA10FC200E8B10E /* Alertable.swift in Sources */,
 				755D540C1C9FC57A0087D9F7 /* Constants.swift in Sources */,
 				756B8BCE1CA0E5A9009C7355 /* User+JSONParselable.swift in Sources */,
 				7500B0091C9ECC3C0067DEAD /* GCDBlackBox.swift in Sources */,
 				7500AFF01C9E88130067DEAD /* MapViewController.swift in Sources */,
+				758794A81CA115DF00E8B10E /* GeoLocation.swift in Sources */,
 				7565837B1CA02C1B0033326E /* StudentLocation+JSONParselable.swift in Sources */,
 				756583851CA035A10033326E /* ParseConstants.swift in Sources */,
 			);

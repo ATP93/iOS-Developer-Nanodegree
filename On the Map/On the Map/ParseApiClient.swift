@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 //-----------------------------------
 // MARK: - ParseApiClient: ApiClient
@@ -36,9 +37,14 @@ class ParseApiClient: ApiClient {
     //-----------------------------------
     
     func getStudentLocationsWithCompletionHandler(block: (locations: [StudentLocation]?, error: NSError?) -> Void) {
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        
         let request = NSMutableURLRequest(URL: parseURLFromParameters(nil, withPathExtension: nil))
+        request.HTTPMethod = Constants.HTTTPMethod.Get
+        
         fetchWithResult(request) { (result) in
             func sendError(error: String) {
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                 print(error)
                 let userInfo = [NSLocalizedDescriptionKey : error]
                 block(locations: nil, error: NSError(domain: "com.ivanmagda.On-the-Map.parse.getStudentLocations", code: 17, userInfo: userInfo))
@@ -56,6 +62,7 @@ class ParseApiClient: ApiClient {
                 }
                 
                 if let locations = StudentLocation.sanitizedStudentLocations(results) {
+                    UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                     block(locations: locations, error: nil)
                 } else {
                     sendError("Failed to sanitized student locations with results: \(results)")

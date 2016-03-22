@@ -8,12 +8,13 @@
 
 import Foundation
 import UIKit
+import MapKit
 
 //------------------------------------
 // MARK: - StudentLocation
 //------------------------------------
 
-struct StudentLocation {
+final class StudentLocation: NSObject {
     
     //------------------------------------
     // MARK: Properties
@@ -37,11 +38,8 @@ struct StudentLocation {
     /// The URL provided by the student.
     let mediaURL: NSURL
     
-    /// The latitude of the student location (ranges from -90 to 90).
-    let latitude: Float
-    
-    /// The longitude of the student location (ranges from -180 to 180).
-    let longitude: Float
+    /// The student location.
+    let location: GeoLocation
     
     /// The date when the student location was created.
     let createdAt: String
@@ -54,17 +52,26 @@ struct StudentLocation {
     //------------------------------------
     
     init(objectId: String, uniqueKey: String, firstName: String, lastName: String, mapString: String,
-        mediaURL: NSURL, latitude: Float, longitude: Float, createdAt: String, updatedAt: String) {
+        mediaURL: NSURL, location: GeoLocation, createdAt: String, updatedAt: String) {
             self.objectId  = objectId
             self.uniqueKey = uniqueKey
             self.firstName = firstName
             self.lastName  = lastName
             self.mapString = mapString
             self.mediaURL  = mediaURL
-            self.latitude  = latitude
-            self.longitude = longitude
+            self.location = location
             self.createdAt = createdAt
             self.updatedAt = updatedAt
+    }
+    
+    convenience init(objectId: String, uniqueKey: String, firstName: String, lastName: String,
+        mapString: String, mediaURL: NSURL, latitude: Double, longitude: Double, createdAt: String,
+        updatedAt: String) {
+        let location = GeoLocation(latitude: latitude, longitude: longitude)
+        
+        self.init(objectId: objectId, uniqueKey: uniqueKey, firstName: firstName, lastName: lastName,
+            mapString: mapString, mediaURL: mediaURL, location: location, createdAt: createdAt,
+            updatedAt: updatedAt)
     }
     
     //------------------------------------
@@ -87,4 +94,26 @@ struct StudentLocation {
         return dicts.flatMap { StudentLocation.decode($0) }
     }
     
+}
+
+//---------------------------------------
+// MARK: - StudentLocation: MKAnnotation
+//---------------------------------------
+
+extension StudentLocation: MKAnnotation {
+    
+    // Center latitude and longitude of the annotation view.
+    // The implementation of this property must be KVO compliant.
+    var coordinate: CLLocationCoordinate2D {
+        return location.coordinate
+    }
+    
+    // Title and subtitle for use by selection UI.
+    var title: String? {
+        return "\(firstName) \(lastName)"
+    }
+    
+    var subtitle: String? {
+        return mediaURL.absoluteString
+    }
 }

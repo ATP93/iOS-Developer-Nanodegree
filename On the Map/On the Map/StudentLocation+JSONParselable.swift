@@ -23,8 +23,8 @@ extension StudentLocation: JSONParselable {
             let mapString = JSON.string(json, key: StudentLocationKey.MapString.rawValue),
             let mediaURLString = JSON.string(json, key: StudentLocationKey.MediaURL.rawValue),
             let mediaURL = NSURL(string: mediaURLString),
-            let latitude = JSON.float(json, key: StudentLocationKey.Latitude.rawValue),
-            let longitude = JSON.float(json, key: StudentLocationKey.Longitude.rawValue),
+            let latitude = JSON.double(json, key: StudentLocationKey.Latitude.rawValue),
+            let longitude = JSON.double(json, key: StudentLocationKey.Longitude.rawValue),
             let createdAt = JSON.string(json, key: StudentLocationKey.CreatedAt.rawValue),
             let updatedAt = JSON.string(json, key: StudentLocationKey.UpdatedAt.rawValue) else {
             return nil
