@@ -1,4 +1,7 @@
 # iOS Networking with Swift
+
+![Platform iOS](https://img.shields.io/badge/platform-iOS-blue.svg)
+
 This projects helps to learn how to incorporate networking into apps, how to harness the power of APIs to display
 images and retrieve movie data.
 
