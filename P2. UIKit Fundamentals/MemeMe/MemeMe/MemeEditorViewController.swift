@@ -9,10 +9,10 @@
 import UIKit
 
 //----------------------------------------------------
-// MARK: - ViewController: UIViewController
+// MARK: - MemeEditorViewController: UIViewController
 //----------------------------------------------------
 
-class ViewController: UIViewController {
+class MemeEditorViewController: UIViewController {
     
     //------------------------------------------------
     // MARK: View Life Cycle
