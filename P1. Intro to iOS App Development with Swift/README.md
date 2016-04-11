@@ -1,4 +1,7 @@
 # Intro to iOS App Development with Swift
+
+![Platform iOS](https://img.shields.io/badge/platform-iOS-blue.svg)
+
 This [course](https://www.udacity.com/course/intro-to-ios-app-development-with-swift--ud585) will introduce you to iOS app development in Swift, a new programming language from Apple, and serves as your launching point into the iOS Developer Nanodegree.
 
 ### Pitch Perfect
