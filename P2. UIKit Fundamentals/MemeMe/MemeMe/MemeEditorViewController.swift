@@ -9,6 +9,15 @@
 import UIKit
 
 //----------------------------------------------------
+// MARK: Types
+//----------------------------------------------------
+
+private enum TextFieldTag: Int {
+    case Top = 100
+    case Bottom = 101
+}
+
+//----------------------------------------------------
 // MARK: - MemeEditorViewController: UIViewController
 //----------------------------------------------------
 
@@ -32,15 +41,42 @@ class MemeEditorViewController: UIViewController {
     /// Image picker controller to let us take/pick photo.
     private var imagePickerController = UIImagePickerController()
     
+    /// Default text attributes for the meme text fields.
+    private lazy var memeTextAttributes: [String: AnyObject] = {
+        return [
+            NSStrokeColorAttributeName : UIColor.blackColor(),
+            NSForegroundColorAttributeName : UIColor.whiteColor(),
+            NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
+            NSStrokeWidthAttributeName : -2.5
+        ]
+    }()
+    
+    private var isBottomTextFieldActive = false
+    private var keyboardOnScreen = false
+    
     //------------------------------------------------
     // MARK: View Life Cycle
     //------------------------------------------------
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
     }
-
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        subscribeToNotification(UIKeyboardWillShowNotification, selector: #selector(MemeEditorViewController.keyboardWillShow(_:)))
+        subscribeToNotification(UIKeyboardWillHideNotification, selector: #selector(MemeEditorViewController.keyboardWillHide(_:)))
+        subscribeToNotification(UIKeyboardDidShowNotification, selector: #selector(MemeEditorViewController.keyboardDidShow(_:)))
+        subscribeToNotification(UIKeyboardDidHideNotification, selector: #selector(MemeEditorViewController.keyboardDidHide(_:)))
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        unsubscribeFromAllNotifications()
+    }
+    
     //------------------------------------------------
     // MARK: Actions
     //------------------------------------------------
@@ -64,6 +100,23 @@ extension MemeEditorViewController {
     private func configureUI() {
         imagePickerController.delegate = self
         cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(.Camera)
+        
+        configureTextField(topTextField, tagType: .Top)
+        configureTextField(bottomTextField, tagType: .Bottom)
+    }
+    
+    private func configureTextField(textField: UITextField, tagType tag: TextFieldTag) {
+        textField.delegate = self
+        textField.tag = tag.rawValue
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.textAlignment = .Center
+        
+        switch tag {
+        case .Top:
+            textField.text = NSLocalizedString("TOP", comment: "Top text field initial text")
+        case .Bottom:
+            textField.text = NSLocalizedString("BOTTOM", comment: "Bottom text field initial text")
+        }
     }
     
     private func presentAlertWithTitle(title: String, message: String?) {
@@ -129,4 +182,91 @@ extension MemeEditorViewController: UIImagePickerControllerDelegate {
 //------------------------------------------------------------------
 
 extension MemeEditorViewController: UINavigationControllerDelegate {
+}
+
+//-------------------------------------------------------
+// MARK: - MemeEditorViewController: UITextFieldDelegate
+//-------------------------------------------------------
+
+extension MemeEditorViewController: UITextFieldDelegate {
+    
+    //----------------------------------------------
+    // MARK: UITextFieldDelegate
+    //----------------------------------------------
+    
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        isBottomTextFieldActive = textField.tag == TextFieldTag.Bottom.rawValue
+        return true
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldShouldEndEditing(textField: UITextField) -> Bool {
+        return textField.text?.characters.count > 0
+    }
+    
+    func textFieldDidEndEditing(textField: UITextField) {
+        isBottomTextFieldActive = false
+    }
+    
+    //----------------------------------------------
+    // MARK: Show/Hide Keyboard
+    //----------------------------------------------
+    
+    func keyboardWillShow(notification: NSNotification) {
+        if !keyboardOnScreen && isBottomTextFieldActive {
+            view.frame.origin.y -= keyboardHeight(notification)
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        if keyboardOnScreen && isBottomTextFieldActive  {
+            view.frame.origin.y += keyboardHeight(notification)
+        }
+    }
+    
+    func keyboardDidShow(notification: NSNotification) {
+        keyboardOnScreen = true
+    }
+    
+    func keyboardDidHide(notification: NSNotification) {
+        keyboardOnScreen = false
+    }
+    
+    private func keyboardHeight(notification: NSNotification) -> CGFloat {
+        let userInfo = notification.userInfo
+        let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
+        return keyboardSize.CGRectValue().height
+    }
+    
+    private func resignIfFirstResponder(textField: UITextField) {
+        if textField.isFirstResponder() {
+            textField.resignFirstResponder()
+        }
+    }
+    
+    @IBAction func userDidTapView(sender: AnyObject) {
+        resignIfFirstResponder(topTextField)
+        resignIfFirstResponder(bottomTextField)
+    }
+    
+}
+
+//--------------------------------------------------
+// MARK: - MemeEditorViewController (Notifications)
+//--------------------------------------------------
+
+extension MemeEditorViewController {
+    
+    private func subscribeToNotification(notification: String, selector: Selector) {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: notification, object: nil)
+    }
+    
+    private func unsubscribeFromAllNotifications() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
 }
