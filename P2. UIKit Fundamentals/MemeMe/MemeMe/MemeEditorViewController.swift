@@ -27,11 +27,14 @@ class MemeEditorViewController: UIViewController {
     // MARK: Outlets
     //------------------------------------------------
     
+    @IBOutlet weak var memeEditorContainerView: UIView!
+    
     @IBOutlet weak var imageView: UIImageView!
     
     @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var bottomTextField: UITextField!
     
+    @IBOutlet weak var shareMemeButton: UIBarButtonItem!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     
     //------------------------------------------------
@@ -53,6 +56,8 @@ class MemeEditorViewController: UIViewController {
     
     private var isBottomTextFieldActive = false
     private var keyboardOnScreen = false
+    
+    private var meme: Meme?
     
     //------------------------------------------------
     // MARK: View Life Cycle
@@ -89,6 +94,9 @@ class MemeEditorViewController: UIViewController {
         photoFromLibrary()
     }
     
+    @IBAction func shareMemeDidPressed(sender: UIBarButtonItem) {
+        meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imageView.image!, memedImage: memeEditorContainerView.generateImage())
+    }
 }
 
 //-------------------------------------------------------------------
@@ -103,6 +111,8 @@ extension MemeEditorViewController {
         
         configureTextField(topTextField, tagType: .Top)
         configureTextField(bottomTextField, tagType: .Bottom)
+        
+        updateShareButtonState()
     }
     
     private func configureTextField(textField: UITextField, tagType tag: TextFieldTag) {
@@ -117,6 +127,10 @@ extension MemeEditorViewController {
         case .Bottom:
             textField.text = NSLocalizedString("BOTTOM", comment: "Bottom text field initial text")
         }
+    }
+    
+    private func updateShareButtonState() {
+        shareMemeButton.enabled = meme != nil
     }
     
     private func presentAlertWithTitle(title: String, message: String?) {
@@ -140,6 +154,7 @@ extension MemeEditorViewController: UIImagePickerControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imageView.image = pickedImage
+            updateShareButtonState()
         }
         dismissViewControllerAnimated(true, completion: nil)
     }

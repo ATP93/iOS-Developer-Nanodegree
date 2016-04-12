@@ -18,10 +18,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="auR-N5-HFN" userLabel="MemeEditorContainerView">
-                                <rect key="frame" x="0.0" y="44" width="320" height="480"/>
+                                <rect key="frame" x="0.0" y="45" width="320" height="479"/>
                                 <subviews>
                                     <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5Ov-1Y-9OF">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="479"/>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="jtB-T0-KLw" appends="YES" id="gPx-Mg-VK3"/>
                                         </connections>
@@ -32,7 +32,7 @@
                                         <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="BOTTOM" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nkB-0N-z1q">
-                                        <rect key="frame" x="20" y="400" width="280" height="48"/>
+                                        <rect key="frame" x="20" y="399" width="280" height="48"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no"/>
                                     </textField>
@@ -53,8 +53,15 @@
                             </view>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lo6-n3-Ful" userLabel="TopToolbar">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="v50-vA-Eyk"/>
+                                </constraints>
                                 <items>
-                                    <barButtonItem systemItem="action" id="elT-Ml-rz5"/>
+                                    <barButtonItem enabled="NO" systemItem="action" id="elT-Ml-rz5">
+                                        <connections>
+                                            <action selector="shareMemeDidPressed:" destination="BYZ-38-t0r" id="wCa-wA-16x"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FSl-qP-lMn" userLabel="SeparatorView">
@@ -66,6 +73,9 @@
                             </view>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Nm-hh-ZE2" userLabel="BottomToolbar">
                                 <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="ak8-H5-LM3"/>
+                                </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="0Lh-v2-DCS"/>
                                     <barButtonItem image="Camera" id="N60-3O-6JM" userLabel="CameraBarButtontem">
@@ -86,8 +96,8 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="9Nm-hh-ZE2" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="0Ag-MI-SEE"/>
-                            <constraint firstItem="auR-N5-HFN" firstAttribute="top" secondItem="lo6-n3-Ful" secondAttribute="bottom" id="9ch-40-pyY"/>
                             <constraint firstItem="FSl-qP-lMn" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="JVe-Da-ehR"/>
+                            <constraint firstItem="auR-N5-HFN" firstAttribute="top" secondItem="FSl-qP-lMn" secondAttribute="bottom" id="M4B-qn-v4i"/>
                             <constraint firstAttribute="trailing" secondItem="auR-N5-HFN" secondAttribute="trailing" id="NMN-Ck-1lN"/>
                             <constraint firstAttribute="trailing" secondItem="FSl-qP-lMn" secondAttribute="trailing" id="PNk-pU-uWa"/>
                             <constraint firstItem="9Nm-hh-ZE2" firstAttribute="top" secondItem="auR-N5-HFN" secondAttribute="bottom" id="aVG-nC-AFJ"/>
@@ -105,6 +115,8 @@
                         <outlet property="bottomTextField" destination="nkB-0N-z1q" id="VFA-Za-HOw"/>
                         <outlet property="cameraButton" destination="N60-3O-6JM" id="hpO-XW-eBy"/>
                         <outlet property="imageView" destination="5Ov-1Y-9OF" id="vo4-gw-CvC"/>
+                        <outlet property="memeEditorContainerView" destination="auR-N5-HFN" id="zBg-NH-CNb"/>
+                        <outlet property="shareMemeButton" destination="elT-Ml-rz5" id="k3o-ty-Xrh"/>
                         <outlet property="topTextField" destination="cJa-8v-dEg" id="2Ck-u2-qw5"/>
                     </connections>
                 </viewController>
