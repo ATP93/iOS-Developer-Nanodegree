@@ -38,13 +38,15 @@ class MemesCollectionViewController: UICollectionViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         switch SegueIdentifier(rawValue: segue.identifier!)! {
         case .CreateMeme:
-            print("create meme")
-            let controller = segue.destinationViewController as! MemeEditorViewController
+            let navigationController = segue.destinationViewController as! UINavigationController
+            let controller = navigationController.topViewController as! MemeViewController
             controller.title = NSLocalizedString("Create", comment: "DetailMemeController create meme title")
+            controller.presentationType = .CreateMeme
         case .ShowMeme:
             print("show meme")
-            let controller = segue.destinationViewController as! MemeEditorViewController
+            let controller = segue.destinationViewController as! MemeViewController
             controller.title = NSLocalizedString("Detail", comment: "DetailMemeController detail meme title")
+            controller.presentationType = .ShowMeme
         }
     }
 
@@ -55,7 +57,6 @@ class MemesCollectionViewController: UICollectionViewController {
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
     }
-
 
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 10

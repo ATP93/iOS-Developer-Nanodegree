@@ -18,10 +18,10 @@ private enum TextFieldTag: Int {
 }
 
 //----------------------------------------------------
-// MARK: - MemeEditorViewController: UIViewController
+// MARK: - MemeViewController: UIViewController
 //----------------------------------------------------
 
-class MemeEditorViewController: UIViewController {
+class MemeViewController: UIViewController {
     
     //------------------------------------------------
     // MARK: Outlets
@@ -34,12 +34,15 @@ class MemeEditorViewController: UIViewController {
     @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var bottomTextField: UITextField!
     
-    @IBOutlet weak var shareMemeButton: UIBarButtonItem!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     
     //------------------------------------------------
     // MARK: Properties
     //------------------------------------------------
+    
+    var presentationType = MemeViewControllerPresentationType.ShowMeme
+    
+    private var shareMemeButton: UIBarButtonItem!
     
     /// Image picker controller to let us take/pick photo.
     private var imagePickerController = UIImagePickerController()
@@ -70,11 +73,7 @@ class MemeEditorViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        subscribeToNotification(UIKeyboardWillShowNotification, selector: #selector(MemeEditorViewController.keyboardWillShow(_:)))
-        subscribeToNotification(UIKeyboardWillHideNotification, selector: #selector(MemeEditorViewController.keyboardWillHide(_:)))
-        subscribeToNotification(UIKeyboardDidShowNotification, selector: #selector(MemeEditorViewController.keyboardDidShow(_:)))
-        subscribeToNotification(UIKeyboardDidHideNotification, selector: #selector(MemeEditorViewController.keyboardDidHide(_:)))
+        subscribeToKeyboardNotifications()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -94,25 +93,46 @@ class MemeEditorViewController: UIViewController {
         photoFromLibrary()
     }
     
-    @IBAction func shareMemeDidPressed(sender: UIBarButtonItem) {
+    func shareMeme() {
         meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imageView.image!, memedImage: memeEditorContainerView.generateImage())
     }
+    
+    func dismiss() {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
 }
 
 //-------------------------------------------------------------------
-// MARK: - MemeEditorViewController (UI Functions)
+// MARK: - MemeViewController (UI Functions)
 //-------------------------------------------------------------------
 
-extension MemeEditorViewController {
+extension MemeViewController {
     
     private func configureUI() {
+        shareMemeButton = UIBarButtonItem(barButtonSystemItem: .Action,
+                                          target: self,
+                                          action: #selector(MemeViewController.shareMeme))
+        switch presentationType {
+        case .CreateMeme:
+            let cancelButton = UIBarButtonItem(title: NSLocalizedString("Cancel",
+                comment: "Cancel bar button item title"),
+                                               style: .Plain,
+                                               target: self,
+                                               action: #selector(MemeViewController.dismiss))
+            navigationItem.leftBarButtonItem = shareMemeButton
+            navigationItem.rightBarButtonItem = cancelButton
+        case .ShowMeme:
+            navigationItem.rightBarButtonItem = shareMemeButton
+        }
+        
         imagePickerController.delegate = self
         cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(.Camera)
         
         configureTextField(topTextField, tagType: .Top)
         configureTextField(bottomTextField, tagType: .Bottom)
         
-        updateShareButtonState()
+        updateShareButtonEnabledState()
     }
     
     private func configureTextField(textField: UITextField, tagType tag: TextFieldTag) {
@@ -129,7 +149,7 @@ extension MemeEditorViewController {
         }
     }
     
-    private func updateShareButtonState() {
+    private func updateShareButtonEnabledState() {
         shareMemeButton.enabled = meme != nil
     }
     
@@ -142,10 +162,10 @@ extension MemeEditorViewController {
 }
 
 //-------------------------------------------------------------------
-// MARK: - MemeEditorViewController: UIImagePickerControllerDelegate
+// MARK: - MemeViewController: UIImagePickerControllerDelegate
 //-------------------------------------------------------------------
 
-extension MemeEditorViewController: UIImagePickerControllerDelegate {
+extension MemeViewController: UIImagePickerControllerDelegate {
     
     //---------------------------------------
     // MARK: UIImagePickerControllerDelegate
@@ -154,7 +174,7 @@ extension MemeEditorViewController: UIImagePickerControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             imageView.image = pickedImage
-            updateShareButtonState()
+            updateShareButtonEnabledState()
         }
         dismissViewControllerAnimated(true, completion: nil)
     }
@@ -193,17 +213,17 @@ extension MemeEditorViewController: UIImagePickerControllerDelegate {
 }
 
 //------------------------------------------------------------------
-// MARK: - MemeEditorViewController: UINavigationControllerDelegate
+// MARK: - MemeViewController: UINavigationControllerDelegate
 //------------------------------------------------------------------
 
-extension MemeEditorViewController: UINavigationControllerDelegate {
+extension MemeViewController: UINavigationControllerDelegate {
 }
 
 //-------------------------------------------------------
-// MARK: - MemeEditorViewController: UITextFieldDelegate
+// MARK: - MemeViewController: UITextFieldDelegate
 //-------------------------------------------------------
 
-extension MemeEditorViewController: UITextFieldDelegate {
+extension MemeViewController: UITextFieldDelegate {
     
     //----------------------------------------------
     // MARK: UITextFieldDelegate
@@ -271,10 +291,17 @@ extension MemeEditorViewController: UITextFieldDelegate {
 }
 
 //--------------------------------------------------
-// MARK: - MemeEditorViewController (Notifications)
+// MARK: - MemeViewController (Notifications)
 //--------------------------------------------------
 
-extension MemeEditorViewController {
+extension MemeViewController {
+    
+    private func subscribeToKeyboardNotifications() {
+        subscribeToNotification(UIKeyboardWillShowNotification, selector: #selector(MemeViewController.keyboardWillShow(_:)))
+        subscribeToNotification(UIKeyboardWillHideNotification, selector: #selector(MemeViewController.keyboardWillHide(_:)))
+        subscribeToNotification(UIKeyboardDidShowNotification, selector: #selector(MemeViewController.keyboardDidShow(_:)))
+        subscribeToNotification(UIKeyboardDidHideNotification, selector: #selector(MemeViewController.keyboardDidHide(_:)))
+    }
     
     private func subscribeToNotification(notification: String, selector: Selector) {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: notification, object: nil)

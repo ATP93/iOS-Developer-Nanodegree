@@ -66,7 +66,7 @@
                     <navigationItem key="navigationItem" title="Memes" id="oVn-6F-DXT">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="EeM-ai-MnG">
                             <connections>
-                                <segue destination="BYZ-38-t0r" kind="show" identifier="CreateMeme" id="xXi-o4-j4N"/>
+                                <segue destination="mTP-7o-Enw" kind="presentation" identifier="CreateMeme" id="uYM-oV-3j7"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -79,7 +79,7 @@
         <!--Detail-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="MemeEditorViewController" customModule="MemeMe" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MemeViewController" customModule="MemeMe" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -155,20 +155,12 @@
                             <constraint firstItem="auR-N5-HFN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="lVF-YH-mYM"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Detail" id="4VB-We-3GM">
-                        <barButtonItem key="leftBarButtonItem" enabled="NO" systemItem="action" id="elT-Ml-rz5">
-                            <connections>
-                                <action selector="shareMemeDidPressed:" destination="BYZ-38-t0r" id="wCa-wA-16x"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="9Wh-f4-LyA"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Detail" id="4VB-We-3GM"/>
                     <connections>
                         <outlet property="bottomTextField" destination="nkB-0N-z1q" id="VFA-Za-HOw"/>
                         <outlet property="cameraButton" destination="N60-3O-6JM" id="hpO-XW-eBy"/>
                         <outlet property="imageView" destination="5Ov-1Y-9OF" id="vo4-gw-CvC"/>
                         <outlet property="memeEditorContainerView" destination="auR-N5-HFN" id="zBg-NH-CNb"/>
-                        <outlet property="shareMemeButton" destination="elT-Ml-rz5" id="k3o-ty-Xrh"/>
                         <outlet property="topTextField" destination="cJa-8v-dEg" id="2Ck-u2-qw5"/>
                     </connections>
                 </viewController>
@@ -179,7 +171,23 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="899" y="354"/>
+            <point key="canvasLocation" x="1379" y="354"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="ozA-GH-9re">
+            <objects>
+                <navigationController id="mTP-7o-Enw" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="yfd-G5-zOn">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="Xk7-6R-KQg"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bAq-12-qEl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="935" y="782"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Eik-Oa-39l">
