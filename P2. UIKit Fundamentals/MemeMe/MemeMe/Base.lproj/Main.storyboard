@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
-        <!--Memes-->
+        <!--MyMemes-->
         <scene sceneID="L2X-qR-vY0">
             <objects>
                 <collectionViewController id="JLg-Ra-BJc" customClass="MemesCollectionViewController" customModule="MemeMe" customModuleProvider="target" sceneMemberID="viewController">
@@ -14,45 +14,32 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="8" minimumInteritemSpacing="8" id="Jgr-ND-6rj">
-                            <size key="itemSize" width="140" height="140"/>
+                            <size key="itemSize" width="304" height="240"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="8" minY="8" maxX="8" maxY="8"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MemeCollectionViewCell" id="AvL-Ve-Sey" customClass="MemeCollectionViewCell" customModule="MemeMe" customModuleProvider="target">
-                                <rect key="frame" x="8" y="72" width="140" height="140"/>
+                                <rect key="frame" x="8" y="72" width="304" height="240"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="140" height="140"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="304" height="240"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dpb-bW-AJy">
-                                            <rect key="frame" x="0.0" y="0.0" width="140" height="100"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="100" id="sJo-VK-Qye"/>
-                                            </constraints>
+                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="251" verticalCompressionResistancePriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dpb-bW-AJy">
+                                            <rect key="frame" x="0.0" y="0.0" width="304" height="240"/>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S4A-CU-gGy">
-                                            <rect key="frame" x="0.0" y="108" width="140" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="dpb-bW-AJy" secondAttribute="trailing" id="IzM-tP-qyd"/>
-                                    <constraint firstItem="S4A-CU-gGy" firstAttribute="leading" secondItem="AvL-Ve-Sey" secondAttribute="leading" id="RMQ-TR-rKB"/>
-                                    <constraint firstItem="dpb-bW-AJy" firstAttribute="leading" secondItem="AvL-Ve-Sey" secondAttribute="leading" id="U41-B5-dF0"/>
-                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="S4A-CU-gGy" secondAttribute="bottom" id="XSB-og-HOw"/>
-                                    <constraint firstItem="dpb-bW-AJy" firstAttribute="top" secondItem="AvL-Ve-Sey" secondAttribute="top" id="evq-kn-6wR"/>
-                                    <constraint firstAttribute="trailing" secondItem="S4A-CU-gGy" secondAttribute="trailing" id="tgq-Ox-iLm"/>
-                                    <constraint firstItem="S4A-CU-gGy" firstAttribute="top" secondItem="dpb-bW-AJy" secondAttribute="bottom" constant="8" symbolic="YES" id="uGZ-GV-ZVc"/>
+                                    <constraint firstItem="dpb-bW-AJy" firstAttribute="top" secondItem="AvL-Ve-Sey" secondAttribute="top" id="YcW-1H-JmO"/>
+                                    <constraint firstItem="dpb-bW-AJy" firstAttribute="leading" secondItem="AvL-Ve-Sey" secondAttribute="leading" id="ciI-jK-Vfz"/>
+                                    <constraint firstAttribute="trailing" secondItem="dpb-bW-AJy" secondAttribute="trailing" id="dtk-8J-h0Z"/>
+                                    <constraint firstAttribute="bottom" secondItem="dpb-bW-AJy" secondAttribute="bottom" id="nQR-iE-uYS"/>
                                 </constraints>
                                 <connections>
-                                    <outlet property="memeLabel" destination="S4A-CU-gGy" id="QWz-ro-LUD"/>
                                     <outlet property="memedImageView" destination="dpb-bW-AJy" id="4jG-JK-rnj"/>
                                     <segue destination="BYZ-38-t0r" kind="show" identifier="ShowMeme" id="t3q-EV-MWp"/>
                                 </connections>
@@ -63,7 +50,7 @@
                             <outlet property="delegate" destination="JLg-Ra-BJc" id="MNF-j0-Gcz"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="Memes" id="oVn-6F-DXT">
+                    <navigationItem key="navigationItem" title="MyMemes" id="oVn-6F-DXT">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="EeM-ai-MnG">
                             <connections>
                                 <segue destination="mTP-7o-Enw" kind="presentation" identifier="CreateMeme" id="uYM-oV-3j7"/>

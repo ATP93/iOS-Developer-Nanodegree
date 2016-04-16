@@ -29,6 +29,8 @@ class MemesCollectionViewController: UICollectionViewController {
     
     var memesPersistence: MemesPersistence!
 
+    private static let sectionInsets = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
+    
     //--------------------------------------------
     // MARK: View Life Cycle
     //--------------------------------------------
@@ -78,11 +80,35 @@ class MemesCollectionViewController: UICollectionViewController {
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MemeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MemeCollectionViewCell
         cell.memedImageView.image = meme.memedImage
-        cell.memeLabel.text = "\(meme.topText), \(meme.bottomText)"
     
         return cell
     }
 
+}
+
+//---------------------------------------------------------------------------
+// MARK: - MemesCollectionViewController: UICollectionViewDelegateFlowLayout
+//---------------------------------------------------------------------------
+
+extension MemesCollectionViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        let screenWidth = screenSize().width
+        let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        
+        let delegateFlowLayout = collectionView.delegate as! UICollectionViewDelegateFlowLayout
+        let sectionInset = delegateFlowLayout.collectionView!(collectionView, layout: flowLayout, insetForSectionAtIndex: indexPath.section)
+        
+        let width = screenWidth - (sectionInset.left + sectionInset.right)
+        
+        return CGSize(width: width, height: MemeCollectionViewCell.defaultHeight)
+    }
+    
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        return MemesCollectionViewController.sectionInsets
+    }
+    
 }
 
 //-------------------------------------------------------------------

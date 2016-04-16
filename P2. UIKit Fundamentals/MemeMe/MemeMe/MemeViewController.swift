@@ -99,46 +99,7 @@ class MemeViewController: UIViewController {
         photoFromLibrary()
     }
     
-    func shareMeme() {
-        func generateMeme() -> Meme {
-            return Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imageView.image!, memedImage: memeEditorContainerView.generateImage())
-        }
-        
-        func share() {
-            let memeToShare = generateMeme()
-            
-            let activityViewController = UIActivityViewController(activityItems: [memeToShare.memedImage], applicationActivities: nil)
-            
-            let completionHandler: UIActivityViewControllerCompletionWithItemsHandler = {
-                (activityType: String?, completed: Bool, items: [AnyObject]?, error: NSError?) in
-                guard error == nil else {
-                    self.presentAlert(message: error!.localizedDescription)
-                    return
-                }
-                
-                if completed && self.delegate != nil {
-                    self.meme = memeToShare
-                    self.delegate?.memeViewController(self, didDoneOnMemeShare: self.meme!)
-                    
-                    let alert = UIAlertController(
-                        title: NSLocalizedString("Shared", comment: "Shared alert title"),
-                        message: NSLocalizedString("Your meme successfully shared", comment: "Meme share alert message"),
-                        preferredStyle: .Alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
-                        if self.presentationType == MemeViewControllerPresentationType.ShowMeme {
-                            self.navigationController?.popViewControllerAnimated(true)
-                        } else {
-                            self.dismissViewControllerAnimated(true, completion: nil)
-                        }
-                    }))
-                    self.presentViewController(alert, animated: true, completion: nil)
-                }
-            }
-            activityViewController.completionWithItemsHandler = completionHandler
-            
-            presentViewController(activityViewController, animated: true, completion: nil)
-        }
-        
+    func actionBarButtonItemDidPressed() {
         if presentationType == MemeViewControllerPresentationType.ShowMeme {
             let alertController = UIAlertController(title: NSLocalizedString("Choose an action", comment: "Choose action alert controller title"), message: nil, preferredStyle: .ActionSheet)
             
@@ -150,7 +111,7 @@ class MemeViewController: UIViewController {
                     return
                 }
                 
-                let newMeme = generateMeme()
+                let newMeme = self.generateMeme()
                 self.meme?.topText = newMeme.topText
                 self.meme?.bottomText = newMeme.bottomText
                 self.meme?.originalImage = newMeme.originalImage
@@ -169,7 +130,7 @@ class MemeViewController: UIViewController {
                     return
                 }
                 
-                share()
+                self.share()
             }))
             
             /**
@@ -207,6 +168,49 @@ class MemeViewController: UIViewController {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
+    //------------------------------------------------
+    // MARK: Helpers
+    //------------------------------------------------
+    
+    private func generateMeme() -> Meme {
+        return Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imageView.image!, memedImage: memeEditorContainerView.generateImage())
+    }
+    
+    private func share() {
+        let memeToShare = generateMeme()
+        
+        let activityViewController = UIActivityViewController(activityItems: [memeToShare.memedImage], applicationActivities: nil)
+        
+        let completionHandler: UIActivityViewControllerCompletionWithItemsHandler = {
+            (activityType: String?, completed: Bool, items: [AnyObject]?, error: NSError?) in
+            guard error == nil else {
+                self.presentAlert(message: error!.localizedDescription)
+                return
+            }
+            
+            if completed && self.delegate != nil {
+                self.meme = memeToShare
+                self.delegate?.memeViewController(self, didDoneOnMemeShare: self.meme!)
+                
+                let alert = UIAlertController(
+                    title: NSLocalizedString("Success", comment: "Success alert title"),
+                    message: NSLocalizedString("Your meme action successfully performed", comment: "Meme action alert message"),
+                    preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
+                    if self.presentationType == MemeViewControllerPresentationType.ShowMeme {
+                        self.navigationController?.popViewControllerAnimated(true)
+                    } else {
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                    }
+                }))
+                self.presentViewController(alert, animated: true, completion: nil)
+            }
+        }
+        activityViewController.completionWithItemsHandler = completionHandler
+        
+        presentViewController(activityViewController, animated: true, completion: nil)
+    }
+    
 }
 
 //-------------------------------------------------------------------
@@ -218,7 +222,7 @@ extension MemeViewController {
     private func configureUI() {
         shareMemeButton = UIBarButtonItem(barButtonSystemItem: .Action,
                                           target: self,
-                                          action: #selector(MemeViewController.shareMeme))
+                                          action: #selector(MemeViewController.actionBarButtonItemDidPressed))
         switch presentationType {
         case .CreateMeme:
             let cancelButton = UIBarButtonItem(title: NSLocalizedString("Cancel",
@@ -251,11 +255,13 @@ extension MemeViewController {
         textField.defaultTextAttributes = memeTextAttributes
         textField.textAlignment = .Center
         
-        switch tag {
-        case .Top:
-            textField.text = NSLocalizedString("TOP", comment: "Top text field initial text")
-        case .Bottom:
-            textField.text = NSLocalizedString("BOTTOM", comment: "Bottom text field initial text")
+        if presentationType == MemeViewControllerPresentationType.CreateMeme {
+            switch tag {
+            case .Top:
+                textField.text = NSLocalizedString("TOP", comment: "Top text field initial text")
+            case .Bottom:
+                textField.text = NSLocalizedString("BOTTOM", comment: "Bottom text field initial text")
+            }
         }
     }
     

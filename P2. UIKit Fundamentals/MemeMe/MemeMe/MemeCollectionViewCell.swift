@@ -19,9 +19,10 @@ class MemeCollectionViewCell: UICollectionViewCell {
     //--------------------------------------
     
     @IBOutlet weak var memedImageView: UIImageView!
-    @IBOutlet weak var memeLabel: UILabel!
     
     /// Cell reuse identifier.
     static let reuseIdentifier = "MemeCollectionViewCell"
+    
+    static let defaultHeight: CGFloat = 240.0
     
 }
