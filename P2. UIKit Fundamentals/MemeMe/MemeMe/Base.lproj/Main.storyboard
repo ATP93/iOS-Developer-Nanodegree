@@ -136,7 +136,7 @@
                                         <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" autocorrectionType="no"/>
                                     </textField>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="nkB-0N-z1q" firstAttribute="leading" secondItem="auR-N5-HFN" secondAttribute="leading" constant="20" symbolic="YES" id="2Rj-ds-nhF"/>
                                     <constraint firstItem="cJa-8v-dEg" firstAttribute="leading" secondItem="auR-N5-HFN" secondAttribute="leading" constant="20" symbolic="YES" id="E5b-1j-4hT"/>
@@ -172,7 +172,7 @@
                                 </items>
                             </toolbar>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="9Nm-hh-ZE2" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="0Ag-MI-SEE"/>
                             <constraint firstItem="auR-N5-HFN" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Aoi-qA-cFl"/>
