@@ -104,9 +104,20 @@ class MemeViewController: UIViewController {
             let alertController = UIAlertController(title: NSLocalizedString("Choose an action", comment: "Choose action alert controller title"), message: nil, preferredStyle: .ActionSheet)
             
             /**
-             * Save meme
+             * Share meme
              */
-            alertController.addAction(UIAlertAction(title: NSLocalizedString("Save", comment: "Save action name"), style: .Default, handler: { action in
+            alertController.addAction(UIAlertAction(title: NSLocalizedString("Share", comment: "Share meme action name"), style: .Default, handler: { action in
+                guard self.delegate != nil else {
+                    return
+                }
+                
+                self.share()
+            }))
+            
+            /**
+             * Update meme
+             */
+            alertController.addAction(UIAlertAction(title: NSLocalizedString("Update", comment: "Update action name"), style: .Default, handler: { action in
                 guard self.delegate != nil else {
                     return
                 }
@@ -120,17 +131,6 @@ class MemeViewController: UIViewController {
                 self.delegate!.memeViewController(self, didDoneOnMemeEditing: self.meme!)
                 
                 self.presentAlert(title: NSLocalizedString("Saved", comment: "Saved alert title"), message: NSLocalizedString("Your meme has been successfully saved", comment: "Saved alert meme message"))
-            }))
-            
-            /**
-             * Share meme
-             */
-            alertController.addAction(UIAlertAction(title: NSLocalizedString("Share", comment: "Share meme action name"), style: .Default, handler: { action in
-                guard self.delegate != nil else {
-                    return
-                }
-                
-                self.share()
             }))
             
             /**

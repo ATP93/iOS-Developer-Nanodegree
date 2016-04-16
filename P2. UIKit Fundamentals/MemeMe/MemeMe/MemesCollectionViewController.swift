@@ -146,9 +146,11 @@ extension MemesCollectionViewController: UICollectionViewDelegateFlowLayout {
 extension MemesCollectionViewController: MemeViewControllerDelegate {
     
     func memeViewController(controller: MemeViewController, didDoneOnMemeShare meme: Meme) {
-        memesPersistence.memes.append(meme)
-        memesPersistence.saveMemes()
-        collectionView?.reloadData()
+        if controller.presentationType == MemeViewControllerPresentationType.CreateMeme {
+            memesPersistence.memes.append(meme)
+            memesPersistence.saveMemes()
+            collectionView?.reloadData()
+        }
     }
     
     func memeViewController(controller: MemeViewController, didDoneOnMemeEditing meme: Meme) {
