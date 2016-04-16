@@ -60,7 +60,7 @@ class MemeViewController: UIViewController {
         ]
     }()
     
-    private var isBottomTextFieldActive = false
+    private var isBottomTextField = false
     private var keyboardOnScreen = false
     
     //------------------------------------------------
@@ -346,7 +346,7 @@ extension MemeViewController: UITextFieldDelegate {
     //----------------------------------------------
     
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        isBottomTextFieldActive = textField.tag == TextFieldTag.Bottom.rawValue
+        isBottomTextField = textField.tag == TextFieldTag.Bottom.rawValue
         return true
     }
     
@@ -360,7 +360,7 @@ extension MemeViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(textField: UITextField) {
-        isBottomTextFieldActive = false
+        isBottomTextField = false
     }
     
     //----------------------------------------------
@@ -368,14 +368,14 @@ extension MemeViewController: UITextFieldDelegate {
     //----------------------------------------------
     
     func keyboardWillShow(notification: NSNotification) {
-        if !keyboardOnScreen && isBottomTextFieldActive {
-            view.frame.origin.y -= keyboardHeight(notification)
+        if !keyboardOnScreen && isBottomTextField {
+            view.frame.origin.y = keyboardHeight(notification) * -1
         }
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        if keyboardOnScreen && isBottomTextFieldActive  {
-            view.frame.origin.y += keyboardHeight(notification)
+        if keyboardOnScreen && isBottomTextField  {
+            view.frame.origin.y = 0
         }
     }
     
