@@ -44,6 +44,47 @@
                                     <segue destination="BYZ-38-t0r" kind="show" identifier="ShowMeme" id="t3q-EV-MWp"/>
                                 </connections>
                             </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="EmptyDataSourceCell" id="rPY-rU-Hes" customClass="MemeCollectionViewEmptyDataSourceCell" customModule="MemeMe" customModuleProvider="target">
+                                <rect key="frame" x="8" y="320" width="304" height="124"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="304" height="124"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You are currently don not have any meme ☹️ Let's create one!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Udt-af-4nR">
+                                            <rect key="frame" x="0.0" y="0.0" width="304" height="41"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ovm-Zt-Ahe" customClass="BorderedButton" customModule="MemeMe" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="80" width="304" height="44"/>
+                                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="44" id="1hx-4q-g4c"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                            <state key="normal" title="Create">
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="Udt-af-4nR" firstAttribute="top" secondItem="rPY-rU-Hes" secondAttribute="top" id="M3v-ai-TjH"/>
+                                    <constraint firstAttribute="bottom" secondItem="Ovm-Zt-Ahe" secondAttribute="bottom" id="Ml1-pe-IVK"/>
+                                    <constraint firstItem="Ovm-Zt-Ahe" firstAttribute="leading" secondItem="rPY-rU-Hes" secondAttribute="leading" id="WWC-4Z-DA9"/>
+                                    <constraint firstAttribute="trailing" secondItem="Udt-af-4nR" secondAttribute="trailing" id="fhN-Lc-n9i"/>
+                                    <constraint firstItem="Udt-af-4nR" firstAttribute="leading" secondItem="rPY-rU-Hes" secondAttribute="leading" id="k8b-2e-V1v"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ovm-Zt-Ahe" secondAttribute="trailing" id="li7-zy-QVg"/>
+                                </constraints>
+                                <size key="customSize" width="304" height="124"/>
+                                <connections>
+                                    <outlet property="createMemeButton" destination="Ovm-Zt-Ahe" id="Ttl-Qg-lIy"/>
+                                    <outlet property="messageLabel" destination="Udt-af-4nR" id="XXe-j6-ZKk"/>
+                                </connections>
+                            </collectionViewCell>
                         </cells>
                         <connections>
                             <outlet property="dataSource" destination="JLg-Ra-BJc" id="IVF-4W-ZGl"/>

@@ -28,7 +28,13 @@ class MemesCollectionViewController: UICollectionViewController {
     //--------------------------------------------
     
     var memesPersistence: MemesPersistence!
-
+    
+    private var isEmptyDataSource: Bool {
+        get {
+            return memesPersistence.memes.count == 0
+        }
+    }
+    
     private static let sectionInsets = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
     
     //--------------------------------------------
@@ -72,16 +78,31 @@ class MemesCollectionViewController: UICollectionViewController {
     //--------------------------------------------
 
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return memesPersistence.memes.count
+        return (isEmptyDataSource ? 1 : memesPersistence.memes.count)
     }
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let meme = memesPersistence.memes[indexPath.row]
-        
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MemeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MemeCollectionViewCell
-        cell.memedImageView.image = meme.memedImage
+        if isEmptyDataSource {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MemeCollectionViewEmptyDataSourceCell.reuseIdentifier, forIndexPath: indexPath) as! MemeCollectionViewEmptyDataSourceCell
+            cell.createMemeButton.addTarget(self, action: #selector(MemesCollectionViewController.createMeme), forControlEvents: .TouchUpInside)
+            
+            return cell
+        } else {
+            let meme = memesPersistence.memes[indexPath.row]
+            
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MemeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MemeCollectionViewCell
+            cell.memedImageView.image = meme.memedImage
+            
+            return cell
+        }
+    }
     
-        return cell
+    //--------------------------------------------
+    // MARK: Actions
+    //--------------------------------------------
+    
+    func createMeme() {
+        performSegueWithIdentifier(SegueIdentifier.CreateMeme.rawValue, sender: self)
     }
 
 }
@@ -100,13 +121,20 @@ extension MemesCollectionViewController: UICollectionViewDelegateFlowLayout {
         let sectionInset = delegateFlowLayout.collectionView!(collectionView, layout: flowLayout, insetForSectionAtIndex: indexPath.section)
         
         let width = screenWidth - (sectionInset.left + sectionInset.right)
+        let height = (isEmptyDataSource ? MemeCollectionViewEmptyDataSourceCell.defaultHeight : MemeCollectionViewCell.defaultHeight)
         
-        return CGSize(width: width, height: MemeCollectionViewCell.defaultHeight)
+        return CGSize(width: width, height: height)
     }
     
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-        return MemesCollectionViewController.sectionInsets
+        var insets = MemesCollectionViewController.sectionInsets
+        
+        if isEmptyDataSource {
+            insets.top *= 4
+        }
+        
+        return insets
     }
     
 }
