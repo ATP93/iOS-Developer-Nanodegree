@@ -42,6 +42,8 @@ class MemeViewController: UIViewController {
     
     var presentationType = MemeViewControllerPresentationType.ShowMeme
     
+    var meme: Meme?
+    
     private var shareMemeButton: UIBarButtonItem!
     
     /// Image picker controller to let us take/pick photo.
@@ -60,14 +62,17 @@ class MemeViewController: UIViewController {
     private var isBottomTextFieldActive = false
     private var keyboardOnScreen = false
     
-    private var meme: Meme?
-    
     //------------------------------------------------
     // MARK: View Life Cycle
     //------------------------------------------------
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if presentationType == MemeViewControllerPresentationType.ShowMeme {
+            assert(meme != nil)
+        }
+        
         configureUI()
     }
     
@@ -150,7 +155,7 @@ extension MemeViewController {
     }
     
     private func updateShareButtonEnabledState() {
-        shareMemeButton.enabled = meme != nil
+        shareMemeButton.enabled = imageView.image != nil
     }
     
     private func presentAlertWithTitle(title: String, message: String?) {

@@ -20,14 +20,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //-----------------------------------------------------
 
     var window: UIWindow?
+    
+    private let memesPersistence = MemesPersistence()
 
     //-----------------------------------------------------
     // MARK: UIApplicationDelegate
     //-----------------------------------------------------
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        setup()
         return true
     }
+    
+    func applicationDidEnterBackground(application: UIApplication) {
+        memesPersistence.saveMemes()
+    }
+    
+    func applicationWillTerminate(application: UIApplication) {
+        memesPersistence.saveMemes()
+    }
+    
+    //-----------------------------------------------------
+    // MARK: Setup
+    //-----------------------------------------------------
 
+    private func setup() {
+        let navigationController = window!.rootViewController as! UINavigationController
+        let memesController = navigationController.topViewController as! MemesCollectionViewController
+        memesController.memesPersistence = memesPersistence
+    }
+    
 }
-

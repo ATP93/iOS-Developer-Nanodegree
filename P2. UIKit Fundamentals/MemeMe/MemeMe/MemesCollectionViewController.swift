@@ -22,6 +22,12 @@ private enum SegueIdentifier: String {
 //-------------------------------------------------------------------
 
 class MemesCollectionViewController: UICollectionViewController {
+    
+    //--------------------------------------------
+    // MARK: Properties
+    //--------------------------------------------
+    
+    var memesPersistence: MemesPersistence!
 
     //--------------------------------------------
     // MARK: View Life Cycle
@@ -29,6 +35,7 @@ class MemesCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        assert(memesPersistence != nil)
     }
 
     //--------------------------------------------
@@ -43,10 +50,16 @@ class MemesCollectionViewController: UICollectionViewController {
             controller.title = NSLocalizedString("Create", comment: "DetailMemeController create meme title")
             controller.presentationType = .CreateMeme
         case .ShowMeme:
-            print("show meme")
             let controller = segue.destinationViewController as! MemeViewController
             controller.title = NSLocalizedString("Detail", comment: "DetailMemeController detail meme title")
             controller.presentationType = .ShowMeme
+            
+            guard let selectedCell = sender as? MemeCollectionViewCell,
+                let indexPath = collectionView?.indexPathForCell(selectedCell) else {
+                    return
+            }
+            
+            controller.meme = memesPersistence.memes[indexPath.row]
         }
     }
 
@@ -54,17 +67,16 @@ class MemesCollectionViewController: UICollectionViewController {
     // MARK: UICollectionViewDataSource
     //--------------------------------------------
 
-    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return memesPersistence.memes.count
     }
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let meme = memesPersistence.memes[indexPath.row]
+        
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MemeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MemeCollectionViewCell
-        cell.memeLabel.text = "Label \(indexPath.row + 1)"
+        cell.memedImageView.image = meme.memedImage
+        cell.memeLabel.text = "\(meme.topText), \(meme.bottomText)"
     
         return cell
     }
