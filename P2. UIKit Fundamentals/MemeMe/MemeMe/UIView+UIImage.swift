@@ -13,9 +13,9 @@ extension UIView {
     /// Creates a UIImage from view hierarchy.
     func generateImage() -> UIImage {
         // render view to an image
-        UIGraphicsBeginImageContext(frame.size)
-        drawViewHierarchyInRect(frame, afterScreenUpdates: true)
-        let image : UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsBeginImageContextWithOptions(bounds.size, true, 0.0)
+        drawViewHierarchyInRect(bounds, afterScreenUpdates: true)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
         return image
