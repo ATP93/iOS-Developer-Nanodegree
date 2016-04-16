@@ -49,10 +49,12 @@ class MemesCollectionViewController: UICollectionViewController {
             let controller = navigationController.topViewController as! MemeViewController
             controller.title = NSLocalizedString("Create", comment: "DetailMemeController create meme title")
             controller.presentationType = .CreateMeme
+            controller.delegate = self
         case .ShowMeme:
             let controller = segue.destinationViewController as! MemeViewController
             controller.title = NSLocalizedString("Detail", comment: "DetailMemeController detail meme title")
             controller.presentationType = .ShowMeme
+            controller.delegate = self
             
             guard let selectedCell = sender as? MemeCollectionViewCell,
                 let indexPath = collectionView?.indexPathForCell(selectedCell) else {
@@ -81,4 +83,29 @@ class MemesCollectionViewController: UICollectionViewController {
         return cell
     }
 
+}
+
+//-------------------------------------------------------------------
+// MARK: - MemesCollectionViewController: MemeViewControllerDelegate
+//-------------------------------------------------------------------
+
+extension MemesCollectionViewController: MemeViewControllerDelegate {
+    
+    func memeViewController(controller: MemeViewController, didDoneOnMemeShare meme: Meme) {
+        memesPersistence.memes.append(meme)
+        memesPersistence.saveMemes()
+        collectionView?.reloadData()
+    }
+    
+    func memeViewController(controller: MemeViewController, didDoneOnMemeEditing meme: Meme) {
+        memesPersistence.saveMemes()
+        collectionView?.reloadData()
+    }
+    
+    func memeViewController(controller: MemeViewController, didSelectRemoveMeme meme: Meme) {
+        let index = memesPersistence.memes.indexOf(meme)!
+        memesPersistence.memes.removeAtIndex(index)
+        memesPersistence.saveMemes()
+        collectionView?.reloadData()
+    }
 }
