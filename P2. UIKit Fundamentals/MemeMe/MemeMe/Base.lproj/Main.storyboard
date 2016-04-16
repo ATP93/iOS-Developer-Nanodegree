@@ -27,7 +27,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="304" height="240"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="251" verticalCompressionResistancePriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dpb-bW-AJy">
+                                        <imageView userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="251" verticalCompressionResistancePriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dpb-bW-AJy">
                                             <rect key="frame" x="0.0" y="0.0" width="304" height="240"/>
                                         </imageView>
                                     </subviews>

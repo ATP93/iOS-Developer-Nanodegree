@@ -45,6 +45,10 @@ class MemesCollectionViewController: UICollectionViewController {
         super.viewDidLoad()
         assert(memesPersistence != nil)
     }
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        collectionView?.collectionViewLayout.invalidateLayout()
+    }
 
     //--------------------------------------------
     // MARK: Navigation
