@@ -87,6 +87,10 @@ class MemeViewController: UIViewController {
         unsubscribeFromAllNotifications()
     }
     
+    deinit {
+        print("MemeViewController deallocated")
+    }
+    
     //------------------------------------------------
     // MARK: Actions
     //------------------------------------------------

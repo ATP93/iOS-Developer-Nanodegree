@@ -45,8 +45,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //-----------------------------------------------------
 
     private func setup() {
-        let navigationController = window!.rootViewController as! UINavigationController
-        let memesController = navigationController.topViewController as! MemesCollectionViewController
+        let tabBarController = window!.rootViewController as! UITabBarController
+        let collectionNavigationController = tabBarController.viewControllers![1] as! UINavigationController
+        
+        let memesController = collectionNavigationController.topViewController as! MemesCollectionViewController
         memesController.memesPersistence = memesPersistence
     }
     
