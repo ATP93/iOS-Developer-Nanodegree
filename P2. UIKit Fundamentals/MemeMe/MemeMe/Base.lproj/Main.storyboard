@@ -254,7 +254,9 @@
         <scene sceneID="Eik-Oa-39l">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8hH-X9-3Be" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="collection" id="Sgq-cx-Srz"/>
+                    <tabBarItem key="tabBarItem" title="" image="collection" id="Sgq-cx-Srz">
+                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-6"/>
+                    </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="8BY-mK-Ds2">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -293,6 +295,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="KQR-6q-szI" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="" image="table" id="m8f-oV-53X">
+                        <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-6"/>
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
                     </tabBarItem>
                     <toolbarItems/>
