@@ -8,6 +8,8 @@ In this [course](https://www.udacity.com/course/uikit-fundamentals--ud788), you 
 
 An iPhone app that lets tou to take a photo, and overlay text to meme-ify your friends. Then share on your favorite social channels!
 
+<img src="https://github.com/vanyaland/iOS-Developer-Nanodegree/blob/master/Screenshots/MemeMe/tabBar.png"
+width="240" height="426" hspace="8">
 <img src="https://github.com/vanyaland/iOS-Developer-Nanodegree/blob/master/Screenshots/MemeMe/MemesList.PNG"
 width="240" height="426">
 <img src="https://github.com/vanyaland/iOS-Developer-Nanodegree/blob/master/Screenshots/MemeMe/CreateMeme.PNG"
