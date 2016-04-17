@@ -21,6 +21,10 @@ class MemeCollectionViewEmptyDataSourceCell: UICollectionViewCell {
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var createMemeButton: BorderedButton!
     
+    //--------------------------------------
+    // MARK: Properties
+    //--------------------------------------
+    
     /// Cell reuse identifier.
     static let reuseIdentifier = "EmptyDataSourceCell"
     

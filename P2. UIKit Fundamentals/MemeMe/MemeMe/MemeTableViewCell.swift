@@ -1,32 +1,33 @@
 //
-//  MemeCollectionViewCell.swift
+//  MemeTableViewCell.swift
 //  MemeMe
 //
-//  Created by Ivan Magda on 12.04.16.
+//  Created by Ivan Magda on 17.04.16.
 //  Copyright © 2016 Ivan Magda. All rights reserved.
 //
 
 import UIKit
 
-//------------------------------------------------------
-// MARK: - MemeCollectionViewCell: UICollectionViewCell
-//------------------------------------------------------
+//--------------------------------------------
+// MARK: - MemeTableViewCell: UITableViewCell
+//--------------------------------------------
 
-class MemeCollectionViewCell: UICollectionViewCell {
-    
+class MemeTableViewCell: UITableViewCell {
+
     //--------------------------------------
     // MARK: Outlets
     //--------------------------------------
     
     @IBOutlet weak var memedImageView: UIImageView!
+    @IBOutlet weak var memeTextLabel: UILabel!
     
     //--------------------------------------
     // MARK: Properties
     //--------------------------------------
     
     /// Cell reuse identifier.
-    static let reuseIdentifier = "MemeCollectionViewCell"
-    
-    static let defaultHeight: CGFloat = 240.0
+    static let reuseIdentifier = "MemeTableViewCell"
+
+    static let defaultHeight: CGFloat = 88.0
     
 }

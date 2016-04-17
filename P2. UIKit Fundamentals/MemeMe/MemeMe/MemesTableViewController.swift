@@ -1,8 +1,8 @@
 //
-//  MemesCollectionViewController.swift
+//  MemesTableViewController.swift
 //  MemeMe
 //
-//  Created by Ivan Magda on 12.04.16.
+//  Created by Ivan Magda on 17.04.16.
 //  Copyright © 2016 Ivan Magda. All rights reserved.
 //
 
@@ -18,10 +18,10 @@ private enum SegueIdentifier: String {
 }
 
 //-------------------------------------------------------------------
-// MARK: - MemesCollectionViewController: UICollectionViewController
+// MARK: - MemesTableViewController: UITableViewController
 //-------------------------------------------------------------------
 
-class MemesCollectionViewController: UICollectionViewController {
+class MemesTableViewController: UITableViewController {
     
     //--------------------------------------------
     // MARK: Properties
@@ -35,26 +35,22 @@ class MemesCollectionViewController: UICollectionViewController {
         }
     }
     
-    private static let sectionInsets = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
-    
     //--------------------------------------------
     // MARK: View Life Cycle
     //--------------------------------------------
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         assert(memesPersistence != nil)
+        navigationItem.leftBarButtonItem = editButtonItem()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        collectionView?.reloadData()
+        tableView.reloadData()
     }
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        collectionView?.collectionViewLayout.invalidateLayout()
-    }
-
     //--------------------------------------------
     // MARK: Navigation
     //--------------------------------------------
@@ -73,8 +69,8 @@ class MemesCollectionViewController: UICollectionViewController {
             controller.presentationType = .ShowMeme
             controller.delegate = self
             
-            guard let selectedCell = sender as? MemeCollectionViewCell,
-                let indexPath = collectionView?.indexPathForCell(selectedCell) else {
+            guard let selectedCell = sender as? MemeTableViewCell,
+                let indexPath = tableView.indexPathForCell(selectedCell) else {
                     return
             }
             
@@ -83,27 +79,63 @@ class MemesCollectionViewController: UICollectionViewController {
     }
 
     //--------------------------------------------
-    // MARK: UICollectionViewDataSource
+    // MARK: - UITableViewDataSource
     //--------------------------------------------
 
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (isEmptyDataSource ? 1 : memesPersistence.memes.count)
     }
 
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if isEmptyDataSource {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MemeCollectionViewEmptyDataSourceCell.reuseIdentifier, forIndexPath: indexPath) as! MemeCollectionViewEmptyDataSourceCell
-            cell.createMemeButton.addTarget(self, action: #selector(MemesCollectionViewController.createMeme), forControlEvents: .TouchUpInside)
+            let cell = tableView.dequeueReusableCellWithIdentifier(MemeTableViewEmptyDataSourceCell.reuseIdentifier, forIndexPath: indexPath) as! MemeTableViewEmptyDataSourceCell
+            cell.createMemeButton.addTarget(self, action: #selector(MemesTableViewController.createMeme), forControlEvents: .TouchUpInside)
             
             return cell
         } else {
-            let meme = memesPersistence.memes[indexPath.row]
+            let cell = tableView.dequeueReusableCellWithIdentifier(MemeTableViewCell.reuseIdentifier) as! MemeTableViewCell
             
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier(MemeCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! MemeCollectionViewCell
+            let meme = memesPersistence.memes[indexPath.row]
             cell.memedImageView.image = meme.memedImage
+            cell.memeTextLabel.text = "\(meme.topText) ᛫᛫᛫ \(meme.bottomText)"
             
             return cell
         }
+    }
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return (isEmptyDataSource
+            ? MemeTableViewEmptyDataSourceCell.defaultHeight
+            : MemeTableViewCell.defaultHeight)
+    }
+
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return !isEmptyDataSource
+    }
+
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            memesPersistence.memes.removeAtIndex(indexPath.row)
+            memesPersistence.saveMemes()
+            
+            if isEmptyDataSource {
+                tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Fade)
+            } else {
+                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            }
+        }
+    }
+    
+    //--------------------------------------------
+    // MARK: - UITableViewDelegate
+    //--------------------------------------------
+    
+    override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+        return (isEmptyDataSource ? nil : indexPath)
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
     //--------------------------------------------
@@ -113,64 +145,33 @@ class MemesCollectionViewController: UICollectionViewController {
     func createMeme() {
         performSegueWithIdentifier(SegueIdentifier.CreateMeme.rawValue, sender: self)
     }
-
-}
-
-//---------------------------------------------------------------------------
-// MARK: - MemesCollectionViewController: UICollectionViewDelegateFlowLayout
-//---------------------------------------------------------------------------
-
-extension MemesCollectionViewController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let screenWidth = screenSize().width
-        let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        
-        let delegateFlowLayout = collectionView.delegate as! UICollectionViewDelegateFlowLayout
-        let sectionInset = delegateFlowLayout.collectionView!(collectionView, layout: flowLayout, insetForSectionAtIndex: indexPath.section)
-        
-        let width = screenWidth - (sectionInset.left + sectionInset.right)
-        let height = (isEmptyDataSource ? MemeCollectionViewEmptyDataSourceCell.defaultHeight : MemeCollectionViewCell.defaultHeight)
-        
-        return CGSize(width: width, height: height)
-    }
-    
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-        var insets = MemesCollectionViewController.sectionInsets
-        
-        if isEmptyDataSource {
-            insets.top *= 4
-        }
-        
-        return insets
-    }
     
 }
 
 //-------------------------------------------------------------------
-// MARK: - MemesCollectionViewController: MemeViewControllerDelegate
+// MARK: - MemesTableViewController: MemeViewControllerDelegate
 //-------------------------------------------------------------------
 
-extension MemesCollectionViewController: MemeViewControllerDelegate {
+extension MemesTableViewController: MemeViewControllerDelegate {
     
     func memeViewController(controller: MemeViewController, didDoneOnMemeShare meme: Meme) {
         if controller.presentationType == MemeViewControllerPresentationType.CreateMeme {
             memesPersistence.memes.append(meme)
             memesPersistence.saveMemes()
-            collectionView?.reloadData()
+            tableView.reloadData()
         }
     }
     
     func memeViewController(controller: MemeViewController, didDoneOnMemeEditing meme: Meme) {
         memesPersistence.saveMemes()
-        collectionView?.reloadData()
+        tableView.reloadData()
     }
     
     func memeViewController(controller: MemeViewController, didSelectRemoveMeme meme: Meme) {
         let index = memesPersistence.memes.indexOf(meme)!
         memesPersistence.memes.removeAtIndex(index)
         memesPersistence.saveMemes()
-        collectionView?.reloadData()
+        tableView.reloadData()
     }
+    
 }
