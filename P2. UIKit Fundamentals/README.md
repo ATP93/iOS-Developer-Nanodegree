@@ -12,6 +12,7 @@ An iPhone app that lets tou to take a photo, and overlay text to meme-ify your f
 width="240" height="426">
 <img src="https://github.com/vanyaland/iOS-Developer-Nanodegree/blob/master/Screenshots/MemeMe/CollectionView.png"
 width="240" height="426" hspace="8">
+
 <img src="https://github.com/vanyaland/iOS-Developer-Nanodegree/blob/master/Screenshots/MemeMe/CreateMeme.PNG"
 width="240" height="426" >
 <img src="https://github.com/vanyaland/iOS-Developer-Nanodegree/blob/master/Screenshots/MemeMe/MemeDetail.PNG"
