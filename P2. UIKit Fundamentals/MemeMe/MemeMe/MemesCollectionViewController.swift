@@ -36,6 +36,7 @@ class MemesCollectionViewController: UICollectionViewController {
     }
     
     private static let sectionInsets = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
+    private static let numberOfMemesPerLine = 2
     
     //--------------------------------------------
     // MARK: View Life Cycle
@@ -123,14 +124,18 @@ class MemesCollectionViewController: UICollectionViewController {
 extension MemesCollectionViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let screenWidth = screenSize().width
         let flowLayout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        
         let delegateFlowLayout = collectionView.delegate as! UICollectionViewDelegateFlowLayout
+        
+        let screenWidth = screenSize().width
         let sectionInset = delegateFlowLayout.collectionView!(collectionView, layout: flowLayout, insetForSectionAtIndex: indexPath.section)
         
-        let width = screenWidth - (sectionInset.left + sectionInset.right)
-        let height = (isEmptyDataSource ? MemeCollectionViewEmptyDataSourceCell.defaultHeight : MemeCollectionViewCell.defaultHeight)
+        let itemSpacing = delegateFlowLayout.collectionView!(collectionView, layout: flowLayout, minimumInteritemSpacingForSectionAtIndex: indexPath.section)
+        var totalItemsSpacing = itemSpacing * (CGFloat(MemesCollectionViewController.numberOfMemesPerLine - 1))
+        totalItemsSpacing = max(itemSpacing, totalItemsSpacing)
+        
+        let width = (screenWidth - (sectionInset.left + sectionInset.right + totalItemsSpacing)) / CGFloat(MemesCollectionViewController.numberOfMemesPerLine)
+        let height = (isEmptyDataSource ? MemeCollectionViewEmptyDataSourceCell.defaultHeight : width)
         
         return CGSize(width: width, height: height)
     }
@@ -144,6 +149,10 @@ extension MemesCollectionViewController: UICollectionViewDelegateFlowLayout {
         }
         
         return insets
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+        return 8.0
     }
     
 }

@@ -27,6 +27,4 @@ class MemeCollectionViewCell: UICollectionViewCell {
     /// Cell reuse identifier.
     static let reuseIdentifier = "MemeCollectionViewCell"
     
-    static let defaultHeight: CGFloat = 240.0
-    
 }
