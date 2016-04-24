@@ -30,6 +30,7 @@ class RecordViewController: UIViewController {
     private static let RecordedAudioFileName = "recordedVoice.wav"
     
     private var audioRecorder: AVAudioRecorder!
+    private var shouldSegueToSoundPlayer = false
     
     //---------------------------------------------
     // MARK: Outlets
@@ -45,7 +46,22 @@ class RecordViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureUI(.NotPlaying)
+        setup()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if shouldSegueToSoundPlayer {
+            do {
+                let audioRecorder = try AVAudioRecorder(URL: audioFileURL()!, settings: [:])
+                performSegueWithIdentifier(SegueIdentifier.PlayRecord.rawValue, sender: audioRecorder)
+                
+                shouldSegueToSoundPlayer = false
+            } catch let e as NSError {
+                print("An error occured: \(e.localizedDescription)")
+            }
+        }
     }
     
     //---------------------------------------------
@@ -60,6 +76,18 @@ class RecordViewController: UIViewController {
             }
             
             playRecordViewController.recordedAudioURL = audioRecorder.url
+        }
+    }
+    
+    //------------------------------------------------
+    // MARK: Helpers
+    //------------------------------------------------
+    
+    private func setup() {
+        configureUI(.NotPlaying)
+        
+        if let audioFilePath = audioFileURL()?.path {
+            shouldSegueToSoundPlayer = NSFileManager.defaultManager().fileExistsAtPath(audioFilePath)
         }
     }
     
@@ -148,12 +176,7 @@ extension RecordViewController: AVAudioRecorderDelegate {
     //---------------------------------------------
     
     private func startRecording() {
-        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-        
-        let recordingName = RecordViewController.RecordedAudioFileName
-        let pathArray = [dirPath, recordingName]
-        let filePath = NSURL.fileURLWithPathComponents(pathArray)
-        
+        let filePath = audioFileURL()
         let session = AVAudioSession.sharedInstance()
         do {
             try session.setCategory(AVAudioSessionCategoryPlayAndRecord)
@@ -182,6 +205,16 @@ extension RecordViewController: AVAudioRecorderDelegate {
         } catch let exception as NSError {
             showAlertWithTitle("Failed to stop recording", message: exception.localizedDescription)
         }
+    }
+    
+    private func audioFileURL() -> NSURL? {
+        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+        
+        let recordingName = RecordViewController.RecordedAudioFileName
+        let pathArray = [dirPath, recordingName]
+        let filePath = NSURL.fileURLWithPathComponents(pathArray)
+        
+        return filePath
     }
     
 }
