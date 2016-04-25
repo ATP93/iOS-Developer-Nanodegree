@@ -7,14 +7,13 @@
 //
 
 import Foundation
-import UIKit
 import MapKit
 
-//-----------------------------------
-// MARK: - ParseApiClient: ApiClient
-//-----------------------------------
+//---------------------------------------
+// MARK: - ParseApiClient: HttpApiClient
+//---------------------------------------
 
-class ParseApiClient: ApiClient {
+class ParseApiClient: HttpApiClient {
     
     //-----------------------------------
     // MARK: Properties

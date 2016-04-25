@@ -10,11 +10,11 @@ import Foundation
 
 typealias UdacityTaskCompletionHandler = (result: JSONDictionary?, error: NSError?) -> Void
 
-//----------------------------------------
-// MARK: - UdacityApiClient: ApiClient
-//----------------------------------------
+//-----------------------------------------
+// MARK: - UdacityApiClient: HttpApiClient
+//-----------------------------------------
 
-final class UdacityApiClient: ApiClient {
+final class UdacityApiClient: HttpApiClient {
 
     //------------------------------------
     // MARK: - Properties

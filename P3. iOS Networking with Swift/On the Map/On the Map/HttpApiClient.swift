@@ -15,7 +15,7 @@ typealias TaskCompletionHandler = (NSData?, NSHTTPURLResponse?, NSError?) -> Voi
 // MARK: - ApiClient
 //-------------------------------------
 
-class ApiClient {
+class HttpApiClient {
 
     //---------------------------------
     // MARK: - Properties -
