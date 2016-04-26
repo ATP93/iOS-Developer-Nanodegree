@@ -63,7 +63,7 @@ extension UdacityApiClient {
             
             self.userID = userId
             
-            // Persist information about the user account .
+            // Persist information about the user account.
             UdacityApiClient.setUserValue(userId, forKey: UdacityApiClient.UserDefaults.UserID)
             UdacityApiClient.setUserValue(sessionID, forKey: UdacityApiClient.UserDefaults.SessionID)
             UdacityApiClient.setUserValue(expirationDate, forKey: UdacityApiClient.UserDefaults.ExpirationDate)
