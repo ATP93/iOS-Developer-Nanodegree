@@ -40,6 +40,7 @@
 		75C84D711CA1883300B14210 /* SubmitLocationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75C84D701CA1883300B14210 /* SubmitLocationView.xib */; };
 		75C84D731CA18BC600B14210 /* SubmitLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C84D721CA18BC600B14210 /* SubmitLocationView.swift */; };
 		75C84D751CA1B97500B14210 /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C84D741CA1B97500B14210 /* UserTableViewCell.swift */; };
+		75E3655B1CCF0A9D00881975 /* JsonApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E3655A1CCF0A9D00881975 /* JsonApiClient.swift */; };
 		75FCED611CA12A3F00C3DD98 /* PostLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FCED601CA12A3F00C3DD98 /* PostLocationViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -79,6 +80,7 @@
 		75C84D701CA1883300B14210 /* SubmitLocationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SubmitLocationView.xib; sourceTree = "<group>"; };
 		75C84D721CA18BC600B14210 /* SubmitLocationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubmitLocationView.swift; sourceTree = "<group>"; };
 		75C84D741CA1B97500B14210 /* UserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
+		75E3655A1CCF0A9D00881975 /* JsonApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonApiClient.swift; sourceTree = "<group>"; };
 		75FCED601CA12A3F00C3DD98 /* PostLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLocationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -178,6 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				7500B0131C9EDFC30067DEAD /* HttpApiClient.swift */,
+				75E3655A1CCF0A9D00881975 /* JsonApiClient.swift */,
 				7500B0141C9EDFC30067DEAD /* ApiClientResult.swift */,
 				7500B0201C9EF8660067DEAD /* Udacity */,
 				756583791CA029DB0033326E /* Parse */,
@@ -349,6 +352,7 @@
 				7500B01A1C9EDFFE0067DEAD /* JSON.swift in Sources */,
 				75C84D751CA1B97500B14210 /* UserTableViewCell.swift in Sources */,
 				7500B0051C9ECBB20067DEAD /* LoginViewController.swift in Sources */,
+				75E3655B1CCF0A9D00881975 /* JsonApiClient.swift in Sources */,
 				756B8BCC1CA0E49E009C7355 /* UserKey.swift in Sources */,
 				7500AFF21C9E88130067DEAD /* LocationsViewController.swift in Sources */,
 				756583811CA030E40033326E /* NSDate+FromString.swift in Sources */,

@@ -8,15 +8,14 @@
 
 import Foundation
 
-typealias JSONTaskCompletionHandler = (JSONDictionary?, NSHTTPURLResponse?, NSError?) -> Void
-typealias TaskCompletionHandler = (NSData?, NSHTTPURLResponse?, NSError?) -> Void
+typealias TaskCompletionHandler = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> Void
 
 //-------------------------------------
-// MARK: - ApiClient
+// MARK: - HttpApiClient
 //-------------------------------------
 
 class HttpApiClient {
-
+    
     //---------------------------------
     // MARK: - Properties -
     //---------------------------------
@@ -55,7 +54,7 @@ class HttpApiClient {
     // MARK: Data Tasks
     //---------------------------------
     
-    func fetch(request: NSURLRequest, completion: TaskCompletionHandler) {
+    func fetchRawData(request: NSURLRequest, completion: TaskCompletionHandler) {
         let task = dataTaskWithRequest(request, completion: completion)
         task.resume()
     }
@@ -66,97 +65,30 @@ class HttpApiClient {
             self.currentTasks.remove(task!)
             let httpResponse = response as! NSHTTPURLResponse
             
-            if let error = error {
+            self.debugLog("Received HTTP \(httpResponse.statusCode) from \(request.HTTPMethod!) to \(request.URL!)")
+            
+            /* GUARD: Was there an error? */
+            guard error == nil else {
                 self.debugLog("Received an error from HTTP \(request.HTTPMethod!) to \(request.URL!)")
                 self.debugLog("Error: \(error)")
-                completion(nil, httpResponse, error)
-            } else {
-                self.debugLog("Received HTTP \(httpResponse.statusCode) from \(request.HTTPMethod!) to \(request.URL!)")
-                
-                if let data = data {
-                    completion(data, httpResponse, nil)
-                } else {
-                    self.debugLog("Received an empty response")
-                    let userInfo = [NSLocalizedDescriptionKey: "No data was returned by the request"]
-                    completion(nil, httpResponse, NSError(domain: "com.ivanmagda.On-the-Map.emptyresponse", code: 12, userInfo: userInfo))
-                }
+                completion(data: nil, response: httpResponse, error: error)
+                return
             }
+            
+            /* GUARD: Was there any data returned? */
+            guard let data = data else {
+                self.debugLog("Received an empty response")
+                let userInfo = [NSLocalizedDescriptionKey: "No data was returned by the request"]
+                completion(data: nil, response: httpResponse, error: NSError(domain: "com.ivanmagda.On-the-Map.emptyresponse", code: 12, userInfo: userInfo))
+                return
+            }
+            
+            completion(data: data, response: httpResponse, error: nil)
         })
         
         currentTasks.insert(task!)
         
         return task!
-    }
-    
-    //---------------------------------
-    // MARK: With JSON Tasks
-    //---------------------------------
-    
-    func fetchWithResult(request: NSURLRequest, completion: ApiClientResult -> Void) {
-        let task = jsonDataTaskWithRequest(request) { (json, response, error) in
-            performOnMain {
-                if let error = error {
-                    completion(.Error(error))
-                } else {
-                    // Did we get a successful 2XX response?
-                    
-                    switch response!.statusCode {
-                    case 200...299:
-                        completion(.Success(json!))
-                    case 404: completion(.NotFound)
-                    case 400...499: completion(.ClientError(response!.statusCode))
-                    case 500...599: completion(.ServerError(response!.statusCode))
-                    default:
-                        let statusCode = response!.statusCode
-                        print("Received HTTP \(statusCode), which was not handled")
-                        // Should not happen.
-                        completion(ApiClientResult.UnexpectedError(statusCode, error))
-                    }
-                }
-            }
-        }
-        
-        task.resume()
-    }
-    
-    func jsonDataTaskWithRequest(request: NSURLRequest, completion: JSONTaskCompletionHandler) -> NSURLSessionDataTask {
-        let task = dataTaskWithRequest(request) { (data, httpResponse, error) in
-            if let data = data {
-                // Parse the data and use the data.
-                self.convertDataWithCompletionHandler(data) { (json, error) in
-                    if let error = error {
-                        completion(nil, httpResponse, error)
-                    } else {
-                        // Try to give raw JSON a usable Foundation object form.
-                        if let json = json as? JSONDictionary {
-                            completion(json, httpResponse, nil)
-                        } else {
-                            let userInfo = [NSLocalizedDescriptionKey: "Could not cast the JSON object as JSONDictionary: '\(json)'"]
-                            completion(nil, httpResponse, NSError(domain: "com.ivanmagda.On-the-Map.jsonerror", code: 11, userInfo: userInfo))
-                        }
-                    }
-                }
-            }
-        }
-        
-        return task
-    }
-    
-    //---------------------------------
-    // MARK: Helpers
-    //---------------------------------
-    
-    func convertDataWithCompletionHandler(data: NSData, block: (AnyObject?, NSError?) -> Void) {
-        var parsedResult: AnyObject!
-        
-        do {
-            parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-        } catch {
-            let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
-            block(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
-        }
-        
-        block(parsedResult, nil)
     }
     
     //---------------------------------

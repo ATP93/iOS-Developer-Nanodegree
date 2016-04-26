@@ -10,10 +10,10 @@ import Foundation
 import MapKit
 
 //---------------------------------------
-// MARK: - ParseApiClient: HttpApiClient
+// MARK: - ParseApiClient: JsonApiClient
 //---------------------------------------
 
-class ParseApiClient: HttpApiClient {
+class ParseApiClient: JsonApiClient {
     
     //-----------------------------------
     // MARK: Properties
@@ -40,9 +40,9 @@ class ParseApiClient: HttpApiClient {
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
         let request = NSMutableURLRequest(URL: parseURLFromParameters(nil, withPathExtension: nil))
-        request.HTTPMethod = HTTTPMethodName.Get
+        request.HTTPMethod = HTTTPMethodName.Get.rawValue
         
-        fetchWithResult(request) { (result) in
+        fetchJSON(request) { (result) in
             func sendError(error: String) {
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                 print(error)
@@ -80,13 +80,13 @@ class ParseApiClient: HttpApiClient {
         }
         
         let request = NSMutableURLRequest(URL: parseURLFromParameters(nil, withPathExtension: nil))
-        request.HTTPMethod = HTTTPMethodName.Post
+        request.HTTPMethod = HTTTPMethodName.Post.rawValue
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = "{\"\(JSONBodyKeys.UniqueKey)\": \"\(student.id)\", \"\(JSONBodyKeys.FirstName)\": \"\(student.firstName)\", \"\(JSONBodyKeys.LastName)\": \"\(student.lastName)\",\"\(JSONBodyKeys.MapString)\": \"\(placemark.name!)\", \"\(JSONBodyKeys.MediaURL)\": \"\(mediaURL)\",\"\(JSONBodyKeys.Latitude)\": \(coordinate.latitude), \"\(JSONBodyKeys.Longitude)\": \(coordinate.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
-        fetchWithResult(request) { (result) in
+        fetchJSON(request) { (result) in
             func sendError(error: String) {
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                 print(error)
