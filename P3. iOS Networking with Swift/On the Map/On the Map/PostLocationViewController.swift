@@ -251,7 +251,7 @@ extension PostLocationViewController: SubmitLocationViewDelegate {
             if let error = error {
                 showError(error)
             } else if let user = user {
-                ParseApiClient.sharedInstance.postStudentLocation(user, placemark: self.placemark!, mediaURL: link, block: { (success, error) in
+                ParseApiClient.sharedInstance.postStudentLocation(student: user, placemark: self.placemark!, mediaURL: link, completionHandler: { (success, error) in
                     view.activityIndicator.stopAnimating()
                     
                     if success {

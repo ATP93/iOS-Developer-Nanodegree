@@ -1,5 +1,5 @@
 //
-//  LoginViewController.swift
+//  HttpApiClient.swift
 //  On the Map
 //
 //  Created by Ivan Magda on 20.03.16.
@@ -8,7 +8,11 @@
 
 import Foundation
 
-typealias TaskCompletionHandler = (data: NSData?, response: NSHTTPURLResponse?, error: NSError?) -> Void
+//-------------------------------------
+// MARK: Typealiases
+//-------------------------------------
+
+typealias TaskCompletionHandler = ApiClientResult -> Void
 
 //-------------------------------------
 // MARK: - HttpApiClient
@@ -20,12 +24,18 @@ class HttpApiClient {
     // MARK: - Properties -
     //---------------------------------
     
+    /// Allow to initialize with whichever configuration you want.
     let configuration: NSURLSessionConfiguration
     
     lazy var session: NSURLSession = {
         return NSURLSession(configuration: self.configuration)
     }()
     
+    /** 
+        Keep track of all requests that are in flight.
+     
+        @return Set of NSURLSessionDataTasks, that are active.
+     */
     var currentTasks: Set<NSURLSessionDataTask> = []
     
     /// If value is `true` then debug messages will be logged.
@@ -63,27 +73,60 @@ class HttpApiClient {
         var task: NSURLSessionDataTask?
         task = session.dataTaskWithRequest(request, completionHandler: { (data, response, error) in
             self.currentTasks.remove(task!)
-            let httpResponse = response as! NSHTTPURLResponse
-            
-            self.debugLog("Received HTTP \(httpResponse.statusCode) from \(request.HTTPMethod!) to \(request.URL!)")
             
             /* GUARD: Was there an error? */
             guard error == nil else {
                 self.debugLog("Received an error from HTTP \(request.HTTPMethod!) to \(request.URL!)")
                 self.debugLog("Error: \(error)")
-                completion(data: nil, response: httpResponse, error: error)
+                completion(.Error(error!))
                 return
             }
+            
+            guard let httpResponse = response as? NSHTTPURLResponse else {
+                self.debugLog("Failed on response processing.")
+                self.debugLog("Error: \(error)")
+                let userInfo = [NSLocalizedDescriptionKey: "Failed processing on HTTP response."]
+                let error = NSError(
+                    domain: HttpApiClientError.BadResponseDomain,
+                    code: HttpApiClientErrorCode.BadResponse.rawValue,
+                    userInfo: userInfo
+                )
+                completion(.Error(error))
+                return
+            }
+            
+            // Did we get a successful 2XX response?
+            let statusCode = httpResponse.statusCode
+            switch statusCode {
+            case 200...299:
+                self.debugLog("Status code: \(statusCode)")
+            case 404:
+                completion(.NotFound)
+            case 400...499:
+                completion(.ClientError(statusCode))
+            case 500...599:
+                completion(.ServerError(statusCode))
+            default:
+                print("Received HTTP status code \(statusCode), which was't be handled")
+                completion(.UnexpectedError(statusCode, error))
+            }
+            
+            self.debugLog("Received HTTP \(httpResponse.statusCode) from \(request.HTTPMethod!) to \(request.URL!)")
             
             /* GUARD: Was there any data returned? */
             guard let data = data else {
                 self.debugLog("Received an empty response")
                 let userInfo = [NSLocalizedDescriptionKey: "No data was returned by the request"]
-                completion(data: nil, response: httpResponse, error: NSError(domain: "com.ivanmagda.On-the-Map.emptyresponse", code: 12, userInfo: userInfo))
+                let error = NSError(
+                    domain: HttpApiClientError.EmptyResponseDomain,
+                    code: HttpApiClientErrorCode.EmptyResponse.rawValue,
+                    userInfo: userInfo
+                )
+                completion(ApiClientResult.Error(error))
                 return
             }
             
-            completion(data: data, response: httpResponse, error: nil)
+            completion(ApiClientResult.RawData(data))
         })
         
         currentTasks.insert(task!)

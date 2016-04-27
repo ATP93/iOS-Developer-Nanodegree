@@ -8,6 +8,10 @@
 
 import Foundation
 
+//-------------------------------------
+// MARK: Typealiases
+//-------------------------------------
+
 typealias UdacityTaskCompletionHandler = (result: JSONDictionary?, error: NSError?) -> Void
 
 //-----------------------------------------
@@ -77,11 +81,11 @@ final class UdacityApiClient: JsonApiClient {
     // MARK: - GET
     //------------------------------------
     
-    func dataTaskForGETMethod(method: String, parameters: [String: AnyObject]?, completionHandler block: UdacityTaskCompletionHandler) {
+    func dataTaskForGETMethod(method: String, parameters: [String: AnyObject]?, completionHandler: UdacityTaskCompletionHandler) {
         let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
-        request.HTTPMethod = HTTTPMethodName.Get.rawValue
-        fetchRawData(request) { (data, response, error) in
-            self.checkRespose(data, httpResponse: response, error: error, completionHandler: block)
+        request.HTTPMethod = HttpMethodName.Get.rawValue
+        fetchRawData(request) { result in
+            self.checkResposeWithApiResult(result, completionHandler: completionHandler)
         }
     }
     
@@ -91,11 +95,10 @@ final class UdacityApiClient: JsonApiClient {
     
     func dataTaskForPOSTMethod(method: String, parameters: [String: AnyObject]?, jsonBody: String, completionHandler: UdacityTaskCompletionHandler) {
         let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
-        request.HTTPMethod = HTTTPMethodName.Post.rawValue
+        request.HTTPMethod = HttpMethodName.Post.rawValue
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
-        
-        fetchRawData(request) { (data, response, error) in
-            self.checkRespose(data, httpResponse: response, error: error, completionHandler: completionHandler)
+        fetchRawData(request) { result in
+            self.checkResposeWithApiResult(result, completionHandler: completionHandler)
         }
     }
     
@@ -105,7 +108,7 @@ final class UdacityApiClient: JsonApiClient {
     
     func dataTaskForDELETEMethod(method: String, parameters: [String: AnyObject]?, headerFields: [String: String?]?, completionHandler: UdacityTaskCompletionHandler) {
         let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
-        request.HTTPMethod = HTTTPMethodName.Delete.rawValue
+        request.HTTPMethod = HttpMethodName.Delete.rawValue
     
         if let headerFields = headerFields {
             for (key, value) in headerFields {
@@ -113,10 +116,9 @@ final class UdacityApiClient: JsonApiClient {
             }
         }
         
-        fetchRawData(request) { (data, response, error) in
-            self.checkRespose(data, httpResponse: response, error: error, completionHandler: completionHandler)
+        fetchRawData(request) { result in
+            self.checkResposeWithApiResult(result, completionHandler: completionHandler)
         }
-
     }
     
     //------------------------------------
@@ -169,44 +171,36 @@ final class UdacityApiClient: JsonApiClient {
         return data.subdataWithRange(NSMakeRange(5, data.length - 5))
     }
     
-    private func checkRespose(data: NSData?, httpResponse: NSHTTPURLResponse?, error: NSError?, completionHandler: UdacityTaskCompletionHandler) {
+    private func checkResposeWithApiResult(result: ApiClientResult, completionHandler: UdacityTaskCompletionHandler) {
         func sendError(error: String) {
-            print(error)
+            self.debugLog(error)
             let userInfo = [NSLocalizedDescriptionKey : error]
-            completionHandler(result: nil, error: NSError(domain: "com.ivanmagda.On-the-Map.taskForPOSTMethod", code: 1, userInfo: userInfo))
+            let error = NSError(
+                domain: UdacityApiClient.ErrorDomain,
+                code: UdacityApiClient.ErrorCode,
+                userInfo: userInfo
+            )
+            completionHandler(result: nil, error: error)
         }
         
-        /* GUARD: Was there an error? */
-        guard (error == nil) else {
-            sendError("There was an error with your request: \(error)")
-            return
-        }
-        
-        /* GUARD: Did we get a successful 2XX response? */
-        guard let statusCode = httpResponse?.statusCode where statusCode >= 200 && statusCode <= 299 else {
-            sendError("Failed to Login, try again")
-            return
-        }
-        
-        /* GUARD: Was there any data returned? */
-        guard let data = data else {
-            sendError("No data was returned by the request!")
-            return
-        }
-        
-        let newData = self.skipSecurityCharactersInData(data)
-        
-        /* Parse the data and use the data (happens in completion handler) */
-        self.deserializeJSONDataWithCompletionHandler(newData) { (result, error) in
-            if let _ = error {
-                sendError("Could not parse the data as JSON: '\(newData)'")
-            } else {
-                if let json = result as? JSONDictionary {
-                    completionHandler(result: json, error: nil)
+        switch result {
+        case .Error(let error):
+            completionHandler(result: nil, error: error)
+        case .RawData(let data):
+            let resultData = self.skipSecurityCharactersInData(data)
+            self.deserializeJsonData(resultData) { (jsonObject, error) in
+                if let _ = error {
+                    sendError("Could not parse the data as JSON: '\(resultData)'")
                 } else {
-                    sendError("Failed to cast type of the json object: \(result)")
+                    if let json = jsonObject as? JSONDictionary {
+                        completionHandler(result: json, error: nil)
+                    } else {
+                        sendError("Failed to cast type of the json object: \(jsonObject)")
+                    }
                 }
             }
+        default:
+            sendError(result.defaultErrorMessage() ?? "An error occured")
         }
     }
 

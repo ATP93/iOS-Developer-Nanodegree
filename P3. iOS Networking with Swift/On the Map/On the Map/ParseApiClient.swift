@@ -9,6 +9,13 @@
 import Foundation
 import MapKit
 
+//-------------------------------------
+// MARK: Typealiases
+//-------------------------------------
+
+typealias ParseTaskCompletionHandler = (success: Bool, error: NSError?) -> Void
+typealias ParseStudentLocationsCompletionHandler = (locations: [StudentLocation]?, error: NSError?) -> Void
+
 //---------------------------------------
 // MARK: - ParseApiClient: JsonApiClient
 //---------------------------------------
@@ -36,26 +43,24 @@ class ParseApiClient: JsonApiClient {
     // MARK: Network
     //-----------------------------------
     
-    func getStudentLocationsWithCompletionHandler(block: (locations: [StudentLocation]?, error: NSError?) -> Void) {
+    func getStudentLocationsWithCompletionHandler(completionHandler: ParseStudentLocationsCompletionHandler) {
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
         let request = NSMutableURLRequest(URL: parseURLFromParameters(nil, withPathExtension: nil))
-        request.HTTPMethod = HTTTPMethodName.Get.rawValue
+        request.HTTPMethod = HttpMethodName.Get.rawValue
         
         fetchJSON(request) { (result) in
             func sendError(error: String) {
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                 print(error)
                 let userInfo = [NSLocalizedDescriptionKey : error]
-                block(locations: nil, error: NSError(domain: "com.ivanmagda.On-the-Map.parse.getStudentLocations", code: 17, userInfo: userInfo))
+                completionHandler(locations: nil, error: NSError(domain: "com.ivanmagda.On-the-Map.parse.getStudentLocations", code: 17, userInfo: userInfo))
             }
             
             switch result {
-            case .ClientError(let code):
-                sendError("Client's error with code: \(code). Please try again later.")
             case .Error(let error):
                 sendError(error.localizedDescription)
-            case .Success(let json):
+            case .Json(let json):
                 guard let results = json[JSONResponseKeys.Results] as? [[String: AnyObject]] else {
                     sendError("Could not find \(JSONResponseKeys.Results) key in JSON: \(json)")
                     return
@@ -63,24 +68,24 @@ class ParseApiClient: JsonApiClient {
                 
                 if let locations = StudentLocation.sanitizedStudentLocations(results) {
                     UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-                    block(locations: locations, error: nil)
+                    completionHandler(locations: locations, error: nil)
                 } else {
                     sendError("Failed to sanitized student locations with results: \(results)")
                 }
             default:
-                sendError("There is an error occured. Try again.")
+                sendError(result.defaultErrorMessage()!)
             }
         }
     }
     
-    func postStudentLocation(student: User, placemark: CLPlacemark, mediaURL: String, block: (success: Bool, error: NSError?) -> Void) {
+    func postStudentLocation(student student: User, placemark: CLPlacemark, mediaURL: String, completionHandler: ParseTaskCompletionHandler) {
         guard let coordinate = placemark.location?.coordinate else {
-            block(success: false, error: nil)
+            completionHandler(success: false, error: nil)
             return
         }
         
         let request = NSMutableURLRequest(URL: parseURLFromParameters(nil, withPathExtension: nil))
-        request.HTTPMethod = HTTTPMethodName.Post.rawValue
+        request.HTTPMethod = HttpMethodName.Post.rawValue
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = "{\"\(JSONBodyKeys.UniqueKey)\": \"\(student.id)\", \"\(JSONBodyKeys.FirstName)\": \"\(student.firstName)\", \"\(JSONBodyKeys.LastName)\": \"\(student.lastName)\",\"\(JSONBodyKeys.MapString)\": \"\(placemark.name!)\", \"\(JSONBodyKeys.MediaURL)\": \"\(mediaURL)\",\"\(JSONBodyKeys.Latitude)\": \(coordinate.latitude), \"\(JSONBodyKeys.Longitude)\": \(coordinate.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
         
@@ -91,24 +96,22 @@ class ParseApiClient: JsonApiClient {
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                 print(error)
                 let userInfo = [NSLocalizedDescriptionKey : error]
-                block(success: false, error: NSError(domain: "com.ivanmagda.On-the-Map.parse.postStudentLocation", code: 20, userInfo: userInfo))
+                completionHandler(success: false, error: NSError(domain: "com.ivanmagda.On-the-Map.parse.postStudentLocation", code: 20, userInfo: userInfo))
             }
             
             switch result {
-            case .ClientError(let code):
-                sendError("Client's error with code: \(code). Please try again later.")
             case .Error(let error):
                 sendError(error.localizedDescription)
-            case .Success(let json):
+            case .Json(let json):
                 guard let createdAt = json[JSONResponseKeys.CreatedAt] as? String,
-                    let objectId = json[JSONResponseKeys.ObjectId] as? String else {
+                      let objectId = json[JSONResponseKeys.ObjectId] as? String else {
                         sendError("Failed to access response keys. Probably your locations did not post")
                       return
                 }
                 print("Posted location id: \(objectId), createdAt: \(createdAt)")
-                block(success: true, error: nil)
+                completionHandler(success: true, error: nil)
             default:
-                sendError("There is an error occured. Try again.")
+                sendError(result.defaultErrorMessage()!)
             }
         }
     }
