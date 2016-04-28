@@ -57,7 +57,7 @@ class LoginViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        if UdacityApiClient.sharedInstance.isUserLoggedIn {
+        if UdacityApiClient.sharedInstance.userSession.isLoggedIn {
             completeLogin()
         }
     }

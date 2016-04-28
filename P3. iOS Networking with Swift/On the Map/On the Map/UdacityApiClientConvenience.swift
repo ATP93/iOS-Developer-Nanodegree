@@ -22,7 +22,7 @@ extension UdacityApiClient {
     // MARK: Authentication (POST) method
     //----------------------------------------------------
     
-    func authenticateWithUsername(username: String, password: String, completionHandler block: UdacityConvenientResultBlock) {
+    func authenticateWithUsername(username: String, password: String, completionHandler: UdacityConvenientResultBlock) {
         let jsonBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
@@ -32,7 +32,7 @@ extension UdacityApiClient {
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                 print(error)
                 let userInfo = [NSLocalizedDescriptionKey : error]
-                block(success: false, error: NSError(domain: "com.ivanmagda.On-the-Map.auth", code: 15, userInfo: userInfo))
+                completionHandler(success: false, error: NSError(domain: "com.ivanmagda.On-the-Map.auth", code: 15, userInfo: userInfo))
             }
             
             guard error == nil else {
@@ -46,14 +46,14 @@ extension UdacityApiClient {
             }
             
             guard let session = json[UdacityApiClient.JSONResponseKeys.Session] as? [String: AnyObject],
-            let sessionID = session[UdacityApiClient.JSONResponseKeys.SessionID] as? String,
+            let sessionId = session[UdacityApiClient.JSONResponseKeys.SessionID] as? String,
                 let expirationDate = session[UdacityApiClient.JSONResponseKeys.ExpirationDate] as? String else {
                     sendError("Could not find key: \(UdacityApiClient.JSONResponseKeys.SessionID)")
                     return
             }
             
-            self.sessionID = sessionID
-            self.expirationDate = expirationDate
+            self.userSession.sessionId = sessionId
+            self.userSession.expirationDate = expirationDate
             
             guard let account = json[UdacityApiClient.JSONResponseKeys.Account] as? [String: AnyObject],
                 let userId = account[UdacityApiClient.JSONResponseKeys.UserID] as? String else {
@@ -61,16 +61,11 @@ extension UdacityApiClient {
                     return
             }
             
-            self.userID = userId
-            
-            // Persist information about the user account.
-            UdacityApiClient.setUserValue(userId, forKey: UdacityApiClient.UserDefaults.UserID)
-            UdacityApiClient.setUserValue(sessionID, forKey: UdacityApiClient.UserDefaults.SessionID)
-            UdacityApiClient.setUserValue(expirationDate, forKey: UdacityApiClient.UserDefaults.ExpirationDate)
+            self.userSession.userId = userId
             
             UIApplication.sharedApplication().networkActivityIndicatorVisible = false
             
-            block(success: true, error: nil)
+            completionHandler(success: true, error: nil)
         })
     }
     
@@ -108,7 +103,7 @@ extension UdacityApiClient {
                 return
             }
             
-            UdacityApiClient.logoutUser()
+            UdacityUserSession.logout()
             
             UIApplication.sharedApplication().networkActivityIndicatorVisible = false
             
@@ -118,7 +113,9 @@ extension UdacityApiClient {
     
     func getPublicUserData(userId: String, completionHandler block: UdacityUserResultBlock) {
         var mutableMethod: String = Methods.UserData
-        mutableMethod = subtituteKeyInMethod(mutableMethod, key: URLKeys.UserID, value: String(UdacityApiClient.sharedInstance.userID!))!
+        mutableMethod = subtituteKeyInMethod(mutableMethod,
+                                             key: URLKeys.UserID,
+                                             value: UdacityApiClient.sharedInstance.userSession.userId!)!
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         

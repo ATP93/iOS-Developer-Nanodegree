@@ -64,12 +64,4 @@ extension UdacityApiClient {
         
     }
     
-    // MARK: - NSUserDefaults
-    struct UserDefaults {
-        static let SessionID = "session_id"
-        static let UserID = "user_id"
-        static let ExpirationDate = "expiration_date"
-        static let CurrentUser = "current_user"
-    }
-
 }

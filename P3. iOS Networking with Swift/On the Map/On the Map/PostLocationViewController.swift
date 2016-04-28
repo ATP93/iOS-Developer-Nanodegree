@@ -242,7 +242,7 @@ extension PostLocationViewController: SubmitLocationViewDelegate {
         view.activityIndicator.startAnimating()
         
         let udacity = UdacityApiClient.sharedInstance
-        udacity.getPublicUserData(udacity.userID!) { (user, error) in
+        udacity.getPublicUserData(udacity.userSession.userId!) { (user, error) in
             func showError(error: NSError) {
                 view.activityIndicator.stopAnimating()
                 self.displayAlert(title: "Failed to post location", message: error.localizedDescription)

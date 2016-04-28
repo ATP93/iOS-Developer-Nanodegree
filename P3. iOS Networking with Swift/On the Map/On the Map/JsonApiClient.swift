@@ -8,6 +8,12 @@
 
 import Foundation
 
+//-------------------------------------
+// MARK: Typealiases
+//-------------------------------------
+
+typealias JsonDeserializingCompletionHandler = (jsonObject: AnyObject?, error: NSError?) -> Void
+
 //--------------------------------------
 // MARK: - JsonApiClient: HttpApiClient
 //--------------------------------------
@@ -55,16 +61,16 @@ class JsonApiClient: HttpApiClient {
     // MARK: JSON Deserializing
     //---------------------------------
     
-    func deserializeJsonData(data: NSData, withCompletionHandler completionHandler: (AnyObject?, NSError?) -> Void) {
+    func deserializeJsonData(data: NSData, completionHandler: JsonDeserializingCompletionHandler) {
         var deserializedJSON: AnyObject?
         
         do {
             deserializedJSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
         } catch let error as NSError {
-            completionHandler(nil, error)
+            completionHandler(jsonObject: nil, error: error)
         }
         
-        completionHandler(deserializedJSON, nil)
+        completionHandler(jsonObject: deserializedJSON, error: nil)
     }
     
 }

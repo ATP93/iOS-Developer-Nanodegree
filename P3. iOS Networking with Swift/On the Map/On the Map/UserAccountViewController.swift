@@ -35,7 +35,7 @@ class UserAccountViewController: UIViewController {
         super.viewDidLoad()
         
         let apiClient = UdacityApiClient.sharedInstance
-        apiClient.getPublicUserData(apiClient.userID!) { (user, error) in
+        apiClient.getPublicUserData(apiClient.userSession.userId!) { (user, error) in
             performOnMain {
                 if let error = error {
                     print("Failed to get public user data. Error: \(error.localizedDescription)")
@@ -53,7 +53,7 @@ class UserAccountViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        logOutBarButtonItem.enabled = UdacityApiClient.sharedInstance.isUserLoggedIn
+        logOutBarButtonItem.enabled = UdacityApiClient.sharedInstance.userSession.isLoggedIn
     }
     
     //--------------------------------------------
@@ -97,7 +97,7 @@ class UserAccountViewController: UIViewController {
 extension UserAccountViewController: UITableViewDataSource {
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        if UdacityApiClient.sharedInstance.isUserLoggedIn {
+        if UdacityApiClient.sharedInstance.userSession.isLoggedIn {
             return 1
         }
         return 0

@@ -86,7 +86,7 @@ final class StudentLocation: NSObject {
         }
     }
     
-    static func sanitizedStudentLocations(dicts: [[String: AnyObject]]?) -> [StudentLocation]? {
+    static func sanitizedStudentLocations(dicts: [JSONDictionary]?) -> [StudentLocation]? {
         guard let dicts = dicts else {
             return nil
         }
@@ -103,12 +103,10 @@ final class StudentLocation: NSObject {
 extension StudentLocation: MKAnnotation {
     
     // Center latitude and longitude of the annotation view.
-    // The implementation of this property must be KVO compliant.
     var coordinate: CLLocationCoordinate2D {
         return location.coordinate
     }
     
-    // Title and subtitle for use by selection UI.
     var title: String? {
         return "\(firstName) \(lastName)"
     }
@@ -116,4 +114,5 @@ extension StudentLocation: MKAnnotation {
     var subtitle: String? {
         return mediaURL.absoluteString
     }
+    
 }

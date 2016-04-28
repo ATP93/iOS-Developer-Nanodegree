@@ -24,36 +24,7 @@ final class UdacityApiClient: JsonApiClient {
     // MARK: - Properties
     //------------------------------------
     
-    // Authentication.
-    var sessionID: String? {
-        get {
-            return NSUserDefaults.standardUserDefaults().stringForKey(UserDefaults.SessionID)
-        }
-        
-        set {
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: UserDefaults.SessionID)
-        }
-    }
-    
-    var userID: String? {
-        get {
-            return NSUserDefaults.standardUserDefaults().stringForKey(UserDefaults.UserID)
-        }
-        
-        set {
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: UserDefaults.UserID)
-        }
-    }
-    
-    var expirationDate: String? {
-        get {
-            return NSUserDefaults.standardUserDefaults().stringForKey(UserDefaults.ExpirationDate)
-        }
-        
-        set {
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: UserDefaults.ExpirationDate)
-        }
-    }
+    var userSession = UdacityUserSession()
     
     static var sharedInstance: UdacityApiClient = {
         let config = NSURLSessionConfiguration.defaultSessionConfiguration()
@@ -67,15 +38,6 @@ final class UdacityApiClient: JsonApiClient {
         
         return client
     }()
-    
-    var isUserLoggedIn: Bool {
-        let userDefaults = NSUserDefaults.standardUserDefaults()
-        guard let userID = userDefaults.objectForKey(UdacityApiClient.UserDefaults.UserID) as? String where !userID.isEmpty else {
-            return false
-        }
-        
-        return true
-    }
 
     //------------------------------------
     // MARK: - GET
@@ -137,15 +99,6 @@ final class UdacityApiClient: JsonApiClient {
     class func setUserValue(value: AnyObject?, forKey key: String) {
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject(value, forKey: key)
-        defaults.synchronize()
-    }
-    
-    class func logoutUser() {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.removeObjectForKey(UserDefaults.UserID)
-        defaults.removeObjectForKey(UserDefaults.SessionID)
-        defaults.removeObjectForKey(UserDefaults.ExpirationDate)
-        defaults.removeObjectForKey(UserDefaults.CurrentUser)
         defaults.synchronize()
     }
     

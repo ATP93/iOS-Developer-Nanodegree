@@ -92,7 +92,7 @@ extension MapViewController: MKMapViewDelegate {
             }
             
             // Is is current user annotation.
-            if annotation.uniqueKey == UdacityApiClient.sharedInstance.userID! {
+            if annotation.uniqueKey == UdacityApiClient.sharedInstance.userSession.userId! {
                 view.pinTintColor = MKPinAnnotationView.greenPinColor()
             } else {
                 view.pinTintColor = MKPinAnnotationView.redPinColor()
