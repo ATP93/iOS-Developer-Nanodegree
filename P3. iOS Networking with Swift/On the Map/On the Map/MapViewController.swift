@@ -14,7 +14,7 @@ import MapKit
 //------------------------------------------------
 
 private enum SegueIdentifier: String {
-    case PostLocation = "PostStudentLocation"
+    case ManageLocation = "ManageStudentLocation"
 }
 
 //------------------------------------------------
@@ -43,12 +43,24 @@ class MapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         fetchStudentLocations()
+        
+        subscribeToNotification(ManageLocationViewControllerDidUpdateLocation, selector: #selector(MapViewController.fetchStudentLocations))
+        subscribeToNotification(ManageLocationViewControllerDidPostLocation, selector: #selector(MapViewController.fetchStudentLocations))
     }
     
+    deinit {
+        unsubscribeFromAllNotifications()
+    }
+    
+    //------------------------------------------------
+    // MARK: Navigation
+    //------------------------------------------------
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == SegueIdentifier.PostLocation.rawValue {
-            let postLocationViewController = segue.destinationViewController as! PostLocationViewController
+        if segue.identifier == SegueIdentifier.ManageLocation.rawValue {
+            let postLocationViewController = segue.destinationViewController as! ManageLocationViewController
             
             if shouldUpdateStudentLocation {
                 let location = sender as! StudentLocation
@@ -108,7 +120,7 @@ class MapViewController: UIViewController {
                 // Overwrite existing location or post a new one?
                 guard let location = location else {
                     self.shouldUpdateStudentLocation = false
-                    self.performSegueWithIdentifier(SegueIdentifier.PostLocation.rawValue, sender: self)
+                    self.performSegueWithIdentifier(SegueIdentifier.ManageLocation.rawValue, sender: self)
                     return
                 }
                 
@@ -129,7 +141,7 @@ class MapViewController: UIViewController {
                     style: .Default,
                     handler: { action in
                         self.shouldUpdateStudentLocation = true
-                        self.performSegueWithIdentifier(SegueIdentifier.PostLocation.rawValue,
+                        self.performSegueWithIdentifier(SegueIdentifier.ManageLocation.rawValue,
                             sender: location)
                 }))
                 
@@ -195,6 +207,22 @@ extension MapViewController: MKMapViewDelegate {
                 presentViewController(alert, animated: true, completion: nil)
             }
         }
+    }
+    
+}
+
+//--------------------------------------------
+// MARK: - MapViewController (Notifications) -
+//--------------------------------------------
+
+extension MapViewController {
+    
+    private func subscribeToNotification(notification: String, selector: Selector) {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: notification, object: nil)
+    }
+    
+    private func unsubscribeFromAllNotifications() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
 }

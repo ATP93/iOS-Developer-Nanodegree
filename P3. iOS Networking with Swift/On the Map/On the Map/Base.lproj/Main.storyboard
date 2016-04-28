@@ -6,10 +6,10 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Post Location View Controller-->
+        <!--Manage Location View Controller-->
         <scene sceneID="nNT-l0-dsY">
             <objects>
-                <viewController id="NoE-tN-m96" customClass="PostLocationViewController" customModule="On_the_Map" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="NoE-tN-m96" customClass="ManageLocationViewController" customModule="On_the_Map" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="d2m-FN-zDg"/>
                         <viewControllerLayoutGuide type="bottom" id="i2P-Kd-QTL"/>
@@ -199,7 +199,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="rSD-PA-iiX" id="cQd-o2-HLK"/>
-                        <segue destination="NoE-tN-m96" kind="presentation" identifier="PostStudentLocation" id="B4O-yz-J8R"/>
+                        <segue destination="NoE-tN-m96" kind="presentation" identifier="ManageStudentLocation" id="B4O-yz-J8R"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>

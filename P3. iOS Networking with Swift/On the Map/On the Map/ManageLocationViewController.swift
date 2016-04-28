@@ -10,10 +10,10 @@ import UIKit
 import MapKit
 
 //------------------------------------------------------
-// MARK: - PostLocationViewController: UIViewController
+// MARK: - ManageLocationViewController: UIViewController
 //------------------------------------------------------
 
-class PostLocationViewController: UIViewController {
+class ManageLocationViewController: UIViewController {
     
     //--------------------------------------------------
     // MARK: Properties
@@ -100,11 +100,11 @@ class PostLocationViewController: UIViewController {
     
 }
 
-//---------------------------------------------------
-// MARK: - PostLocationViewController (Configure UI)
-//---------------------------------------------------
+//----------------------------------------------------
+// MARK: - ManageLocationViewController (Configure UI)
+//----------------------------------------------------
 
-extension PostLocationViewController {
+extension ManageLocationViewController {
     
     private func configureUI() {
         configureTextField(locationTextField)
@@ -118,11 +118,11 @@ extension PostLocationViewController {
     
 }
 
-//---------------------------------------------------------
-// MARK: - PostLocationViewController: UITextFieldDelegate
-//---------------------------------------------------------
+//-----------------------------------------------------------
+// MARK: - ManageLocationViewController: UITextFieldDelegate
+//-----------------------------------------------------------
 
-extension PostLocationViewController: UITextFieldDelegate {
+extension ManageLocationViewController: UITextFieldDelegate {
     
     //--------------------------------------------------
     // MARK: UITextFieldDelegate
@@ -176,34 +176,43 @@ extension PostLocationViewController: UITextFieldDelegate {
 }
 
 //---------------------------------------------------------
-// MARK: - PostLocationViewController: (Notifications)
+// MARK: - ManageLocationViewController: (Notifications)
 //---------------------------------------------------------
 
-extension PostLocationViewController {
-    
+extension ManageLocationViewController {
     
     private func subscribeToNotification(notification: String, selector: Selector) {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: notification, object: nil)
     }
     
     private func subscribeToKeyboardNotifications() {
-        subscribeToNotification(UIKeyboardWillShowNotification, selector: #selector(PostLocationViewController.keyboardWillShow(_:)))
-        subscribeToNotification(UIKeyboardWillHideNotification, selector: #selector(PostLocationViewController.keyboardWillHide(_:)))
-        subscribeToNotification(UIKeyboardDidShowNotification, selector: #selector(PostLocationViewController.keyboardDidShow(_:)))
-        subscribeToNotification(UIKeyboardDidHideNotification, selector: #selector(PostLocationViewController.keyboardDidHide(_:)))
+        subscribeToNotification(UIKeyboardWillShowNotification, selector: #selector(ManageLocationViewController.keyboardWillShow(_:)))
+        subscribeToNotification(UIKeyboardWillHideNotification, selector: #selector(ManageLocationViewController.keyboardWillHide(_:)))
+        subscribeToNotification(UIKeyboardDidShowNotification, selector: #selector(ManageLocationViewController.keyboardDidShow(_:)))
+        subscribeToNotification(UIKeyboardDidHideNotification, selector: #selector(ManageLocationViewController.keyboardDidHide(_:)))
     }
     
     private func unsubscribeFromAllNotifications() {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
+    private func postUpdateLocationNotification() {
+        NSNotificationCenter.defaultCenter()
+            .postNotificationName(ManageLocationViewControllerDidUpdateLocation, object: nil)
+    }
+    
+    private func postPostLocationNotification() {
+        NSNotificationCenter.defaultCenter()
+            .postNotificationName(ManageLocationViewControllerDidPostLocation, object: nil)
+    }
+    
 }
 
-//---------------------------------------------------------
-// MARK: - PostLocationViewController (SubmitLocationView)
-//---------------------------------------------------------
+//-----------------------------------------------------------
+// MARK: - ManageLocationViewController (SubmitLocationView)
+//-----------------------------------------------------------
 
-extension PostLocationViewController {
+extension ManageLocationViewController {
     
     func displaySubmitLocationView() {
         func showView(submitView: SubmitLocationView) {
@@ -235,11 +244,11 @@ extension PostLocationViewController {
     
 }
 
-//----------------------------------------------------------------
-// MARK: - PostLocationViewController: SubmitLocationViewDelegate
-//----------------------------------------------------------------
+//------------------------------------------------------------------
+// MARK: - ManageLocationViewController: SubmitLocationViewDelegate
+//------------------------------------------------------------------
 
-extension PostLocationViewController: SubmitLocationViewDelegate {
+extension ManageLocationViewController: SubmitLocationViewDelegate {
     
     //------------------------------------------------------------
     // MARK: SubmitLocationViewDelegate
@@ -294,6 +303,7 @@ extension PostLocationViewController: SubmitLocationViewDelegate {
                 performOnMain {
                     hideNetworkActivityIndicator()
                     if success {
+                        self.postUpdateLocationNotification()
                         self.displayAlert(
                             title: "Success",
                             message: "Your location successfully updated!",
@@ -341,6 +351,7 @@ extension PostLocationViewController: SubmitLocationViewDelegate {
                 performOnMain {
                     hideNetworkActivityIndicator()
                     if success {
+                        self.postPostLocationNotification()
                         self.displayAlert(
                             title: "Success",
                             message: "Your location successfully posted!",

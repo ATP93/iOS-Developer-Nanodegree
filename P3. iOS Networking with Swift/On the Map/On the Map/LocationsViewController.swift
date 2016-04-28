@@ -36,11 +36,18 @@ class LocationsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        fetchLocations()
+        
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(LocationsViewController.fetchLocations), forControlEvents: .ValueChanged)
         tableView.addSubview(refreshControl)
         
-        fetchLocations()
+        subscribeToNotification(ManageLocationViewControllerDidPostLocation, selector: #selector(LocationsViewController.fetchLocations))
+        subscribeToNotification(ManageLocationViewControllerDidUpdateLocation, selector: #selector(LocationsViewController.fetchLocations))
+    }
+    
+    deinit {
+        unsubscribeFromAllNotifications()
     }
     
     //--------------------------------------------
@@ -114,6 +121,22 @@ extension LocationsViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         studentLocations[indexPath.row].openMediaURLInSafari()
+    }
+    
+}
+
+//--------------------------------------------------
+// MARK: - LocationsViewController (Notifications) -
+//--------------------------------------------------
+
+extension LocationsViewController {
+    
+    private func subscribeToNotification(notification: String, selector: Selector) {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: notification, object: nil)
+    }
+    
+    private func unsubscribeFromAllNotifications() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
 }

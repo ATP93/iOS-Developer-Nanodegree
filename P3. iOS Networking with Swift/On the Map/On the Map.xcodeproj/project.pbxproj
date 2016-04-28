@@ -36,6 +36,7 @@
 		756B8BCE1CA0E5A9009C7355 /* User+JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756B8BCD1CA0E5A9009C7355 /* User+JSONParselable.swift */; };
 		7571C4D71CD1B459001B4F03 /* UdacityUserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571C4D61CD1B459001B4F03 /* UdacityUserSession.swift */; };
 		7571C4D91CD1D2CD001B4F03 /* UIUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571C4D81CD1D2CD001B4F03 /* UIUtility.swift */; };
+		7571C4DB1CD23D9B001B4F03 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571C4DA1CD23D9B001B4F03 /* Constants.swift */; };
 		758794A21CA10FC200E8B10E /* Alertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A11CA10FC200E8B10E /* Alertable.swift */; };
 		758794A41CA1117E00E8B10E /* StudentLocation+Alertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A31CA1117E00E8B10E /* StudentLocation+Alertable.swift */; };
 		758794A81CA115DF00E8B10E /* GeoLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A71CA115DF00E8B10E /* GeoLocation.swift */; };
@@ -44,7 +45,7 @@
 		75C84D751CA1B97500B14210 /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C84D741CA1B97500B14210 /* UserTableViewCell.swift */; };
 		75E3655B1CCF0A9D00881975 /* JsonApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E3655A1CCF0A9D00881975 /* JsonApiClient.swift */; };
 		75EAE52F1CD0FFEC003F682F /* HttpMethodName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EAE52E1CD0FFEC003F682F /* HttpMethodName.swift */; };
-		75FCED611CA12A3F00C3DD98 /* PostLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FCED601CA12A3F00C3DD98 /* PostLocationViewController.swift */; };
+		75FCED611CA12A3F00C3DD98 /* ManageLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75FCED601CA12A3F00C3DD98 /* ManageLocationViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +80,7 @@
 		756B8BCD1CA0E5A9009C7355 /* User+JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+JSONParselable.swift"; sourceTree = "<group>"; };
 		7571C4D61CD1B459001B4F03 /* UdacityUserSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityUserSession.swift; sourceTree = "<group>"; };
 		7571C4D81CD1D2CD001B4F03 /* UIUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtility.swift; sourceTree = "<group>"; };
+		7571C4DA1CD23D9B001B4F03 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		758794A11CA10FC200E8B10E /* Alertable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alertable.swift; sourceTree = "<group>"; };
 		758794A31CA1117E00E8B10E /* StudentLocation+Alertable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StudentLocation+Alertable.swift"; sourceTree = "<group>"; };
 		758794A71CA115DF00E8B10E /* GeoLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoLocation.swift; sourceTree = "<group>"; };
@@ -87,7 +89,7 @@
 		75C84D741CA1B97500B14210 /* UserTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		75E3655A1CCF0A9D00881975 /* JsonApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonApiClient.swift; sourceTree = "<group>"; };
 		75EAE52E1CD0FFEC003F682F /* HttpMethodName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpMethodName.swift; sourceTree = "<group>"; };
-		75FCED601CA12A3F00C3DD98 /* PostLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostLocationViewController.swift; sourceTree = "<group>"; };
+		75FCED601CA12A3F00C3DD98 /* ManageLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManageLocationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,7 +157,7 @@
 				7500AFEF1C9E88130067DEAD /* MapViewController.swift */,
 				7500AFF11C9E88130067DEAD /* LocationsViewController.swift */,
 				756583751CA0093B0033326E /* UserAccountViewController.swift */,
-				75FCED601CA12A3F00C3DD98 /* PostLocationViewController.swift */,
+				75FCED601CA12A3F00C3DD98 /* ManageLocationViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -225,6 +227,7 @@
 			isa = PBXGroup;
 			children = (
 				7500B0071C9ECC3C0067DEAD /* GCDBlackBox.swift */,
+				7571C4DA1CD23D9B001B4F03 /* Constants.swift */,
 				755D540B1C9FC57A0087D9F7 /* ErrorUtils.swift */,
 				7571C4D81CD1D2CD001B4F03 /* UIUtility.swift */,
 				756583801CA030E40033326E /* NSDate+FromString.swift */,
@@ -386,8 +389,9 @@
 				7565837D1CA02CCA0033326E /* StudentLocationKey.swift in Sources */,
 				7571C4D71CD1B459001B4F03 /* UdacityUserSession.swift in Sources */,
 				7500B0241C9F15380067DEAD /* UdacityApiClientConvenience.swift in Sources */,
-				75FCED611CA12A3F00C3DD98 /* PostLocationViewController.swift in Sources */,
+				75FCED611CA12A3F00C3DD98 /* ManageLocationViewController.swift in Sources */,
 				756583831CA0337C0033326E /* ParseApiClient.swift in Sources */,
+				7571C4DB1CD23D9B001B4F03 /* Constants.swift in Sources */,
 				758794A21CA10FC200E8B10E /* Alertable.swift in Sources */,
 				755D540C1C9FC57A0087D9F7 /* ErrorUtils.swift in Sources */,
 				75C84D731CA18BC600B14210 /* SubmitLocationView.swift in Sources */,

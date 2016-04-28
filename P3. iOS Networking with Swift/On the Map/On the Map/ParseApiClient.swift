@@ -48,11 +48,12 @@ class ParseApiClient: JsonApiClient {
     //-----------------------------------
     
     func getStudentLocationsWithCompletionHandler(completionHandler: ParseGetStudentLocationsCompletionHandler) {
-        let request = NSURLRequest(URL: parseURLFromParameters([
-                ParameterKey.order: "-\(JSONBodyKeys.UpdatedAt)",
-                ParameterKey.limit: "200"
-            ])
+        let url = parseURLFromParameters([
+            ParameterKey.order: "-\(JSONBodyKeys.UpdatedAt)",
+            ParameterKey.limit: "200"]
         )
+        
+        let request = NSURLRequest(URL: url)
         fetchJson(request) { (result) in
             func sendError(error: String) {
                 self.debugLog(error)
@@ -86,9 +87,11 @@ class ParseApiClient: JsonApiClient {
     }
     
     func getStudentLocationWithId(id: String, completionHandler: ParseGetStudentLocationCompletionHandler) {
-        let request = NSURLRequest(URL: parseURLFromParameters(
-            ["where": "{\"\(JSONBodyKeys.UniqueKey)\":\"\(id)\"}"])
+        let url = parseURLFromParameters([
+            "where": "{\"\(JSONBodyKeys.UniqueKey)\":\"\(id)\"}"]
         )
+        
+        let request = NSURLRequest(URL: url)
         fetchJson(request) { (result) in
             func sendError(error: String) {
                 self.debugLog(error)
