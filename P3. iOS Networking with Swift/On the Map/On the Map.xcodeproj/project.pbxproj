@@ -35,6 +35,7 @@
 		756B8BCC1CA0E49E009C7355 /* UserKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756B8BCB1CA0E49E009C7355 /* UserKey.swift */; };
 		756B8BCE1CA0E5A9009C7355 /* User+JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756B8BCD1CA0E5A9009C7355 /* User+JSONParselable.swift */; };
 		7571C4D71CD1B459001B4F03 /* UdacityUserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571C4D61CD1B459001B4F03 /* UdacityUserSession.swift */; };
+		7571C4D91CD1D2CD001B4F03 /* UIUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571C4D81CD1D2CD001B4F03 /* UIUtility.swift */; };
 		758794A21CA10FC200E8B10E /* Alertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A11CA10FC200E8B10E /* Alertable.swift */; };
 		758794A41CA1117E00E8B10E /* StudentLocation+Alertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A31CA1117E00E8B10E /* StudentLocation+Alertable.swift */; };
 		758794A81CA115DF00E8B10E /* GeoLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A71CA115DF00E8B10E /* GeoLocation.swift */; };
@@ -77,6 +78,7 @@
 		756B8BCB1CA0E49E009C7355 /* UserKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserKey.swift; sourceTree = "<group>"; };
 		756B8BCD1CA0E5A9009C7355 /* User+JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+JSONParselable.swift"; sourceTree = "<group>"; };
 		7571C4D61CD1B459001B4F03 /* UdacityUserSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityUserSession.swift; sourceTree = "<group>"; };
+		7571C4D81CD1D2CD001B4F03 /* UIUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtility.swift; sourceTree = "<group>"; };
 		758794A11CA10FC200E8B10E /* Alertable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alertable.swift; sourceTree = "<group>"; };
 		758794A31CA1117E00E8B10E /* StudentLocation+Alertable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StudentLocation+Alertable.swift"; sourceTree = "<group>"; };
 		758794A71CA115DF00E8B10E /* GeoLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoLocation.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 			children = (
 				7500B0071C9ECC3C0067DEAD /* GCDBlackBox.swift */,
 				755D540B1C9FC57A0087D9F7 /* ErrorUtils.swift */,
+				7571C4D81CD1D2CD001B4F03 /* UIUtility.swift */,
 				756583801CA030E40033326E /* NSDate+FromString.swift */,
 			);
 			name = Utility;
@@ -360,6 +363,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7571C4D91CD1D2CD001B4F03 /* UIUtility.swift in Sources */,
 				756583781CA029D40033326E /* StudentLocation.swift in Sources */,
 				7500B0081C9ECC3C0067DEAD /* BorderedButton.swift in Sources */,
 				758794A41CA1117E00E8B10E /* StudentLocation+Alertable.swift in Sources */,

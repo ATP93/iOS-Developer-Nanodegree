@@ -46,8 +46,10 @@ class MapViewController: UIViewController {
             mapView.removeAnnotation(anAnnotation)
         }
         
+        showNetworkActivityIndicator()
         ParseApiClient.sharedInstance.getStudentLocationsWithCompletionHandler { (locations, error) in
             performOnMain {
+                hideNetworkActivityIndicator()
                 if let error = error {
                     print(error.localizedDescription)
                 } else {

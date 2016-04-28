@@ -37,17 +37,12 @@ class PostLocationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureUI()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        subscribeToNotification(UIKeyboardWillShowNotification, selector: #selector(PostLocationViewController.keyboardWillShow(_:)))
-        subscribeToNotification(UIKeyboardWillHideNotification, selector: #selector(PostLocationViewController.keyboardWillHide(_:)))
-        subscribeToNotification(UIKeyboardDidShowNotification, selector: #selector(PostLocationViewController.keyboardDidShow(_:)))
-        subscribeToNotification(UIKeyboardDidHideNotification, selector: #selector(PostLocationViewController.keyboardDidHide(_:)))
+        subscribeToKeyboardNotifications()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -77,7 +72,9 @@ class PostLocationViewController: UIViewController {
             return
         }
         
+        showNetworkActivityIndicator()
         geocoder.geocodeAddressString(addressString) { [weak self] (placemarks, error) in
+            hideNetworkActivityIndicator()
             if let error = error {
                 print(error.localizedDescription)
             } else {
@@ -140,13 +137,13 @@ extension PostLocationViewController: UITextFieldDelegate {
     
     func keyboardWillShow(notification: NSNotification) {
         if !keyboardOnScreen {
-            view.frame.origin.y -= keyboardHeight(notification)
+            view.frame.origin.y = keyboardHeight(notification) * -1
         }
     }
     
     func keyboardWillHide(notification: NSNotification) {
         if keyboardOnScreen {
-            view.frame.origin.y += keyboardHeight(notification)
+            view.frame.origin.y = 0.0
         }
     }
     
@@ -182,8 +179,16 @@ extension PostLocationViewController: UITextFieldDelegate {
 
 extension PostLocationViewController {
     
+    
     private func subscribeToNotification(notification: String, selector: Selector) {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: notification, object: nil)
+    }
+    
+    private func subscribeToKeyboardNotifications() {
+        subscribeToNotification(UIKeyboardWillShowNotification, selector: #selector(PostLocationViewController.keyboardWillShow(_:)))
+        subscribeToNotification(UIKeyboardWillHideNotification, selector: #selector(PostLocationViewController.keyboardWillHide(_:)))
+        subscribeToNotification(UIKeyboardDidShowNotification, selector: #selector(PostLocationViewController.keyboardDidShow(_:)))
+        subscribeToNotification(UIKeyboardDidHideNotification, selector: #selector(PostLocationViewController.keyboardDidHide(_:)))
     }
     
     private func unsubscribeFromAllNotifications() {
@@ -239,12 +244,14 @@ extension PostLocationViewController: SubmitLocationViewDelegate {
     }
     
     func submitLocationViewDidSubmitLocation(view: SubmitLocationView, location: CLLocation, withLinkToShare link: String) {
+        showNetworkActivityIndicator()
         view.activityIndicator.startAnimating()
         
         let udacity = UdacityApiClient.sharedInstance
         udacity.getPublicUserData(udacity.userSession.userId!) { (user, error) in
             func showError(error: NSError) {
                 view.activityIndicator.stopAnimating()
+                hideNetworkActivityIndicator()
                 self.displayAlert(title: "Failed to post location", message: error.localizedDescription)
             }
             
@@ -253,6 +260,7 @@ extension PostLocationViewController: SubmitLocationViewDelegate {
             } else if let user = user {
                 ParseApiClient.sharedInstance.postStudentLocation(student: user, placemark: self.placemark!, mediaURL: link, completionHandler: { (success, error) in
                     view.activityIndicator.stopAnimating()
+                    hideNetworkActivityIndicator()
                     
                     if success {
                         let alert = UIAlertController(title: "Success", message: "Your location has been successfully posted!", preferredStyle: .Alert)
@@ -266,6 +274,7 @@ extension PostLocationViewController: SubmitLocationViewDelegate {
                 })
             } else {
                 view.activityIndicator.stopAnimating()
+                hideNetworkActivityIndicator()
                 
                 let userInfo = [NSLocalizedDescriptionKey : "Unexpected error occured"]
                 showError(NSError(domain: "com.ivanmagda.On-the-Map.parse.submitStudentLocation", code: 21, userInfo: userInfo))

@@ -48,8 +48,10 @@ class LocationsViewController: UIViewController {
     //--------------------------------------------
     
     func fetchLocations() {
+        showNetworkActivityIndicator()
         ParseApiClient.sharedInstance.getStudentLocationsWithCompletionHandler { [weak self] (locations, error) in
             performOnMain {
+                hideNetworkActivityIndicator()
                 self?.refreshControl.endRefreshing()
                 if let error = error {
                     print(error.localizedDescription)

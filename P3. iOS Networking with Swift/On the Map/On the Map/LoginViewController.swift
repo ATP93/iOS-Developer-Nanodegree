@@ -82,10 +82,12 @@ class LoginViewController: UIViewController {
         } else {
             setUIEnabled(false)
             self.activityIndicator.startAnimating()
+            showNetworkActivityIndicator()
             
             UdacityApiClient.sharedInstance.authenticateWithUsername(username, password: password) { (success, error) in
                 performOnMain {
                     self.activityIndicator.stopAnimating()
+                    hideNetworkActivityIndicator()
                     
                     if success {
                         self.completeLogin()
@@ -178,14 +180,14 @@ extension LoginViewController: UITextFieldDelegate {
     
     func keyboardWillShow(notification: NSNotification) {
         if !keyboardOnScreen {
-            view.frame.origin.y -= keyboardHeight(notification) / 2
+            view.frame.origin.y = (keyboardHeight(notification) * -1) / 2.0
             udacityLogoImageView.hidden = true
         }
     }
     
     func keyboardWillHide(notification: NSNotification) {
         if keyboardOnScreen {
-            view.frame.origin.y += keyboardHeight(notification) / 2
+            view.frame.origin.y = 0.0
             udacityLogoImageView.hidden = false
         }
     }
