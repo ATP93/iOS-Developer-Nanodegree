@@ -32,6 +32,8 @@ final class UdacityApiClient: JsonApiClient {
             "Content-Type": "application/json",
             "Accept": "application/json"
         ]
+        config.timeoutIntervalForRequest  = 30.0
+        config.timeoutIntervalForResource = 60.0
         
         let client = UdacityApiClient(configuration: config)
         client.loggingEnabled = true

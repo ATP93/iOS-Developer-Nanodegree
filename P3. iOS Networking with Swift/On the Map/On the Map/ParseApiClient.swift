@@ -32,6 +32,8 @@ class ParseApiClient: JsonApiClient {
             "X-Parse-Application-Id": Constant.ApplicationId,
             "X-Parse-REST-API-Key": Constant.RestApiKey
         ]
+        config.timeoutIntervalForRequest  = 30.0
+        config.timeoutIntervalForResource = 60.0
         
         let client = ParseApiClient(configuration: config)
         client.loggingEnabled = true

@@ -28,8 +28,6 @@ class JsonApiClient: HttpApiClient {
         fetchRawData(request) { result in
             switch result {
             case .RawData(let data):
-                self.debugResponseData(data)
-                
                 // Deserializing the JSON data.
                 self.deserializeJsonData(data) { (jsonObject, error) in
                     guard error == nil else {
