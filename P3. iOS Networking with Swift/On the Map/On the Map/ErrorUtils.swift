@@ -75,4 +75,7 @@ extension ParseApiClient {
     
     static let PostStudentLocationDomain = "\(ErrorDomain).post-student-location"
     static let PostStudentLocationErrorCode = 20
+    
+    static let GetStudentLocationDomain = "\(ErrorDomain).get-student-location"
+    static let GetStudentLocationErrorCode = 21
 }

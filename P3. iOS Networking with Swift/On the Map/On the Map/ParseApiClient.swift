@@ -14,7 +14,8 @@ import MapKit
 //-------------------------------------
 
 typealias ParseTaskCompletionHandler = (success: Bool, error: NSError?) -> Void
-typealias ParseStudentLocationsCompletionHandler = (locations: [StudentLocation]?, error: NSError?) -> Void
+typealias ParseGetStudentLocationsCompletionHandler = (locations: [StudentLocation]?, error: NSError?) -> Void
+typealias ParseGetStudentLocationCompletionHandler = (location: StudentLocation?, error: NSError?) -> Void
 
 //---------------------------------------
 // MARK: - ParseApiClient: JsonApiClient
@@ -45,10 +46,8 @@ class ParseApiClient: JsonApiClient {
     // MARK: Network
     //-----------------------------------
     
-    func getStudentLocationsWithCompletionHandler(completionHandler: ParseStudentLocationsCompletionHandler) {
-        let request = NSMutableURLRequest(URL: parseURLFromParameters(nil, withPathExtension: nil))
-        request.HTTPMethod = HttpMethodName.Get.rawValue
-        
+    func getStudentLocationsWithCompletionHandler(completionHandler: ParseGetStudentLocationsCompletionHandler) {
+        let request = NSURLRequest(URL: parseURLFromParameters(nil))
         fetchJson(request) { (result) in
             func sendError(error: String) {
                 self.debugLog(error)
@@ -87,7 +86,7 @@ class ParseApiClient: JsonApiClient {
             return
         }
         
-        let request = NSMutableURLRequest(URL: parseURLFromParameters(nil, withPathExtension: nil))
+        let request = NSMutableURLRequest(URL: parseURLFromParameters(nil))
         request.HTTPMethod = HttpMethodName.Post.rawValue
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = "{\"\(JSONBodyKeys.UniqueKey)\": \"\(student.id)\", \"\(JSONBodyKeys.FirstName)\": \"\(student.firstName)\", \"\(JSONBodyKeys.LastName)\": \"\(student.lastName)\",\"\(JSONBodyKeys.MapString)\": \"\(placemark.name!)\", \"\(JSONBodyKeys.MediaURL)\": \"\(mediaURL)\",\"\(JSONBodyKeys.Latitude)\": \(coordinate.latitude), \"\(JSONBodyKeys.Longitude)\": \(coordinate.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
@@ -114,6 +113,38 @@ class ParseApiClient: JsonApiClient {
                 }
                 self.debugLog("Posted location id: \(objectId), createdAt: \(createdAt)")
                 completionHandler(success: true, error: nil)
+            default:
+                sendError(result.defaultErrorMessage()!)
+            }
+        }
+    }
+    
+    func getStudentLocationWithId(id: String, completionHandler: ParseGetStudentLocationCompletionHandler) {
+        let request = NSURLRequest(URL: parseURLFromParameters(
+            ["where": "{\"\(JSONBodyKeys.UniqueKey)\":\"\(id)\"}"])
+        )
+        fetchJson(request) { (result) in
+            func sendError(error: String) {
+                self.debugLog(error)
+                let error = NSError(
+                    domain: ParseApiClient.GetStudentLocationDomain,
+                    code: ParseApiClient.GetStudentLocationErrorCode,
+                    userInfo: [NSLocalizedDescriptionKey : error]
+                )
+                completionHandler(location: nil, error: error)
+            }
+            
+            switch result {
+            case .Error(let error):
+                sendError(error.localizedDescription)
+            case .Json(let json):
+                guard let results = json[JSONResponseKeys.Results] as? [JSONDictionary] where
+                          results.count == 1 else {
+                    sendError("Failed to parse json")
+                    return
+                }
+                
+                completionHandler(location: StudentLocation.decode(results[0]), error: nil)
             default:
                 sendError(result.defaultErrorMessage()!)
             }
