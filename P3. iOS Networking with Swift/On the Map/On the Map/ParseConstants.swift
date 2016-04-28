@@ -49,6 +49,7 @@ extension ParseApiClient {
         static let MediaURL = "mediaURL"
         static let Latitude = "latitude"
         static let Longitude = "longitude"
+        static let UpdatedAt = "updatedAt"
     }
     
     // MARK: JSON Response Keys
@@ -56,6 +57,7 @@ extension ParseApiClient {
         static let Results = "results"
         static let CreatedAt = "createdAt"
         static let ObjectId = "objectId"
+        static let UpdatedAt = "updatedAt"
     }
     
 }

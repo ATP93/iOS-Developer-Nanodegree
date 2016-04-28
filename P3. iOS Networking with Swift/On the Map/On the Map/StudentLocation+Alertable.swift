@@ -11,7 +11,7 @@ import UIKit
 extension StudentLocation: Alertable {
     
     func alert() -> UIAlertController {
-        let alert = UIAlertController(title: nil, message: "Open user media link in Safari", preferredStyle: .Alert)
+        let alert = UIAlertController(title: nil, message: "Open user media link in Safari?", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "Yes", style: .Default, handler: { action in
             self.openMediaURLInSafari()
         }))

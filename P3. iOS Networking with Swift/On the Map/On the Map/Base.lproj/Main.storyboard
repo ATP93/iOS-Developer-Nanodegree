@@ -188,7 +188,7 @@
                     <navigationItem key="navigationItem" title="On The Map" id="NDG-mF-lt2">
                         <barButtonItem key="leftBarButtonItem" image="Marker" id="asz-Bs-p3J" userLabel="PostLocation">
                             <connections>
-                                <segue destination="NoE-tN-m96" kind="presentation" id="1EQ-9O-4Ja"/>
+                                <action selector="postLocationDidPressed:" destination="9pv-A4-QxB" id="uVc-X4-nXU"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="Synchronize" id="LFC-BY-DN4" userLabel="Synchronize">
@@ -199,6 +199,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="rSD-PA-iiX" id="cQd-o2-HLK"/>
+                        <segue destination="NoE-tN-m96" kind="presentation" identifier="PostStudentLocation" id="B4O-yz-J8R"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>

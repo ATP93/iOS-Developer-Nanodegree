@@ -12,4 +12,5 @@ enum HttpMethodName: String {
     case Get = "GET"
     case Post = "POST"
     case Delete = "DELETE"
+    case Put = "PUT"
 }

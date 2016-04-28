@@ -19,6 +19,8 @@ class PostLocationViewController: UIViewController {
     // MARK: Properties
     //--------------------------------------------------
     
+    var locationToUpdate: StudentLocation?
+    
     var keyboardOnScreen = false
     
     private var geocoder = CLGeocoder()
@@ -90,9 +92,9 @@ class PostLocationViewController: UIViewController {
     // MARK: Helpers
     //---------------------------------------
     
-    private func displayAlert(title title: String, message: String) {
+    private func displayAlert(title title: String, message: String, actionHandler block: (UIAlertAction -> Void)?) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: block))
         presentViewController(alert, animated: true, completion: nil)
     }
     
@@ -239,46 +241,117 @@ extension PostLocationViewController {
 
 extension PostLocationViewController: SubmitLocationViewDelegate {
     
+    //------------------------------------------------------------
+    // MARK: SubmitLocationViewDelegate
+    //------------------------------------------------------------
+    
     func submitLocationViewDidCancel(view: SubmitLocationView) {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
     func submitLocationViewDidSubmitLocation(view: SubmitLocationView, location: CLLocation, withLinkToShare link: String) {
+        if let locationToUpdate = locationToUpdate {
+            updateLocation(locationToUpdate, location: location, link: link)
+        } else {
+            postLocation(location, link: link)
+        }
+    }
+    
+    //------------------------------------------------------------
+    // MARK: Helpers
+    //------------------------------------------------------------
+    
+    private func updateLocation(locationToUpdate: StudentLocation, location: CLLocation, link: String) {
         showNetworkActivityIndicator()
-        view.activityIndicator.startAnimating()
         
         let udacity = UdacityApiClient.sharedInstance
         udacity.getPublicUserData(udacity.userSession.userId!) { (user, error) in
             func showError(error: NSError) {
-                view.activityIndicator.stopAnimating()
-                hideNetworkActivityIndicator()
-                self.displayAlert(title: "Failed to post location", message: error.localizedDescription)
+                performOnMain {
+                    hideNetworkActivityIndicator()
+                    self.displayAlert(title: "Failed to overwrite location",
+                        message: error.localizedDescription,
+                        actionHandler: nil)
+                }
             }
             
-            if let error = error {
-                showError(error)
-            } else if let user = user {
-                ParseApiClient.sharedInstance.postStudentLocation(student: user, placemark: self.placemark!, mediaURL: link, completionHandler: { (success, error) in
-                    view.activityIndicator.stopAnimating()
+            guard error == nil else {
+                showError(error!)
+                return
+            }
+            
+            guard user != nil else {
+                hideNetworkActivityIndicator()
+                showError(NSError(
+                    domain: "com.ivanmagda.On-the-Map.parse.update-student-location",
+                    code: 26,
+                    userInfo: [NSLocalizedDescriptionKey : "Unexpected error occured"])
+                )
+                return
+            }
+            
+            ParseApiClient.sharedInstance.updateStudentLocation(locationToUpdate, student: user!, placemark: self.placemark!, mediaURL: link, completionHandler: { (success, error) in
+                performOnMain {
                     hideNetworkActivityIndicator()
-                    
                     if success {
-                        let alert = UIAlertController(title: "Success", message: "Your location has been successfully posted!", preferredStyle: .Alert)
-                        alert.addAction(UIAlertAction(title: "Ok", style: .Cancel, handler: { action in
-                            self.dismissViewControllerAnimated(true, completion: nil)
-                        }))
-                        self.presentViewController(alert, animated: true, completion: nil)
+                        self.displayAlert(
+                            title: "Success",
+                            message: "Your location successfully updated!",
+                            actionHandler: { action in
+                                self.dismissViewControllerAnimated(true, completion: nil)
+                        })
                     } else {
                         showError(error!)
                     }
-                })
-            } else {
-                view.activityIndicator.stopAnimating()
-                hideNetworkActivityIndicator()
-                
-                let userInfo = [NSLocalizedDescriptionKey : "Unexpected error occured"]
-                showError(NSError(domain: "com.ivanmagda.On-the-Map.parse.submitStudentLocation", code: 21, userInfo: userInfo))
+                }
+            })
+        }
+    }
+    
+    private func postLocation(location: CLLocation, link: String) {
+        showNetworkActivityIndicator()
+        
+        let udacity = UdacityApiClient.sharedInstance
+        udacity.getPublicUserData(udacity.userSession.userId!) { (user, error) in
+            func showError(error: NSError) {
+                performOnMain {
+                    hideNetworkActivityIndicator()
+                    self.displayAlert(title: "Failed to post location",
+                        message: error.localizedDescription,
+                        actionHandler: nil)
+                }
             }
+            
+            guard error == nil else {
+                showError(error!)
+                return
+            }
+            
+            guard user != nil else {
+                hideNetworkActivityIndicator()
+                showError(NSError(
+                    domain: "com.ivanmagda.On-the-Map.parse.submit-student-location",
+                    code: 25,
+                    userInfo: [NSLocalizedDescriptionKey : "Unexpected error occured"])
+                )
+                return
+            }
+            
+            ParseApiClient.sharedInstance.postLocationForStudent(user!, placemark: self.placemark!, mediaURL: link, completionHandler: { (success, error) in
+                performOnMain {
+                    hideNetworkActivityIndicator()
+                    if success {
+                        self.displayAlert(
+                            title: "Success",
+                            message: "Your location successfully posted!",
+                            actionHandler: { action in
+                                self.dismissViewControllerAnimated(true, completion: nil)
+                        })
+                    } else {
+                        showError(error!)
+                    }
+                }
+            })
         }
     }
     
