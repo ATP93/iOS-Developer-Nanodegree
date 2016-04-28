@@ -24,7 +24,7 @@ class JsonApiClient: HttpApiClient {
     // MARK: Data Tasks
     //----------------------------------
     
-    func fetchJSON(request: NSURLRequest, completionHandler: TaskCompletionHandler) {
+    func fetchJson(request: NSURLRequest, completionHandler: TaskCompletionHandler) {
         fetchRawData(request) { result in
             switch result {
             case .RawData(let data):

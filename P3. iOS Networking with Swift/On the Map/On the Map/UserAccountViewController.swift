@@ -63,7 +63,7 @@ class UserAccountViewController: UIViewController {
     @IBAction func logoutDidPressed(sender: AnyObject) {
         let alert = UIAlertController(title: "Are you sure?", message: "You want to exit your account. Press Ok if you want it.", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
-            UdacityApiClient.sharedInstance.logOutWithCompletionHandler { [weak self] (success, error) in
+            UdacityApiClient.sharedInstance.logOut { [weak self] (success, error) in
                 performOnMain {
                     if success {
                         self?.dismissViewControllerAnimated(true, completion: nil)

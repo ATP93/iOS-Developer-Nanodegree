@@ -12,7 +12,7 @@ import Foundation
 // MARK: Typealiases
 //-------------------------------------
 
-typealias UdacityTaskCompletionHandler = (result: JSONDictionary?, error: NSError?) -> Void
+typealias UdacityTaskCompletionHandler = (jsonObject: JSONDictionary?, error: NSError?) -> Void
 
 //-----------------------------------------
 // MARK: - UdacityApiClient: HttpApiClient
@@ -45,7 +45,7 @@ final class UdacityApiClient: JsonApiClient {
     // MARK: - GET
     //------------------------------------
     
-    func dataTaskForGETMethod(method: String, parameters: [String: AnyObject]?, completionHandler: UdacityTaskCompletionHandler) {
+    func dataTaskForGetMethod(method: String, parameters: [String: AnyObject]?, completionHandler: UdacityTaskCompletionHandler) {
         let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
         request.HTTPMethod = HttpMethodName.Get.rawValue
         fetchRawData(request) { result in
@@ -57,7 +57,7 @@ final class UdacityApiClient: JsonApiClient {
     // MARK: - POST
     //------------------------------------
     
-    func dataTaskForPOSTMethod(method: String, parameters: [String: AnyObject]?, jsonBody: String, completionHandler: UdacityTaskCompletionHandler) {
+    func dataTaskForPostMethod(method: String, parameters: [String: AnyObject]?, jsonBody: String, completionHandler: UdacityTaskCompletionHandler) {
         let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
         request.HTTPMethod = HttpMethodName.Post.rawValue
         request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
@@ -70,7 +70,7 @@ final class UdacityApiClient: JsonApiClient {
     // MARK: - DELETE
     //------------------------------------
     
-    func dataTaskForDELETEMethod(method: String, parameters: [String: AnyObject]?, headerFields: [String: String?]?, completionHandler: UdacityTaskCompletionHandler) {
+    func dataTaskForDeleteMethod(method: String, parameters: [String: AnyObject]?, headerFields: [String: String?]?, completionHandler: UdacityTaskCompletionHandler) {
         let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
         request.HTTPMethod = HttpMethodName.Delete.rawValue
     
@@ -96,12 +96,6 @@ final class UdacityApiClient: JsonApiClient {
         } else {
             return nil
         }
-    }
-    
-    class func setUserValue(value: AnyObject?, forKey key: String) {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setObject(value, forKey: key)
-        defaults.synchronize()
     }
     
     /// Create a URL from parameters.
@@ -135,20 +129,21 @@ final class UdacityApiClient: JsonApiClient {
                 code: UdacityApiClient.ErrorCode,
                 userInfo: userInfo
             )
-            completionHandler(result: nil, error: error)
+            completionHandler(jsonObject: nil, error: error)
         }
         
         switch result {
         case .Error(let error):
-            completionHandler(result: nil, error: error)
+            completionHandler(jsonObject: nil, error: error)
         case .RawData(let data):
             let resultData = self.skipSecurityCharactersInData(data)
+            self.debugResponseData(resultData)
             self.deserializeJsonData(resultData) { (jsonObject, error) in
                 if let _ = error {
                     sendError("Could not parse the data as JSON: '\(resultData)'")
                 } else {
                     if let json = jsonObject as? JSONDictionary {
-                        completionHandler(result: json, error: nil)
+                        completionHandler(jsonObject: json, error: nil)
                     } else {
                         sendError("Failed to cast type of the json object: \(jsonObject)")
                     }

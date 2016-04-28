@@ -7,10 +7,13 @@
 //
 
 import Foundation
-import UIKit
 
-typealias UdacityConvenientResultBlock = (success: Bool, error: NSError?) -> Void
-typealias UdacityUserResultBlock = (user: User?, error: NSError?) -> Void
+//-------------------------------------
+// MARK: Typealiases
+//-------------------------------------
+
+typealias UdacityConvenientCompletionHandler = (success: Bool, error: NSError?) -> Void
+typealias UdacityUserCompletionHandler = (user: User?, error: NSError?) -> Void
 
 //--------------------------------------------------------
 // MARK: - UdacityApiClient (Convenient Resource Methods)
@@ -22,17 +25,18 @@ extension UdacityApiClient {
     // MARK: Authentication (POST) method
     //----------------------------------------------------
     
-    func authenticateWithUsername(username: String, password: String, completionHandler: UdacityConvenientResultBlock) {
+    func authenticateWithUsername(username: String, password: String, completionHandler: UdacityConvenientCompletionHandler) {
         let jsonBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
         
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-        
-        dataTaskForPOSTMethod(UdacityApiClient.Methods.AuthenticationSession, parameters: nil, jsonBody: jsonBody, completionHandler: { (result, error) in
+        dataTaskForPostMethod(UdacityApiClient.Methods.AuthenticationSession, parameters: nil, jsonBody: jsonBody, completionHandler: { (jsonObject, error) in
             func sendError(error: String) {
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-                print(error)
-                let userInfo = [NSLocalizedDescriptionKey : error]
-                completionHandler(success: false, error: NSError(domain: "com.ivanmagda.On-the-Map.auth", code: 15, userInfo: userInfo))
+                self.debugLog(error)
+                let error = NSError(
+                    domain: UdacityApiClient.UserAuthDomain,
+                    code: UdacityApiClient.UserAuthErrorCode,
+                    userInfo: [NSLocalizedDescriptionKey : error]
+                )
+                completionHandler(success: false, error: error)
             }
             
             guard error == nil else {
@@ -40,14 +44,14 @@ extension UdacityApiClient {
                 return
             }
             
-            guard let json = result else {
+            guard let json = jsonObject else {
                 sendError("Empty response")
                 return
             }
             
-            guard let session = json[UdacityApiClient.JSONResponseKeys.Session] as? [String: AnyObject],
-            let sessionId = session[UdacityApiClient.JSONResponseKeys.SessionID] as? String,
-                let expirationDate = session[UdacityApiClient.JSONResponseKeys.ExpirationDate] as? String else {
+            guard let session = json[UdacityApiClient.JSONResponseKeys.Session] as? JSONDictionary,
+                  let sessionId = session[UdacityApiClient.JSONResponseKeys.SessionID] as? String,
+                  let expirationDate = session[UdacityApiClient.JSONResponseKeys.ExpirationDate] as? String else {
                     sendError("Could not find key: \(UdacityApiClient.JSONResponseKeys.SessionID)")
                     return
             }
@@ -55,15 +59,12 @@ extension UdacityApiClient {
             self.userSession.sessionId = sessionId
             self.userSession.expirationDate = expirationDate
             
-            guard let account = json[UdacityApiClient.JSONResponseKeys.Account] as? [String: AnyObject],
-                let userId = account[UdacityApiClient.JSONResponseKeys.UserID] as? String else {
+            guard let account = json[UdacityApiClient.JSONResponseKeys.Account] as? JSONDictionary,
+                  let userId = account[UdacityApiClient.JSONResponseKeys.UserID] as? String else {
                     sendError("Could not find key: \(UdacityApiClient.JSONResponseKeys.UserID)")
                     return
             }
-            
             self.userSession.userId = userId
-            
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
             
             completionHandler(success: true, error: nil)
         })
@@ -73,7 +74,7 @@ extension UdacityApiClient {
     // MARK: Logging Out (DELETE) method
     //----------------------------------------------------
     
-    func logOutWithCompletionHandler(block: UdacityConvenientResultBlock) {
+    func logOut(completionHandler: UdacityConvenientCompletionHandler) {
         var xsrfCookie: NSHTTPCookie? = nil
         let sharedCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
         
@@ -83,14 +84,15 @@ extension UdacityApiClient {
             }
         }
         
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-        
-        dataTaskForDELETEMethod(UdacityApiClient.Methods.LoggingOut, parameters: nil, headerFields: ["X-XSRF-TOKEN": xsrfCookie?.value]) { (result, error) in
+        dataTaskForDeleteMethod(UdacityApiClient.Methods.LoggingOut, parameters: nil, headerFields: ["X-XSRF-TOKEN": xsrfCookie?.value]) { (result, error) in
             func sendError(error: String) {
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-                print(error)
-                let userInfo = [NSLocalizedDescriptionKey : error]
-                block(success: false, error: NSError(domain: "com.ivanmagda.On-the-Map.logout", code: 16, userInfo: userInfo))
+                self.debugLog(error)
+                let error = NSError(
+                    domain: UdacityApiClient.UserLogoutDomain,
+                    code: UdacityApiClient.UserLogoutErrorCode,
+                    userInfo: [NSLocalizedDescriptionKey : error]
+                )
+                completionHandler(success: false, error: error)
             }
             
             guard error == nil else {
@@ -102,29 +104,27 @@ extension UdacityApiClient {
                 sendError("Empty response")
                 return
             }
-            
             UdacityUserSession.logout()
             
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-            
-            block(success: true, error: nil)
+            completionHandler(success: true, error: nil)
         }
     }
     
-    func getPublicUserData(userId: String, completionHandler block: UdacityUserResultBlock) {
+    func getPublicUserData(userId: String, completionHandler: UdacityUserCompletionHandler) {
         var mutableMethod: String = Methods.UserData
         mutableMethod = subtituteKeyInMethod(mutableMethod,
                                              key: URLKeys.UserID,
                                              value: UdacityApiClient.sharedInstance.userSession.userId!)!
         
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-        
-        dataTaskForGETMethod(mutableMethod, parameters: nil) { (result, error) in
+        dataTaskForGetMethod(mutableMethod, parameters: nil) { (result, error) in
             func sendError(error: String) {
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-                print(error)
-                let userInfo = [NSLocalizedDescriptionKey : error]
-                block(user: nil, error: NSError(domain: "com.ivanmagda.On-the-Map.getPublicUserData", code: 17, userInfo: userInfo))
+                self.debugLog(error)
+                let error = NSError(
+                    domain: UdacityApiClient.GetPublicUserDataDomain,
+                    code: UdacityApiClient.GetPublicUserDataErrorCode,
+                    userInfo: [NSLocalizedDescriptionKey : error]
+                )
+                completionHandler(user: nil, error: error)
             }
             
             guard error == nil else {
@@ -136,12 +136,9 @@ extension UdacityApiClient {
                 sendError("Empty response")
                 return
             }
-            
             let user = User.decode(userJSON)
             
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-            
-            block(user: user, error: nil)
+            completionHandler(user: user, error: nil)
         }
     }
     

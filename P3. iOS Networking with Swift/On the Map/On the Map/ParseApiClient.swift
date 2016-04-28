@@ -46,34 +46,35 @@ class ParseApiClient: JsonApiClient {
     //-----------------------------------
     
     func getStudentLocationsWithCompletionHandler(completionHandler: ParseStudentLocationsCompletionHandler) {
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-        
         let request = NSMutableURLRequest(URL: parseURLFromParameters(nil, withPathExtension: nil))
         request.HTTPMethod = HttpMethodName.Get.rawValue
         
-        fetchJSON(request) { (result) in
+        fetchJson(request) { (result) in
             func sendError(error: String) {
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-                print(error)
-                let userInfo = [NSLocalizedDescriptionKey : error]
-                completionHandler(locations: nil, error: NSError(domain: "com.ivanmagda.On-the-Map.parse.getStudentLocations", code: 17, userInfo: userInfo))
+                self.debugLog(error)
+                let error = NSError(
+                    domain: ParseApiClient.GetStudentLocationsDomain,
+                    code: ParseApiClient.GetStudentLocationsErrorCode,
+                    userInfo: [NSLocalizedDescriptionKey : error]
+                )
+                completionHandler(locations: nil, error: error)
             }
             
             switch result {
             case .Error(let error):
                 sendError(error.localizedDescription)
             case .Json(let json):
-                guard let results = json[JSONResponseKeys.Results] as? [[String: AnyObject]] else {
+                guard let results = json[JSONResponseKeys.Results] as? [JSONDictionary] else {
                     sendError("Could not find \(JSONResponseKeys.Results) key in JSON: \(json)")
                     return
                 }
                 
-                if let locations = StudentLocation.sanitizedStudentLocations(results) {
-                    UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-                    completionHandler(locations: locations, error: nil)
-                } else {
+                guard let locations = StudentLocation.sanitizedStudentLocations(results) else {
                     sendError("Failed to sanitized student locations with results: \(results)")
+                    return
                 }
+                
+                completionHandler(locations: locations, error: nil)
             default:
                 sendError(result.defaultErrorMessage()!)
             }
@@ -91,14 +92,15 @@ class ParseApiClient: JsonApiClient {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.HTTPBody = "{\"\(JSONBodyKeys.UniqueKey)\": \"\(student.id)\", \"\(JSONBodyKeys.FirstName)\": \"\(student.firstName)\", \"\(JSONBodyKeys.LastName)\": \"\(student.lastName)\",\"\(JSONBodyKeys.MapString)\": \"\(placemark.name!)\", \"\(JSONBodyKeys.MediaURL)\": \"\(mediaURL)\",\"\(JSONBodyKeys.Latitude)\": \(coordinate.latitude), \"\(JSONBodyKeys.Longitude)\": \(coordinate.longitude)}".dataUsingEncoding(NSUTF8StringEncoding)
         
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
-        
-        fetchJSON(request) { (result) in
+        fetchJson(request) { (result) in
             func sendError(error: String) {
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-                print(error)
-                let userInfo = [NSLocalizedDescriptionKey : error]
-                completionHandler(success: false, error: NSError(domain: "com.ivanmagda.On-the-Map.parse.postStudentLocation", code: 20, userInfo: userInfo))
+                self.debugLog(error)
+                let error = NSError(
+                    domain: ParseApiClient.PostStudentLocationDomain,
+                    code: ParseApiClient.PostStudentLocationErrorCode,
+                    userInfo: [NSLocalizedDescriptionKey : error]
+                )
+                completionHandler(success: false, error: error)
             }
             
             switch result {
@@ -110,7 +112,7 @@ class ParseApiClient: JsonApiClient {
                         sendError("Failed to access response keys. Probably your locations did not post")
                       return
                 }
-                print("Posted location id: \(objectId), createdAt: \(createdAt)")
+                self.debugLog("Posted location id: \(objectId), createdAt: \(createdAt)")
                 completionHandler(success: true, error: nil)
             default:
                 sendError(result.defaultErrorMessage()!)
