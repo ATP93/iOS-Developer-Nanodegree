@@ -57,10 +57,10 @@ final class UdacityApiClient: JsonApiClient {
     // MARK: - POST
     //------------------------------------
     
-    func dataTaskForPostMethod(method: String, parameters: [String: AnyObject]?, jsonBody: String, completionHandler: UdacityTaskCompletionHandler) {
+    func dataTaskForPostMethod(method: String, parameters: [String: AnyObject]?, httpBody: String, completionHandler: UdacityTaskCompletionHandler) {
         let request = NSMutableURLRequest(URL: udacityURLFromParameters(parameters, withPathExtension: method))
         request.HTTPMethod = HttpMethodName.Post.rawValue
-        request.HTTPBody = jsonBody.dataUsingEncoding(NSUTF8StringEncoding)
+        request.HTTPBody = httpBody.dataUsingEncoding(NSUTF8StringEncoding)
         fetchRawData(request) { result in
             self.checkResposeWithApiResult(result, completionHandler: completionHandler)
         }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import FBSDKLoginKit
 
 //-------------------------------------
 // MARK: Typealiases
@@ -22,56 +23,37 @@ typealias UdacityUserCompletionHandler = (user: User?, error: NSError?) -> Void
 extension UdacityApiClient {
     
     //----------------------------------------------------
-    // MARK: Authentication (POST) method
+    // MARK: - Authentication (POST) method
     //----------------------------------------------------
     
     func authenticateWithUsername(username: String, password: String, completionHandler: UdacityConvenientCompletionHandler) {
-        let jsonBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
+        let body = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
         
-        dataTaskForPostMethod(UdacityApiClient.Methods.AuthenticationSession, parameters: nil, jsonBody: jsonBody, completionHandler: { (jsonObject, error) in
-            func sendError(error: String) {
-                self.debugLog(error)
-                let error = NSError(
-                    domain: UdacityApiClient.UserAuthDomain,
-                    code: UdacityApiClient.UserAuthErrorCode,
-                    userInfo: [NSLocalizedDescriptionKey : error]
-                )
-                completionHandler(success: false, error: error)
-            }
-            
+        dataTaskForPostMethod(UdacityApiClient.Methods.AuthenticationSession, parameters: nil, httpBody: body, completionHandler: { (jsonObject, error) in
             guard error == nil else {
-                sendError(error!.localizedDescription)
+                completionHandler(success: false, error: error)
                 return
             }
             
-            guard let json = jsonObject else {
-                sendError("Empty response")
-                return
-            }
-            
-            guard let session = json[UdacityApiClient.JSONResponseKeys.Session] as? JSONDictionary,
-                  let sessionId = session[UdacityApiClient.JSONResponseKeys.SessionID] as? String,
-                  let expirationDate = session[UdacityApiClient.JSONResponseKeys.ExpirationDate] as? String else {
-                    sendError("Could not find key: \(UdacityApiClient.JSONResponseKeys.SessionID)")
-                    return
-            }
-            
-            self.userSession.sessionId = sessionId
-            self.userSession.expirationDate = expirationDate
-            
-            guard let account = json[UdacityApiClient.JSONResponseKeys.Account] as? JSONDictionary,
-                  let userId = account[UdacityApiClient.JSONResponseKeys.UserID] as? String else {
-                    sendError("Could not find key: \(UdacityApiClient.JSONResponseKeys.UserID)")
-                    return
-            }
-            self.userSession.userId = userId
-            
-            completionHandler(success: true, error: nil)
+            self.processOnPostSessionJsonObject(jsonObject, completionHandler: completionHandler)
         })
     }
     
+    func authenticateWithFacebookByAccessToken(token: FBSDKAccessToken, completionHandler: UdacityConvenientCompletionHandler) {
+        let body = "{\"facebook_mobile\": {\"access_token\": \"\(token.tokenString);\"}}"
+        
+        dataTaskForPostMethod(UdacityApiClient.Methods.AuthenticationSession, parameters: nil, httpBody: body) { (jsonObject, error) in
+            guard error == nil else {
+                completionHandler(success: false, error: error)
+                return
+            }
+            
+            self.processOnPostSessionJsonObject(jsonObject, completionHandler: completionHandler)
+        }
+    }
+    
     //----------------------------------------------------
-    // MARK: Logging Out (DELETE) method
+    // MARK: - Logging Out (DELETE) method
     //----------------------------------------------------
     
     func logOut(completionHandler: UdacityConvenientCompletionHandler) {
@@ -110,6 +92,10 @@ extension UdacityApiClient {
         }
     }
     
+    //----------------------------------------------------
+    // MARK: - (GET) method
+    //----------------------------------------------------
+    
     func getPublicUserData(userId: String, completionHandler: UdacityUserCompletionHandler) {
         var mutableMethod: String = Methods.UserData
         mutableMethod = subtituteKeyInMethod(mutableMethod,
@@ -140,6 +126,46 @@ extension UdacityApiClient {
             
             completionHandler(user: user, error: nil)
         }
+    }
+    
+    //----------------------------------------------------
+    // MARK: - Helpers
+    //----------------------------------------------------
+    
+    private func processOnPostSessionJsonObject(jsonObject: JSONDictionary?, completionHandler: UdacityConvenientCompletionHandler) {
+        func sendError(error: String) {
+            self.debugLog(error)
+            let error = NSError(
+                domain: UdacityApiClient.UserAuthDomain,
+                code: UdacityApiClient.UserAuthErrorCode,
+                userInfo: [NSLocalizedDescriptionKey : error]
+            )
+            completionHandler(success: false, error: error)
+        }
+        
+        guard let json = jsonObject else {
+            sendError("Empty response")
+            return
+        }
+        
+        guard let session = json[UdacityApiClient.JSONResponseKeys.Session] as? JSONDictionary,
+            let sessionId = session[UdacityApiClient.JSONResponseKeys.SessionID] as? String,
+            let expirationDate = session[UdacityApiClient.JSONResponseKeys.ExpirationDate] as? String else {
+                sendError("Could not find key: \(UdacityApiClient.JSONResponseKeys.SessionID)")
+                return
+        }
+        
+        self.userSession.sessionId = sessionId
+        self.userSession.expirationDate = expirationDate
+        
+        guard let account = json[UdacityApiClient.JSONResponseKeys.Account] as? JSONDictionary,
+            let userId = account[UdacityApiClient.JSONResponseKeys.UserID] as? String else {
+                sendError("Could not find key: \(UdacityApiClient.JSONResponseKeys.UserID)")
+                return
+        }
+        self.userSession.userId = userId
+        
+        completionHandler(success: true, error: nil)
     }
     
 }

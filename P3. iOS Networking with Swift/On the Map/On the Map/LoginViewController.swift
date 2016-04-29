@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FBSDKLoginKit
 
 private enum SegueIdentifier: String {
     case DoneWithLogin
@@ -32,7 +33,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginWithUdacityButton: BorderedButton!
-    @IBOutlet weak var loginWithFacebookButton: BorderedButton!
+    @IBOutlet weak var loginWithFacebookButton: FBSDKLoginButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     //-------------------------------------------
@@ -42,6 +43,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        loginWithFacebookButton.delegate = self
         configureUI()
     }
     
@@ -59,6 +61,9 @@ class LoginViewController: UIViewController {
         
         if UdacityApiClient.sharedInstance.userSession.isLoggedIn {
             completeLogin()
+        } else if let accessToken = FBSDKAccessToken.currentAccessToken() {
+            print("Facebook access token: \(accessToken.tokenString)")
+            facebookLoginWithToken(accessToken)
         }
     }
     
@@ -81,7 +86,7 @@ class LoginViewController: UIViewController {
             displayAlertWithTitle(nil, message: "Username or Password Empty")
         } else {
             setUIEnabled(false)
-            self.activityIndicator.startAnimating()
+            activityIndicator.startAnimating()
             showNetworkActivityIndicator()
             
             UdacityApiClient.sharedInstance.authenticateWithUsername(username, password: password) { (success, error) in
@@ -100,8 +105,26 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @IBAction func loginWithFacebookDidPressed(sender: AnyObject) {
+    private func facebookLoginWithToken(accessToken: FBSDKAccessToken) {
         userDidTapView(self)
+        setUIEnabled(false)
+        activityIndicator.startAnimating()
+        showNetworkActivityIndicator()
+        
+        UdacityApiClient.sharedInstance.authenticateWithFacebookByAccessToken(accessToken, completionHandler: { (success, error) in
+            performOnMain {
+                self.activityIndicator.stopAnimating()
+                hideNetworkActivityIndicator()
+                
+                if success {
+                    self.completeLogin()
+                } else {
+                    self.setUIEnabled(true)
+                    self.displayAlertWithTitle("Failed to login with Facebook",
+                        message: error!.localizedDescription)
+                }
+            }
+        })
     }
     
     private func displayAlertWithTitle(title: String?, message: String?) {
@@ -147,6 +170,10 @@ extension LoginViewController {
     private func configureUI() {
         configureTextField(usernameTextField)
         configureTextField(passwordTextField)
+        
+        loginWithFacebookButton.titleLabel?.font = UIFont.systemFontOfSize(19.0)
+        loginWithFacebookButton.layer.masksToBounds = true
+        loginWithFacebookButton.layer.cornerRadius = 4.0
     }
     
     private func configureTextField(textField: UITextField) {
@@ -155,6 +182,30 @@ extension LoginViewController {
         textField.leftView = textFieldPaddingView
         textField.leftViewMode = .Always
         textField.delegate = self
+    }
+    
+}
+
+//--------------------------------------------------------
+// MARK: - LoginViewController: FBSDKLoginButtonDelegate -
+//--------------------------------------------------------
+
+extension LoginViewController: FBSDKLoginButtonDelegate {
+    
+    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+        guard error == nil else {
+            displayAlertWithTitle("Error", message: error.localizedDescription)
+            return
+        }
+        
+        guard !result.isCancelled else {
+            return
+        }
+        
+        facebookLoginWithToken(FBSDKAccessToken.currentAccessToken())
+    }
+    
+    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
     }
     
 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FBSDKLoginKit
 
 //-----------------------------------------------------
 // MARK: - UserAccountViewController: UIViewController
@@ -33,7 +34,42 @@ class UserAccountViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        fetchUserInfo()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         
+        logOutBarButtonItem.enabled = UdacityApiClient.sharedInstance.userSession.isLoggedIn
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if user == nil {
+            fetchUserInfo()
+        }
+    }
+    
+    //--------------------------------------------
+    // MARK: Actions
+    //--------------------------------------------
+    
+    @IBAction func logoutDidPressed(sender: AnyObject) {
+        let alert = UIAlertController(title: "Are you sure?", message: "You want to exit your account. Press Ok if you want it.", preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
+            self.logout()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        
+        presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    //--------------------------------------------
+    // MARK: Helpers
+    //--------------------------------------------
+    
+    private func fetchUserInfo() {
         showNetworkActivityIndicator()
         let apiClient = UdacityApiClient.sharedInstance
         apiClient.getPublicUserData(apiClient.userSession.userId!) { (user, error) in
@@ -52,39 +88,34 @@ class UserAccountViewController: UIViewController {
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        logOutBarButtonItem.enabled = UdacityApiClient.sharedInstance.userSession.isLoggedIn
+    private func logout() {
+        if FBSDKAccessToken.currentAccessToken() != nil {
+            facebookLogout()
+        } else {
+            udacityLogout()
+        }
     }
     
-    //--------------------------------------------
-    // MARK: Actions
-    //--------------------------------------------
+    private func facebookLogout() {
+        FBSDKLoginManager().logOut()
+        UdacityUserSession.logout()
+        
+        dismissViewControllerAnimated(true, completion: nil)
+    }
     
-    @IBAction func logoutDidPressed(sender: AnyObject) {
-        let alert = UIAlertController(title: "Are you sure?", message: "You want to exit your account. Press Ok if you want it.", preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
-            showNetworkActivityIndicator()
-            UdacityApiClient.sharedInstance.logOut { [weak self] (success, error) in
-                performOnMain {
-                    hideNetworkActivityIndicator()
-                    if success {
-                        self?.dismissViewControllerAnimated(true, completion: nil)
-                    } else {
-                        self?.displayAlertWithTitle("Failed to log out", message: error!.localizedDescription)
-                    }
+    private func udacityLogout() {
+        showNetworkActivityIndicator()
+        UdacityApiClient.sharedInstance.logOut { [weak self] (success, error) in
+            performOnMain {
+                hideNetworkActivityIndicator()
+                if success {
+                    self?.dismissViewControllerAnimated(true, completion: nil)
+                } else {
+                    self?.displayAlertWithTitle("Failed to log out", message: error!.localizedDescription)
                 }
             }
-        }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-        
-        presentViewController(alert, animated: true, completion: nil)
+        }
     }
-    
-    //--------------------------------------------
-    // MARK: Helpers
-    //--------------------------------------------
     
     private func displayAlertWithTitle(title: String?, message: String?) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
