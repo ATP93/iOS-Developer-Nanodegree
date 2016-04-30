@@ -50,6 +50,10 @@ class SubmitLocationView: UIView {
     override func willMoveToSuperview(newSuperview: UIView?) {
         super.willMoveToSuperview(newSuperview)
         assert(placemark != nil, "Placemark must exist")
+        
+        if let newSuperview = newSuperview {
+            frame = newSuperview.frame
+        }
     }
     
     override func didMoveToSuperview() {
