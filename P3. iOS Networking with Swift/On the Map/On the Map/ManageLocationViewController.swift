@@ -28,7 +28,9 @@ class ManageLocationViewController: UIViewController {
     
     private var geocoder = CLGeocoder()
     private var placemark: CLPlacemark? = nil
+    
     private var submitLocationView: SubmitLocationView?
+    private var activityIndicator: UIActivityIndicatorView?
     
     //--------------------------------------------------
     // MARK: Outlets
@@ -81,8 +83,12 @@ class ManageLocationViewController: UIViewController {
         }
         
         showNetworkActivityIndicator()
+        presentActivityIndicatorViewWithColor(.whiteColor())
+        
         geocoder.geocodeAddressString(addressString) { [weak self] (placemarks, error) in
             hideNetworkActivityIndicator()
+            self?.activityIndicator?.stopAnimating()
+            
             if let error = error {
                 self?.displayAlert(title: "Geocode error", message: error.localizedDescription, actionHandler: nil)
             } else {
@@ -120,6 +126,26 @@ extension ManageLocationViewController {
         textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder!, attributes: [NSForegroundColorAttributeName: UIColor(red:0.59, green:0.68, blue:0.82, alpha:1)])
         textField.tintColor = UIColor.whiteColor()
         textField.delegate = self
+    }
+    
+    private func presentActivityIndicatorViewWithColor(color: UIColor) {
+        func present() {
+            activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+            activityIndicator?.color = color
+            activityIndicator!.hidesWhenStopped = true
+            activityIndicator!.center = view.center
+            view.addSubview(activityIndicator!)
+            activityIndicator!.startAnimating()
+        }
+        
+        if activityIndicator != nil {
+            activityIndicator?.removeFromSuperview()
+            activityIndicator = nil
+            present()
+            return
+        }
+        
+        present()
     }
     
 }
@@ -278,11 +304,13 @@ extension ManageLocationViewController: SubmitLocationViewDelegate {
     
     private func updateLocation(locationToUpdate: StudentLocation, location: CLLocation, link: String) {
         showNetworkActivityIndicator()
+        presentActivityIndicatorViewWithColor(kDarkModerateBlue)
         
         udacityApiClient.publicUserData(udacityApiClient.userSession.userId!) { (user, error) in
             func showError(error: NSError) {
                 performOnMain {
                     hideNetworkActivityIndicator()
+                    self.activityIndicator?.stopAnimating()
                     self.displayAlert(title: "Failed to overwrite location",
                         message: error.localizedDescription,
                         actionHandler: nil)
@@ -296,6 +324,7 @@ extension ManageLocationViewController: SubmitLocationViewDelegate {
             
             guard user != nil else {
                 hideNetworkActivityIndicator()
+                self.activityIndicator?.stopAnimating()
                 showError(NSError(
                     domain: "com.ivanmagda.On-the-Map.parse.update-student-location",
                     code: 26,
@@ -307,6 +336,7 @@ extension ManageLocationViewController: SubmitLocationViewDelegate {
             self.parseApiClient.updateStudentLocation(locationToUpdate, student: user!, placemark: self.placemark!, mediaURL: link, completionHandler: { (success, error) in
                 performOnMain {
                     hideNetworkActivityIndicator()
+                    self.activityIndicator?.stopAnimating()
                     if success {
                         self.postUpdateLocationNotification()
                         self.displayAlert(
@@ -325,11 +355,13 @@ extension ManageLocationViewController: SubmitLocationViewDelegate {
     
     private func postLocation(location: CLLocation, link: String) {
         showNetworkActivityIndicator()
+        presentActivityIndicatorViewWithColor(kDarkModerateBlue)
         
         udacityApiClient.publicUserData(udacityApiClient.userSession.userId!) { (user, error) in
             func showError(error: NSError) {
                 performOnMain {
                     hideNetworkActivityIndicator()
+                    self.activityIndicator?.stopAnimating()
                     self.displayAlert(title: "Failed to post location",
                         message: error.localizedDescription,
                         actionHandler: nil)
@@ -343,6 +375,7 @@ extension ManageLocationViewController: SubmitLocationViewDelegate {
             
             guard user != nil else {
                 hideNetworkActivityIndicator()
+                self.activityIndicator?.stopAnimating()
                 showError(NSError(
                     domain: "com.ivanmagda.On-the-Map.parse.submit-student-location",
                     code: 25,
@@ -354,6 +387,7 @@ extension ManageLocationViewController: SubmitLocationViewDelegate {
             self.parseApiClient.postLocationForStudent(user!, placemark: self.placemark!, mediaURL: link, completionHandler: { (success, error) in
                 performOnMain {
                     hideNetworkActivityIndicator()
+                    self.activityIndicator?.stopAnimating()
                     if success {
                         self.postPostLocationNotification()
                         self.displayAlert(
