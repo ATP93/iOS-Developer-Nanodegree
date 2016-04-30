@@ -30,6 +30,7 @@ class MapViewController: UIViewController {
     private var locations: [StudentLocation] = []
     
     private var shouldUpdateStudentLocation = false
+    private var locationToUpdate: StudentLocation?
     
     //------------------------------------------------
     // MARK: Outlets
@@ -63,11 +64,11 @@ class MapViewController: UIViewController {
             let postLocationViewController = segue.destinationViewController as! ManageLocationViewController
             
             if shouldUpdateStudentLocation {
-                let location = sender as! StudentLocation
-                postLocationViewController.locationToUpdate = location
+                postLocationViewController.locationToUpdate = locationToUpdate!
             }
             
             shouldUpdateStudentLocation = false
+            locationToUpdate = nil
         }
     }
     
@@ -90,7 +91,8 @@ class MapViewController: UIViewController {
                     if let locations = locations {
                         print("Successfully fetched \(locations.count) users locations.")
                         self.locations = locations
-                        self.mapView.addAnnotations(self.locations)
+                        let annotations = locations.flatMap { StudentLocationAnnotation(location: $0) }
+                        self.mapView.addAnnotations(annotations)
                     }
                 }
             }
@@ -141,8 +143,9 @@ class MapViewController: UIViewController {
                     style: .Default,
                     handler: { action in
                         self.shouldUpdateStudentLocation = true
+                        self.locationToUpdate = location
                         self.performSegueWithIdentifier(SegueIdentifier.ManageLocation.rawValue,
-                            sender: location)
+                            sender: self)
                 }))
                 
                 self.presentViewController(alert, animated: true, completion: nil)
@@ -173,7 +176,7 @@ extension MapViewController {
 extension MapViewController: MKMapViewDelegate {
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        if let annotation = annotation as? StudentLocation {
+        if let annotation = annotation as? StudentLocationAnnotation {
             let view: MKPinAnnotationView
             
             if let dequeueView = mapView.dequeueReusableAnnotationViewWithIdentifier("pin") as? MKPinAnnotationView {
@@ -188,7 +191,7 @@ extension MapViewController: MKMapViewDelegate {
             }
             
             // Is is current user annotation.
-            if annotation.uniqueKey == UdacityApiClient.sharedInstance.userSession.userId! {
+            if annotation.studentLocation.uniqueKey == UdacityApiClient.sharedInstance.userSession.userId! {
                 view.pinTintColor = MKPinAnnotationView.greenPinColor()
             } else {
                 view.pinTintColor = MKPinAnnotationView.redPinColor()
@@ -202,7 +205,7 @@ extension MapViewController: MKMapViewDelegate {
     
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
-            if let location = view.annotation as? StudentLocation {
+            if let location = view.annotation as? StudentLocationAnnotation {
                 let alert = (location as Alertable).alert()
                 presentViewController(alert, animated: true, completion: nil)
             }

@@ -7,14 +7,12 @@
 //
 
 import Foundation
-import UIKit
-import MapKit
 
 //------------------------------------
 // MARK: - StudentLocation
 //------------------------------------
 
-final class StudentLocation: NSObject {
+struct StudentLocation {
     
     //------------------------------------
     // MARK: Properties
@@ -64,27 +62,36 @@ final class StudentLocation: NSObject {
             self.updatedAt = updatedAt
     }
     
-    convenience init(objectId: String, uniqueKey: String, firstName: String, lastName: String,
-        mapString: String, mediaURL: NSURL, latitude: Double, longitude: Double, createdAt: String,
-        updatedAt: String) {
-        let location = GeoLocation(latitude: latitude, longitude: longitude)
+    init?(dict: [String: AnyObject]) {
+        guard
+            let objectId = JSON.string(dict, key: StudentLocationKey.ObjectId.rawValue),
+            let uniqueKey = JSON.string(dict, key: StudentLocationKey.UniqueKey.rawValue),
+            let firstName = JSON.string(dict, key: StudentLocationKey.FirstName.rawValue),
+            let lastName = JSON.string(dict, key: StudentLocationKey.LastName.rawValue),
+            let mapString = JSON.string(dict, key: StudentLocationKey.MapString.rawValue),
+            let mediaURLString = JSON.string(dict, key: StudentLocationKey.MediaURL.rawValue),
+            let mediaURL = NSURL(string: mediaURLString),
+            let latitude = JSON.double(dict, key: StudentLocationKey.Latitude.rawValue),
+            let longitude = JSON.double(dict, key: StudentLocationKey.Longitude.rawValue),
+            let createdAt = JSON.string(dict, key: StudentLocationKey.CreatedAt.rawValue),
+            let updatedAt = JSON.string(dict, key: StudentLocationKey.UpdatedAt.rawValue) else {
+                return nil
+        }
         
-        self.init(objectId: objectId, uniqueKey: uniqueKey, firstName: firstName, lastName: lastName,
-            mapString: mapString, mediaURL: mediaURL, location: location, createdAt: createdAt,
-            updatedAt: updatedAt)
+        self.objectId = objectId
+        self.uniqueKey = uniqueKey
+        self.firstName = firstName
+        self.lastName = lastName
+        self.mapString = mapString
+        self.mediaURL = mediaURL
+        self.location = GeoLocation(latitude: latitude, longitude: longitude)
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
     }
     
     //------------------------------------
     // MARK: Methods
     //------------------------------------
-    
-    func openMediaURLInSafari() {
-        let application = UIApplication.sharedApplication()
-        
-        if application.canOpenURL(mediaURL) {
-            application.openURL(mediaURL)
-        }
-    }
     
     static func sanitizedStudentLocations(dicts: [JSONDictionary]?) -> [StudentLocation]? {
         guard let dicts = dicts else {
@@ -96,23 +103,14 @@ final class StudentLocation: NSObject {
     
 }
 
-//---------------------------------------
-// MARK: - StudentLocation: MKAnnotation
-//---------------------------------------
+//-----------------------------------------
+// MARK: - StudentLocation: JSONParselable
+//-----------------------------------------
 
-extension StudentLocation: MKAnnotation {
+extension StudentLocation: JSONParselable {
     
-    // Center latitude and longitude of the annotation view.
-    var coordinate: CLLocationCoordinate2D {
-        return location.coordinate
-    }
-    
-    var title: String? {
-        return "\(firstName) \(lastName)"
-    }
-    
-    var subtitle: String? {
-        return mediaURL.absoluteString
+    static func decode(json: JSONDictionary) -> StudentLocation? {
+        return self.init(dict: json)
     }
     
 }

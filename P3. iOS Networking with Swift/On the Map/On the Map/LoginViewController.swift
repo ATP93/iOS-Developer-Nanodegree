@@ -9,6 +9,10 @@
 import UIKit
 import FBSDKLoginKit
 
+//-------------------------------------------
+// MARK: Types
+//-------------------------------------------
+
 private enum SegueIdentifier: String {
     case DoneWithLogin
 }

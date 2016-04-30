@@ -120,7 +120,7 @@ extension LocationsViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        studentLocations[indexPath.row].openMediaURLInSafari()
+        StudentLocationAnnotation(location: studentLocations[indexPath.row]).openMediaURLInSafari()
     }
     
 }

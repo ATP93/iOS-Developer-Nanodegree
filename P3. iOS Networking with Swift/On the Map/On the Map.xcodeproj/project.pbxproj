@@ -23,13 +23,13 @@
 		7500B01F1C9EF85C0067DEAD /* UdacityApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B01E1C9EF85C0067DEAD /* UdacityApiClient.swift */; };
 		7500B0221C9EF9040067DEAD /* UdacityConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0211C9EF9040067DEAD /* UdacityConstants.swift */; };
 		7500B0241C9F15380067DEAD /* UdacityApiClientConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0231C9F15380067DEAD /* UdacityApiClientConvenience.swift */; };
+		7501224B1CD467FE002015C5 /* StudentLocationAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7501224A1CD467FE002015C5 /* StudentLocationAnnotation.swift */; };
 		754B406A1CD30A0000E3B889 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 754B40691CD30A0000E3B889 /* FBSDKCoreKit.framework */; };
 		754B406D1CD30CCD00E3B889 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 754B406B1CD30CCD00E3B889 /* Bolts.framework */; };
 		754B406E1CD30CCD00E3B889 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 754B406C1CD30CCD00E3B889 /* FBSDKLoginKit.framework */; };
 		755D540C1C9FC57A0087D9F7 /* ErrorUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 755D540B1C9FC57A0087D9F7 /* ErrorUtils.swift */; };
 		756583761CA0093B0033326E /* UserAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756583751CA0093B0033326E /* UserAccountViewController.swift */; };
 		756583781CA029D40033326E /* StudentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756583771CA029D40033326E /* StudentLocation.swift */; };
-		7565837B1CA02C1B0033326E /* StudentLocation+JSONParselable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7565837A1CA02C1B0033326E /* StudentLocation+JSONParselable.swift */; };
 		7565837D1CA02CCA0033326E /* StudentLocationKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7565837C1CA02CCA0033326E /* StudentLocationKey.swift */; };
 		756583811CA030E40033326E /* NSDate+FromString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756583801CA030E40033326E /* NSDate+FromString.swift */; };
 		756583831CA0337C0033326E /* ParseApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756583821CA0337C0033326E /* ParseApiClient.swift */; };
@@ -41,7 +41,6 @@
 		7571C4D91CD1D2CD001B4F03 /* UIUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571C4D81CD1D2CD001B4F03 /* UIUtility.swift */; };
 		7571C4DB1CD23D9B001B4F03 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7571C4DA1CD23D9B001B4F03 /* Constants.swift */; };
 		758794A21CA10FC200E8B10E /* Alertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A11CA10FC200E8B10E /* Alertable.swift */; };
-		758794A41CA1117E00E8B10E /* StudentLocation+Alertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A31CA1117E00E8B10E /* StudentLocation+Alertable.swift */; };
 		758794A81CA115DF00E8B10E /* GeoLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758794A71CA115DF00E8B10E /* GeoLocation.swift */; };
 		75C84D711CA1883300B14210 /* SubmitLocationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 75C84D701CA1883300B14210 /* SubmitLocationView.xib */; };
 		75C84D731CA18BC600B14210 /* SubmitLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C84D721CA18BC600B14210 /* SubmitLocationView.swift */; };
@@ -70,13 +69,13 @@
 		7500B01E1C9EF85C0067DEAD /* UdacityApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityApiClient.swift; sourceTree = "<group>"; };
 		7500B0211C9EF9040067DEAD /* UdacityConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConstants.swift; sourceTree = "<group>"; };
 		7500B0231C9F15380067DEAD /* UdacityApiClientConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityApiClientConvenience.swift; sourceTree = "<group>"; };
+		7501224A1CD467FE002015C5 /* StudentLocationAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocationAnnotation.swift; sourceTree = "<group>"; };
 		754B40691CD30A0000E3B889 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		754B406B1CD30CCD00E3B889 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../../../../../Documents/FacebookSDK/Bolts.framework; sourceTree = "<group>"; };
 		754B406C1CD30CCD00E3B889 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../../../../../Documents/FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		755D540B1C9FC57A0087D9F7 /* ErrorUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorUtils.swift; sourceTree = "<group>"; };
 		756583751CA0093B0033326E /* UserAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAccountViewController.swift; sourceTree = "<group>"; };
 		756583771CA029D40033326E /* StudentLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocation.swift; sourceTree = "<group>"; };
-		7565837A1CA02C1B0033326E /* StudentLocation+JSONParselable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StudentLocation+JSONParselable.swift"; sourceTree = "<group>"; };
 		7565837C1CA02CCA0033326E /* StudentLocationKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocationKey.swift; sourceTree = "<group>"; };
 		756583801CA030E40033326E /* NSDate+FromString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+FromString.swift"; sourceTree = "<group>"; };
 		756583821CA0337C0033326E /* ParseApiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseApiClient.swift; sourceTree = "<group>"; };
@@ -88,7 +87,6 @@
 		7571C4D81CD1D2CD001B4F03 /* UIUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtility.swift; sourceTree = "<group>"; };
 		7571C4DA1CD23D9B001B4F03 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		758794A11CA10FC200E8B10E /* Alertable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alertable.swift; sourceTree = "<group>"; };
-		758794A31CA1117E00E8B10E /* StudentLocation+Alertable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "StudentLocation+Alertable.swift"; sourceTree = "<group>"; };
 		758794A71CA115DF00E8B10E /* GeoLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeoLocation.swift; sourceTree = "<group>"; };
 		75C84D701CA1883300B14210 /* SubmitLocationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SubmitLocationView.xib; sourceTree = "<group>"; };
 		75C84D721CA18BC600B14210 /* SubmitLocationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubmitLocationView.swift; sourceTree = "<group>"; };
@@ -188,6 +186,7 @@
 				7500B01B1C9EE00E0067DEAD /* JSON */,
 				758794A61CA1119800E8B10E /* User */,
 				758794A51CA1118900E8B10E /* StudentLocation */,
+				7501224A1CD467FE002015C5 /* StudentLocationAnnotation.swift */,
 				7571C4D61CD1B459001B4F03 /* UdacityUserSession.swift */,
 				758794A71CA115DF00E8B10E /* GeoLocation.swift */,
 				758794A11CA10FC200E8B10E /* Alertable.swift */,
@@ -260,8 +259,6 @@
 			children = (
 				756583771CA029D40033326E /* StudentLocation.swift */,
 				7565837C1CA02CCA0033326E /* StudentLocationKey.swift */,
-				7565837A1CA02C1B0033326E /* StudentLocation+JSONParselable.swift */,
-				758794A31CA1117E00E8B10E /* StudentLocation+Alertable.swift */,
 			);
 			name = StudentLocation;
 			sourceTree = "<group>";
@@ -389,7 +386,6 @@
 				7571C4D91CD1D2CD001B4F03 /* UIUtility.swift in Sources */,
 				756583781CA029D40033326E /* StudentLocation.swift in Sources */,
 				7500B0081C9ECC3C0067DEAD /* BorderedButton.swift in Sources */,
-				758794A41CA1117E00E8B10E /* StudentLocation+Alertable.swift in Sources */,
 				7500B01A1C9EDFFE0067DEAD /* JSON.swift in Sources */,
 				75C84D751CA1B97500B14210 /* UserTableViewCell.swift in Sources */,
 				7500B0051C9ECBB20067DEAD /* LoginViewController.swift in Sources */,
@@ -417,9 +413,9 @@
 				75C84D731CA18BC600B14210 /* SubmitLocationView.swift in Sources */,
 				756B8BCE1CA0E5A9009C7355 /* User+JSONParselable.swift in Sources */,
 				7500B0091C9ECC3C0067DEAD /* GCDBlackBox.swift in Sources */,
+				7501224B1CD467FE002015C5 /* StudentLocationAnnotation.swift in Sources */,
 				7500AFF01C9E88130067DEAD /* MapViewController.swift in Sources */,
 				758794A81CA115DF00E8B10E /* GeoLocation.swift in Sources */,
-				7565837B1CA02C1B0033326E /* StudentLocation+JSONParselable.swift in Sources */,
 				756583851CA035A10033326E /* ParseConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
