@@ -96,7 +96,7 @@ extension UdacityApiClient {
     // MARK: - (GET) method
     //----------------------------------------------------
     
-    func getPublicUserData(userId: String, completionHandler: UdacityUserCompletionHandler) {
+    func publicUserData(userId: String, completionHandler: UdacityUserCompletionHandler) {
         var mutableMethod: String = Methods.UserData
         mutableMethod = subtituteKeyInMethod(mutableMethod,
                                              key: URLKeys.UserID,

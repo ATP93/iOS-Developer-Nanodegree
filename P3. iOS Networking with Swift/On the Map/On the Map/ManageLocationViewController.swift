@@ -279,7 +279,7 @@ extension ManageLocationViewController: SubmitLocationViewDelegate {
     private func updateLocation(locationToUpdate: StudentLocation, location: CLLocation, link: String) {
         showNetworkActivityIndicator()
         
-        udacityApiClient.getPublicUserData(udacityApiClient.userSession.userId!) { (user, error) in
+        udacityApiClient.publicUserData(udacityApiClient.userSession.userId!) { (user, error) in
             func showError(error: NSError) {
                 performOnMain {
                     hideNetworkActivityIndicator()
@@ -326,7 +326,7 @@ extension ManageLocationViewController: SubmitLocationViewDelegate {
     private func postLocation(location: CLLocation, link: String) {
         showNetworkActivityIndicator()
         
-        udacityApiClient.getPublicUserData(udacityApiClient.userSession.userId!) { (user, error) in
+        udacityApiClient.publicUserData(udacityApiClient.userSession.userId!) { (user, error) in
             func showError(error: NSError) {
                 performOnMain {
                     hideNetworkActivityIndicator()

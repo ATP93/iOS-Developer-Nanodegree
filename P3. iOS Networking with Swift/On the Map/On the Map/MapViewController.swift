@@ -112,7 +112,7 @@ class MapViewController: UIViewController {
     
     @IBAction func postLocationDidPressed(sender: AnyObject) {
         showNetworkActivityIndicator()
-        parseApiClient.getStudentLocationWithId(udacityApiClient.userSession.userId!) { (location, error) in
+        parseApiClient.studentLocationWithId(udacityApiClient.userSession.userId!) { (location, error) in
             performOnMain {
                 hideNetworkActivityIndicator()
                 

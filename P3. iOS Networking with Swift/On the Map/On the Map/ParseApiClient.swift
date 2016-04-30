@@ -56,7 +56,7 @@ class ParseApiClient: JsonApiClient {
     // MARK: Network
     //-----------------------------------
     
-    func getStudentLocationsWithCompletionHandler(completionHandler: ParseGetStudentLocationsCompletionHandler) {
+    func studentLocationsWithCompletionHandler(completionHandler: ParseGetStudentLocationsCompletionHandler) {
         let url = parseURLFromParameters([
             ParameterKey.order: "-\(JSONBodyKeys.UpdatedAt)",
             ParameterKey.limit: "200"]
@@ -100,7 +100,7 @@ class ParseApiClient: JsonApiClient {
         }
     }
     
-    func getStudentLocationWithId(id: String, completionHandler: ParseGetStudentLocationCompletionHandler) {
+    func studentLocationWithId(id: String, completionHandler: ParseGetStudentLocationCompletionHandler) {
         let url = parseURLFromParameters([
             "where": "{\"\(JSONBodyKeys.UniqueKey)\":\"\(id)\"}"]
         )
@@ -121,10 +121,14 @@ class ParseApiClient: JsonApiClient {
             case .Error(let error):
                 sendError(error.localizedDescription)
             case .Json(let json):
-                guard let results = json[JSONResponseKeys.Results] as? [JSONDictionary] where
-                    results.count == 1 else {
+                guard let results = json[JSONResponseKeys.Results] as? [JSONDictionary] else {
                         sendError("Failed to parse json")
                         return
+                }
+                
+                guard results.count > 0 else {
+                    completionHandler(location: nil, error: nil)
+                    return
                 }
                 
                 completionHandler(location: StudentLocation.decode(results[0]), error: nil)

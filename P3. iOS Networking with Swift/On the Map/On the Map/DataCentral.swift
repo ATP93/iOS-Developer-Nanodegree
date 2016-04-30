@@ -66,7 +66,7 @@ class DataCentral: NSObject {
     
     func fetchStudentLocations() {
         showNetworkActivityIndicator()
-        parseApiClient.getStudentLocationsWithCompletionHandler { (locations, error) in
+        parseApiClient.studentLocationsWithCompletionHandler { (locations, error) in
             performOnMain {
                 self.studentLocations = locations ?? []
                 
@@ -90,7 +90,7 @@ class DataCentral: NSObject {
     
     func fetchForCurrentUser() {
         showNetworkActivityIndicator()
-        udacityApiClient.getPublicUserData(udacityApiClient.userSession.userId!) { (user, error) in
+        udacityApiClient.publicUserData(udacityApiClient.userSession.userId!) { (user, error) in
             performOnMain {
                 hideNetworkActivityIndicator()
                 
