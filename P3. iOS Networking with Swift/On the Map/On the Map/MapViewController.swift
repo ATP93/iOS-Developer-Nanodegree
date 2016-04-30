@@ -194,6 +194,7 @@ extension MapViewController: MKMapViewDelegate {
             
             // Is is current user annotation.
             if annotation.studentLocation.uniqueKey == UdacityApiClient.sharedInstance.userSession.userId! {
+                mapView.setCenterCoordinate(annotation.studentLocation.location.coordinate, animated: true)
                 view.pinTintColor = MKPinAnnotationView.greenPinColor()
             } else {
                 view.pinTintColor = MKPinAnnotationView.redPinColor()
