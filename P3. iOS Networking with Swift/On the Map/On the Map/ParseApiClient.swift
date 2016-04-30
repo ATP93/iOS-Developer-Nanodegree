@@ -27,21 +27,30 @@ class ParseApiClient: JsonApiClient {
     // MARK: Properties
     //-----------------------------------
     
-    static var sharedInstance: ParseApiClient = {
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
-        config.HTTPAdditionalHeaders = [
-            "X-Parse-Application-Id": Constant.ApplicationId,
-            "X-Parse-REST-API-Key": Constant.RestApiKey,
-            "Content-Type": "application/json"
-        ]
-        config.timeoutIntervalForRequest  = 30.0
-        config.timeoutIntervalForResource = 60.0
+    class var sharedInstance: ParseApiClient {
+        struct Static {
+            static var instance: ParseApiClient?
+            static var token: dispatch_once_t = 0
+        }
         
-        let client = ParseApiClient(configuration: config)
-        client.loggingEnabled = true
+        dispatch_once(&Static.token) {
+            let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+            config.HTTPAdditionalHeaders = [
+                "X-Parse-Application-Id": Constant.ApplicationId,
+                "X-Parse-REST-API-Key": Constant.RestApiKey,
+                "Content-Type": "application/json"
+            ]
+            config.timeoutIntervalForRequest  = 30.0
+            config.timeoutIntervalForResource = 60.0
+            
+            let client = ParseApiClient(configuration: config)
+            client.loggingEnabled = true
+            
+            Static.instance = client
+        }
         
-        return client
-    }()
+        return Static.instance!
+    }
     
     //-----------------------------------
     // MARK: Network
@@ -56,7 +65,7 @@ class ParseApiClient: JsonApiClient {
         let request = NSURLRequest(URL: url)
         fetchJson(request) { (result) in
             func sendError(error: String) {
-                self.debugLog(error)
+                self.debugLog("Error: \(error)")
                 let error = NSError(
                     domain: ParseApiClient.GetStudentLocationsDomain,
                     code: ParseApiClient.GetStudentLocationsErrorCode,
@@ -69,6 +78,11 @@ class ParseApiClient: JsonApiClient {
             case .Error(let error):
                 sendError(error.localizedDescription)
             case .Json(let json):
+                if let error = json[JSONResponseKeys.Error] as? String {
+                    sendError(error)
+                    return
+                }
+                
                 guard let results = json[JSONResponseKeys.Results] as? [JSONDictionary] else {
                     sendError("Could not find \(JSONResponseKeys.Results) key in JSON: \(json)")
                     return

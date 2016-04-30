@@ -19,7 +19,9 @@ class UserAccountViewController: UIViewController {
     // MARK: Properties
     //--------------------------------------------
     
-    var user: User? = nil
+    private let dataCentral = DataCentral.sharedInstance
+    private let udacityApiClient = UdacityApiClient.sharedInstance
+    private let parseApiClient = ParseApiClient.sharedInstance
  
     //--------------------------------------------
     // MARK: Outlets
@@ -34,21 +36,30 @@ class UserAccountViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchUserInfo()
+        
+        subscribeToNotification(DataCentralDidUpdateCurrentUser, selector: #selector(UserAccountViewController.reloadData))
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        logOutBarButtonItem.enabled = UdacityApiClient.sharedInstance.userSession.isLoggedIn
+        logOutBarButtonItem.enabled = udacityApiClient.userSession.isLoggedIn
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        if user == nil {
-            fetchUserInfo()
+        if dataCentral.currentUser == nil {
+            dataCentral.fetchForCurrentUser()
         }
+    }
+    
+    //--------------------------------------------
+    // MARK: Helpers
+    //--------------------------------------------
+    
+    func reloadData() {
+        tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
     }
     
     //--------------------------------------------
@@ -66,27 +77,8 @@ class UserAccountViewController: UIViewController {
     }
     
     //--------------------------------------------
-    // MARK: Helpers
+    // MARK: Logout
     //--------------------------------------------
-    
-    private func fetchUserInfo() {
-        showNetworkActivityIndicator()
-        let apiClient = UdacityApiClient.sharedInstance
-        apiClient.getPublicUserData(apiClient.userSession.userId!) { (user, error) in
-            performOnMain {
-                hideNetworkActivityIndicator()
-                if let error = error {
-                    print("Failed to get public user data. Error: \(error.localizedDescription)")
-                } else {
-                    if let user = user {
-                        print("Fetched user: \(user)")
-                        self.user = user
-                        self.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
-                    }
-                }
-            }
-        }
-    }
     
     private func logout() {
         if FBSDKAccessToken.currentAccessToken() != nil {
@@ -111,13 +103,21 @@ class UserAccountViewController: UIViewController {
                 if success {
                     self?.dismissViewControllerAnimated(true, completion: nil)
                 } else {
-                    self?.displayAlertWithTitle("Failed to log out", message: error!.localizedDescription)
+                    self?.presentAlertWithTitle("Failed to log out", message: error!.localizedDescription)
                 }
             }
         }
     }
     
-    private func displayAlertWithTitle(title: String?, message: String?) {
+}
+
+//----------------------------------------------------------
+// MARK: - UserAccountViewController: (UI Functions)
+//----------------------------------------------------------
+
+extension UserAccountViewController {
+    
+    private func presentAlertWithTitle(title: String?, message: String?, actionHandler: (UIAlertAction -> Void)? = nil) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .Cancel, handler: nil))
         presentViewController(alert, animated: true, completion: nil)
@@ -125,9 +125,9 @@ class UserAccountViewController: UIViewController {
     
 }
 
-//------------------------------------------------------
-// MARK: UserAccountViewController: UITableViewDataSource
-//------------------------------------------------------
+//----------------------------------------------------------
+// MARK: - UserAccountViewController: UITableViewDataSource
+//----------------------------------------------------------
 
 extension UserAccountViewController: UITableViewDataSource {
     
@@ -149,13 +149,13 @@ extension UserAccountViewController: UITableViewDataSource {
         switch indexPath.row {
         case 0:
             cell.leftTitleLabel.text = "First name"
-            cell.rightDetailLabel.text = user?.firstName ?? undefined
+            cell.rightDetailLabel.text = dataCentral.currentUser?.firstName ?? undefined
         case 1:
             cell.leftTitleLabel.text = "Last name"
-            cell.rightDetailLabel.text = user?.lastName ?? undefined
+            cell.rightDetailLabel.text = dataCentral.currentUser?.lastName ?? undefined
         case 2:
             cell.leftTitleLabel.text = "Email"
-            cell.rightDetailLabel.text = user?.email ?? undefined
+            cell.rightDetailLabel.text = dataCentral.currentUser?.email ?? undefined
         default:
             print("Unexpected error")
         }
@@ -173,6 +173,43 @@ extension UserAccountViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
         return nil
+    }
+    
+}
+
+//----------------------------------------------------
+// MARK: - UserAccountViewController (Notifications) -
+//----------------------------------------------------
+
+extension UserAccountViewController {
+    
+    func handleFailedCurrentUserUpdate(notification: NSNotification) {
+        // Present alert view controller if view is visible
+        guard isViewLoaded() && view.window != nil else {
+            return
+        }
+        
+        guard let error = notification.userInfo?[DataCentralErrorNotificationKey] as? NSError else {
+            return
+        }
+        
+        let alert = UIAlertController(
+            title: "Failed to fetch info",
+            message: "\(error.localizedDescription) Try again to fetch info?",
+            preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Try Again", style: .Default, handler: { action in
+            self.dataCentral.fetchForCurrentUser()
+        }))
+        presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    private func subscribeToNotification(notification: String, selector: Selector) {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: notification, object: nil)
+    }
+    
+    private func unsubscribeFromAllNotifications() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
 }

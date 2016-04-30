@@ -19,6 +19,9 @@ class ManageLocationViewController: UIViewController {
     // MARK: Properties
     //--------------------------------------------------
     
+    var udacityApiClient: UdacityApiClient!
+    var parseApiClient: ParseApiClient!
+    
     var locationToUpdate: StudentLocation?
     
     var keyboardOnScreen = false
@@ -39,6 +42,9 @@ class ManageLocationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        assert(parseApiClient != nil && udacityApiClient != nil)
+        
         configureUI()
     }
     
@@ -78,7 +84,7 @@ class ManageLocationViewController: UIViewController {
         geocoder.geocodeAddressString(addressString) { [weak self] (placemarks, error) in
             hideNetworkActivityIndicator()
             if let error = error {
-                print(error.localizedDescription)
+                self?.displayAlert(title: "Geocode error", message: error.localizedDescription, actionHandler: nil)
             } else {
                 if let placemarks = placemarks {
                     self?.placemark = placemarks[0]
@@ -273,8 +279,7 @@ extension ManageLocationViewController: SubmitLocationViewDelegate {
     private func updateLocation(locationToUpdate: StudentLocation, location: CLLocation, link: String) {
         showNetworkActivityIndicator()
         
-        let udacity = UdacityApiClient.sharedInstance
-        udacity.getPublicUserData(udacity.userSession.userId!) { (user, error) in
+        udacityApiClient.getPublicUserData(udacityApiClient.userSession.userId!) { (user, error) in
             func showError(error: NSError) {
                 performOnMain {
                     hideNetworkActivityIndicator()
@@ -299,7 +304,7 @@ extension ManageLocationViewController: SubmitLocationViewDelegate {
                 return
             }
             
-            ParseApiClient.sharedInstance.updateStudentLocation(locationToUpdate, student: user!, placemark: self.placemark!, mediaURL: link, completionHandler: { (success, error) in
+            self.parseApiClient.updateStudentLocation(locationToUpdate, student: user!, placemark: self.placemark!, mediaURL: link, completionHandler: { (success, error) in
                 performOnMain {
                     hideNetworkActivityIndicator()
                     if success {
@@ -321,8 +326,7 @@ extension ManageLocationViewController: SubmitLocationViewDelegate {
     private func postLocation(location: CLLocation, link: String) {
         showNetworkActivityIndicator()
         
-        let udacity = UdacityApiClient.sharedInstance
-        udacity.getPublicUserData(udacity.userSession.userId!) { (user, error) in
+        udacityApiClient.getPublicUserData(udacityApiClient.userSession.userId!) { (user, error) in
             func showError(error: NSError) {
                 performOnMain {
                     hideNetworkActivityIndicator()
@@ -347,7 +351,7 @@ extension ManageLocationViewController: SubmitLocationViewDelegate {
                 return
             }
             
-            ParseApiClient.sharedInstance.postLocationForStudent(user!, placemark: self.placemark!, mediaURL: link, completionHandler: { (success, error) in
+            self.parseApiClient.postLocationForStudent(user!, placemark: self.placemark!, mediaURL: link, completionHandler: { (success, error) in
                 performOnMain {
                     hideNetworkActivityIndicator()
                     if success {

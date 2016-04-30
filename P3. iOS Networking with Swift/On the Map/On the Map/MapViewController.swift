@@ -27,7 +27,9 @@ class MapViewController: UIViewController {
     // MARK: Properties
     //------------------------------------------------
     
-    private var locations: [StudentLocation] = []
+    private let dataCentral = DataCentral.sharedInstance
+    private let udacityApiClient = UdacityApiClient.sharedInstance
+    private let parseApiClient = ParseApiClient.sharedInstance
     
     private var shouldUpdateStudentLocation = false
     private var locationToUpdate: StudentLocation?
@@ -45,10 +47,10 @@ class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        fetchStudentLocations()
+        subscribeToNotification(DataCentralDidUpdateStudentLocations, selector: #selector(MapViewController.refreshAnnotations))
+        subscribeToNotification(DataCentralDidFailedUpdateStudentLocations, selector: #selector(MapViewController.handleFailedLocationsUpdate(_:)))
         
-        subscribeToNotification(ManageLocationViewControllerDidUpdateLocation, selector: #selector(MapViewController.fetchStudentLocations))
-        subscribeToNotification(ManageLocationViewControllerDidPostLocation, selector: #selector(MapViewController.fetchStudentLocations))
+        dataCentral.fetchStudentLocations()
     }
     
     deinit {
@@ -61,10 +63,12 @@ class MapViewController: UIViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == SegueIdentifier.ManageLocation.rawValue {
-            let postLocationViewController = segue.destinationViewController as! ManageLocationViewController
+            let manageLocationViewController = segue.destinationViewController as! ManageLocationViewController
+            manageLocationViewController.parseApiClient = parseApiClient
+            manageLocationViewController.udacityApiClient = udacityApiClient
             
             if shouldUpdateStudentLocation {
-                postLocationViewController.locationToUpdate = locationToUpdate!
+                manageLocationViewController.locationToUpdate = locationToUpdate!
             }
             
             shouldUpdateStudentLocation = false
@@ -76,27 +80,26 @@ class MapViewController: UIViewController {
     // MARK: Network
     //------------------------------------------------
     
-    func fetchStudentLocations() {
+    func refreshAnnotations() {
         for anAnnotation in mapView.annotations {
             mapView.removeAnnotation(anAnnotation)
         }
         
-        showNetworkActivityIndicator()
-        ParseApiClient.sharedInstance.getStudentLocationsWithCompletionHandler { (locations, error) in
-            performOnMain {
-                hideNetworkActivityIndicator()
-                if let error = error {
-                    print(error.localizedDescription)
-                } else {
-                    if let locations = locations {
-                        print("Successfully fetched \(locations.count) users locations.")
-                        self.locations = locations
-                        let annotations = locations.flatMap { StudentLocationAnnotation(location: $0) }
-                        self.mapView.addAnnotations(annotations)
-                    }
-                }
-            }
+        let annotations = dataCentral.studentLocations.flatMap { StudentLocationAnnotation(location: $0) }
+        self.mapView.addAnnotations(annotations)
+    }
+    
+    func handleFailedLocationsUpdate(notification: NSNotification) {
+        // Present alert view controller if view is visible
+        guard isViewLoaded() && view.window != nil else {
+            return
         }
+        
+        guard let error = notification.userInfo?[DataCentralErrorNotificationKey] as? NSError else {
+            return
+        }
+        
+        presentAlertWithTitle("Failed to update", message: "\(error.localizedDescription) Please try again later.")
     }
     
     //------------------------------------------------
@@ -104,13 +107,12 @@ class MapViewController: UIViewController {
     //------------------------------------------------
     
     @IBAction func syncronizeDidPressed(sender: AnyObject) {
-        fetchStudentLocations()
+        dataCentral.fetchStudentLocations()
     }
     
     @IBAction func postLocationDidPressed(sender: AnyObject) {
         showNetworkActivityIndicator()
-        let userId = UdacityApiClient.sharedInstance.userSession.userId!
-        ParseApiClient.sharedInstance.getStudentLocationWithId(userId) { (location, error) in
+        parseApiClient.getStudentLocationWithId(udacityApiClient.userSession.userId!) { (location, error) in
             performOnMain {
                 hideNetworkActivityIndicator()
                 

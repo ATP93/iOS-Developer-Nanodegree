@@ -54,6 +54,7 @@ extension ParseApiClient {
     
     // MARK: JSON Response Keys
     struct JSONResponseKeys {
+        static let Error = "error"
         static let Results = "results"
         static let CreatedAt = "createdAt"
         static let ObjectId = "objectId"

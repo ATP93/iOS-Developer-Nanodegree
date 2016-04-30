@@ -24,6 +24,7 @@
 		7500B0221C9EF9040067DEAD /* UdacityConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0211C9EF9040067DEAD /* UdacityConstants.swift */; };
 		7500B0241C9F15380067DEAD /* UdacityApiClientConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7500B0231C9F15380067DEAD /* UdacityApiClientConvenience.swift */; };
 		7501224B1CD467FE002015C5 /* StudentLocationAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7501224A1CD467FE002015C5 /* StudentLocationAnnotation.swift */; };
+		7501224D1CD46F91002015C5 /* DataCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7501224C1CD46F91002015C5 /* DataCentral.swift */; };
 		754B406A1CD30A0000E3B889 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 754B40691CD30A0000E3B889 /* FBSDKCoreKit.framework */; };
 		754B406D1CD30CCD00E3B889 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 754B406B1CD30CCD00E3B889 /* Bolts.framework */; };
 		754B406E1CD30CCD00E3B889 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 754B406C1CD30CCD00E3B889 /* FBSDKLoginKit.framework */; };
@@ -70,6 +71,7 @@
 		7500B0211C9EF9040067DEAD /* UdacityConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityConstants.swift; sourceTree = "<group>"; };
 		7500B0231C9F15380067DEAD /* UdacityApiClientConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UdacityApiClientConvenience.swift; sourceTree = "<group>"; };
 		7501224A1CD467FE002015C5 /* StudentLocationAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentLocationAnnotation.swift; sourceTree = "<group>"; };
+		7501224C1CD46F91002015C5 /* DataCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataCentral.swift; sourceTree = "<group>"; };
 		754B40691CD30A0000E3B889 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		754B406B1CD30CCD00E3B889 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../../../../../Documents/FacebookSDK/Bolts.framework; sourceTree = "<group>"; };
 		754B406C1CD30CCD00E3B889 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../../../../../Documents/FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 		7500B0171C9EDFCA0067DEAD /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				7501224C1CD46F91002015C5 /* DataCentral.swift */,
 				7500B01B1C9EE00E0067DEAD /* JSON */,
 				758794A61CA1119800E8B10E /* User */,
 				758794A51CA1118900E8B10E /* StudentLocation */,
@@ -402,6 +405,7 @@
 				7500B01F1C9EF85C0067DEAD /* UdacityApiClient.swift in Sources */,
 				75EAE52F1CD0FFEC003F682F /* HttpMethodName.swift in Sources */,
 				7500B0221C9EF9040067DEAD /* UdacityConstants.swift in Sources */,
+				7501224D1CD46F91002015C5 /* DataCentral.swift in Sources */,
 				7565837D1CA02CCA0033326E /* StudentLocationKey.swift in Sources */,
 				7571C4D71CD1B459001B4F03 /* UdacityUserSession.swift in Sources */,
 				7500B0241C9F15380067DEAD /* UdacityApiClientConvenience.swift in Sources */,

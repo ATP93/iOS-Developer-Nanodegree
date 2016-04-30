@@ -102,13 +102,17 @@ class HttpApiClient {
                 self.debugLog("Status code: \(statusCode)")
             case 404:
                 completion(.NotFound)
+                return
             case 400...499:
                 completion(.ClientError(statusCode))
+                return
             case 500...599:
                 completion(.ServerError(statusCode))
+                return
             default:
                 print("Received HTTP status code \(statusCode), which was't be handled")
                 completion(.UnexpectedError(statusCode, error))
+                return
             }
             
             self.debugLog("Received HTTP \(httpResponse.statusCode) from \(request.HTTPMethod!) to \(request.URL!)")

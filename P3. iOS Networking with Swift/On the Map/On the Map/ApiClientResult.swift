@@ -36,19 +36,19 @@ extension ApiClientResult {
         case .Error(let error):
             return error.localizedDescription
         case .NotFound:
-            return NSLocalizedString("Not found",
+            return NSLocalizedString("Not found.",
                                      comment: "Requested URL not found")
         case .ServerError(let code):
-            return NSLocalizedString("Server error",
+            return NSLocalizedString("Server error.",
                                      comment: "Server error occured with code: \(code)")
         case .ClientError(let code):
-            return NSLocalizedString("Client error", comment: "Client error occured with code: \(code)")
+            return NSLocalizedString("Client error.", comment: "Client error occured with code: \(code)")
         case .UnexpectedError(let code, let error):
             return (error == nil
-                ? NSLocalizedString("Unexpected error default template",
-                    comment: "Unexpected error occured with code: \(code)")
-                : NSLocalizedString("Unexpected error with details",
-                    comment: "Unexpected error occured with code: \(code), error: \(error!.localizedDescription)"))
+                ? NSLocalizedString("Unexpected error occured with code: \(code).",
+                    comment: "Unexpected error default template")
+                : NSLocalizedString("Unexpected error occured with code: \(code), error: \(error!.localizedDescription).",
+                    comment: "Unexpected error with details"))
         default:
             return nil
         }

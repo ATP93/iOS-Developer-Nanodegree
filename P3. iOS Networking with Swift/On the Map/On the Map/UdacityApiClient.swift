@@ -26,20 +26,29 @@ final class UdacityApiClient: JsonApiClient {
     
     var userSession = UdacityUserSession()
     
-    static var sharedInstance: UdacityApiClient = {
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
-        config.HTTPAdditionalHeaders = [
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        ]
-        config.timeoutIntervalForRequest  = 30.0
-        config.timeoutIntervalForResource = 60.0
+    class var sharedInstance: UdacityApiClient {
+        struct Static {
+            static var instance: UdacityApiClient?
+            static var token: dispatch_once_t = 0
+        }
         
-        let client = UdacityApiClient(configuration: config)
-        client.loggingEnabled = true
+        dispatch_once(&Static.token) {
+            let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+            config.HTTPAdditionalHeaders = [
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            ]
+            config.timeoutIntervalForRequest  = 30.0
+            config.timeoutIntervalForResource = 60.0
+            
+            let client = UdacityApiClient(configuration: config)
+            client.loggingEnabled = true
+            
+            Static.instance = client
+        }
         
-        return client
-    }()
+        return Static.instance!
+    }
 
     //------------------------------------
     // MARK: - GET

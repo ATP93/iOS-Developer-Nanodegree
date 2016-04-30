@@ -18,7 +18,10 @@ class LocationsViewController: UIViewController {
     // MARK: Properties
     //--------------------------------------------
     
-    private var studentLocations = [StudentLocation]()
+    private let dataCentral = DataCentral.sharedInstance
+    private let udacityApiClient = UdacityApiClient.sharedInstance
+    private let parseApiClient = ParseApiClient.sharedInstance
+    
     private let cellReuseIdentifier = "StudentLocationCell"
     
     var refreshControl: UIRefreshControl!
@@ -36,14 +39,20 @@ class LocationsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        fetchLocations()
-        
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(LocationsViewController.fetchLocations), forControlEvents: .ValueChanged)
         tableView.addSubview(refreshControl)
         
-        subscribeToNotification(ManageLocationViewControllerDidPostLocation, selector: #selector(LocationsViewController.fetchLocations))
-        subscribeToNotification(ManageLocationViewControllerDidUpdateLocation, selector: #selector(LocationsViewController.fetchLocations))
+        subscribeToNotification(DataCentralDidUpdateStudentLocations, selector: #selector(LocationsViewController.reloadData))
+        subscribeToNotification(DataCentralDidFailedUpdateStudentLocations, selector: #selector(LocationsViewController.handleFailedLocationsUpdate(_:)))
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if dataCentral.studentLocations.count == 0 {
+            dataCentral.fetchStudentLocations()
+        }
     }
     
     deinit {
@@ -51,26 +60,29 @@ class LocationsViewController: UIViewController {
     }
     
     //--------------------------------------------
-    // MARK: Network
+    // MARK: Working with Data
     //--------------------------------------------
     
+    func reloadData() {
+        refreshControl.endRefreshing()
+        tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
+    }
+    
     func fetchLocations() {
-        showNetworkActivityIndicator()
-        ParseApiClient.sharedInstance.getStudentLocationsWithCompletionHandler { [weak self] (locations, error) in
-            performOnMain {
-                hideNetworkActivityIndicator()
-                self?.refreshControl.endRefreshing()
-                if let error = error {
-                    print(error.localizedDescription)
-                } else {
-                    if let locations = locations {
-                        print("Successfully fetched \(locations.count) users locations.")
-                        self?.studentLocations = locations
-                        self?.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
-                    }
-                }
-            }
+        dataCentral.fetchStudentLocations()
+    }
+    
+    func handleFailedLocationsUpdate(notification: NSNotification) {
+        // Present alert view controller if view is visible
+        guard isViewLoaded() && view.window != nil else {
+            return
         }
+        
+        guard let error = notification.userInfo?[DataCentralErrorNotificationKey] as? NSError else {
+            return
+        }
+        
+        presentAlertWithTitle("Failed to update", message: "\(error.localizedDescription) Please try again later.")
     }
 
     //--------------------------------------------
@@ -80,6 +92,7 @@ class LocationsViewController: UIViewController {
     @IBAction func syncronizeDidPressed(sender: AnyObject) {
         fetchLocations()
     }
+    
 }
 
 //------------------------------------------------------
@@ -93,18 +106,18 @@ extension LocationsViewController: UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return studentLocations.count
+        return dataCentral.studentLocations.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier)!
         cell.textLabel?.text = ""
         
-        guard indexPath.row < studentLocations.count else {
+        guard indexPath.row < dataCentral.studentLocations.count else {
             return cell
         }
         
-        let location = studentLocations[indexPath.row]
+        let location = dataCentral.studentLocations[indexPath.row]
         cell.textLabel?.text = "\(location.firstName) \(location.lastName)"
         
         return cell
@@ -120,7 +133,21 @@ extension LocationsViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        StudentLocationAnnotation(location: studentLocations[indexPath.row]).openMediaURLInSafari()
+        StudentLocationAnnotation(location: dataCentral.studentLocations[indexPath.row]).openMediaURLInSafari()
+    }
+    
+}
+
+//------------------------------------------------
+// MARK: - LocationsViewController (UI Functions)
+//------------------------------------------------
+
+extension LocationsViewController {
+    
+    private func presentAlertWithTitle(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
     }
     
 }

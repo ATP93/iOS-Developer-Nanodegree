@@ -12,5 +12,13 @@ import Foundation
 // MARK: - Notification Center
 //--------------------------------------------
 
+// MARK: ManageLocationViewController
 let ManageLocationViewControllerDidUpdateLocation = "ManageLocationViewControllerDidUpdateLocation"
 let ManageLocationViewControllerDidPostLocation = "ManageLocationViewControllerDidPostLocation"
+
+// MARK: DataCentral
+let DataCentralDidUpdateStudentLocations = "DataCentralDidUpdateStudentLocations"
+let DataCentralDidFailedUpdateStudentLocations = "DataCentralDidFailedUpdateStudentLocations"
+let DataCentralDidUpdateCurrentUser = "DataCentralDidUpdateCurrentUser"
+let DataCentralDidFailedUpdateCurrentUser = "DataCentralDidFailedCurrentUser"
+let DataCentralErrorNotificationKey = "error"
