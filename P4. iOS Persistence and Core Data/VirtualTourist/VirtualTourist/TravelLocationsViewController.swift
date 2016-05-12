@@ -17,15 +17,17 @@ import Darwin.C
 class TravelLocationsViewController: UIViewController {
     
     //-----------------------------------------------------
-    // MARK: - Properties
+    // MARK: - Properties -
     //-----------------------------------------------------
-    
-    private static let locationUpdateTimeInterval = 3.0
     
     // MARK: Public
     var coreDataStackManager: CoreDataStackManager!
     
     // MARK: Private
+    private static let locationUpdateTimeInterval = 5.0
+    
+    private var currentUserLocation: CLLocation?
+    
     private lazy var locationManager: CLLocationManager = {
         let locationManager = CLLocationManager()
         locationManager.delegate = self
@@ -33,29 +35,45 @@ class TravelLocationsViewController: UIViewController {
         return locationManager
     }()
     
-    private var userLocation: CLLocation?
-    
     // MARK: Outlets
     @IBOutlet weak var mapView: MKMapView!
     
     //-----------------------------------------------------
-    // MARK: View Life Cycle
+    // MARK: - View Life Cycle -
     //-----------------------------------------------------
     
     override func viewDidLoad() {
         super.viewDidLoad()
         assert(coreDataStackManager != nil)
         
+        configureMapView()
+    }
+    
+}
+
+//----------------------------------------------------------
+// MARK: - TravelLocationsViewController (MapView Helpers) -
+//----------------------------------------------------------
+
+extension TravelLocationsViewController {
+    
+    private func configureMapView() {
+        mapView.delegate = self
+        
+        if !UserDefaultsUtils.isFirstAppLaunch() {
+            mapView.setRegion(UserDefaultsUtils.persistedMapRegion(), animated: false)
+        }
         checkLocationAuthorizationStatus()
     }
-    //-----------------------------------------------------
-    // MARK: Helpers
-    //-----------------------------------------------------
     
     private func checkLocationAuthorizationStatus() {
         if CLLocationManager.authorizationStatus() == .AuthorizedWhenInUse {
-            startUpdatingLocation()
             mapView.showsUserLocation = true
+            
+            // Center map on the current user location, if it first time when app launch.
+            if UserDefaultsUtils.isFirstAppLaunch() {
+                startUpdatingLocation()
+            }
         } else {
             locationManager.requestWhenInUseAuthorization()
         }
@@ -71,9 +89,21 @@ class TravelLocationsViewController: UIViewController {
     
 }
 
-//------------------------------------------------------------------
-// MARK: - TravelLocationsViewController: CLLocationManagerDelegate
-//------------------------------------------------------------------
+//-------------------------------------------------------------------
+// MARK: - TravelLocationsViewController: MKMapViewDelegate -
+//-------------------------------------------------------------------
+
+extension TravelLocationsViewController: MKMapViewDelegate {
+    
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        UserDefaultsUtils.persistMapRegion(mapView.region)
+    }
+    
+}
+
+//-------------------------------------------------------------------
+// MARK: - TravelLocationsViewController: CLLocationManagerDelegate -
+//-------------------------------------------------------------------
 
 extension TravelLocationsViewController: CLLocationManagerDelegate {
     
@@ -116,17 +146,17 @@ extension TravelLocationsViewController: CLLocationManagerDelegate {
         
         // Calculates the distance between the new reading and the previous reading.
         var distance: CLLocationDistance = DBL_MAX
-        guard userLocation != nil else {
-            userLocation = newLocation
+        guard currentUserLocation != nil else {
+            currentUserLocation = newLocation
             updateMapRegionWithLocation(newLocation)
             return
         }
-        distance = newLocation.distanceFromLocation(userLocation!)
+        distance = newLocation.distanceFromLocation(currentUserLocation!)
         
         // If the new reading coordinates is more useful than the previous one.
         // Larger accuracy value actually means less accurate.
-        if userLocation!.horizontalAccuracy > newLocation.horizontalAccuracy {
-            userLocation = newLocation
+        if currentUserLocation!.horizontalAccuracy > newLocation.horizontalAccuracy {
+            currentUserLocation = newLocation
             
             if newLocation.horizontalAccuracy <= locationManager.desiredAccuracy {
                 print("Done updating user location. Desired accuracy is reached.")
@@ -134,18 +164,17 @@ extension TravelLocationsViewController: CLLocationManagerDelegate {
             }
             
             updateMapRegionWithLocation(newLocation)
-            
-            // If the coordinate from this reading is not significantly different from
-            // the previous reading and it has been more than 5 seconds since you’ve
-            // received that original reading, then it’s a good point to stop.
         }
         
-        if distance < 10.0 {
-            let timeInterval = newLocation.timestamp.timeIntervalSinceDate(userLocation!.timestamp)
-            if timeInterval > TravelLocationsViewController.locationUpdateTimeInterval {
-                print("Force done updating user location.")
-                stopUpdatingLocation()
-            }
+        // If the coordinate from this reading is not significantly different from
+        // the previous reading and it has been more than 5 seconds(see locationUpdateTimeInterval)
+        // since you’ve received that original reading, then it’s a good point to stop.
+        
+        let timeInterval = newLocation.timestamp.timeIntervalSinceDate(currentUserLocation!.timestamp)
+        if distance < 10.0 ||
+            timeInterval > TravelLocationsViewController.locationUpdateTimeInterval {
+            print("Force done updating user location.")
+            stopUpdatingLocation()
         }
     }
     

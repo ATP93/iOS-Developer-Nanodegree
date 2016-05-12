@@ -28,10 +28,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         spreadCoreDataStack()
+        UserDefaultsUtils.activate()
+        
         return true
     }
 
     func applicationWillTerminate(application: UIApplication) {
+        UserDefaultsUtils.synchronize()
         coreDataStackManager.saveContext()
     }
     

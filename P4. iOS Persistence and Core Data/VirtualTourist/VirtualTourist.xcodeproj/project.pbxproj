@@ -15,6 +15,7 @@
 		752CAAFF1CE358D50063E287 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 752CAAFD1CE358D50063E287 /* LaunchScreen.storyboard */; };
 		752CAB0A1CE358D50063E287 /* VirtualTouristTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CAB091CE358D50063E287 /* VirtualTouristTests.swift */; };
 		752CAB151CE358D50063E287 /* VirtualTouristUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CAB141CE358D50063E287 /* VirtualTouristUITests.swift */; };
+		75740B861CE4B295001679A0 /* UserDefaultsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75740B851CE4B295001679A0 /* UserDefaultsUtils.swift */; };
 		75B8DAA81CE479BA00E0E8B2 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B8DAA41CE479BA00E0E8B2 /* Photo+CoreDataProperties.swift */; };
 		75B8DAA91CE479BA00E0E8B2 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B8DAA51CE479BA00E0E8B2 /* Photo.swift */; };
 		75B8DAAA1CE479BA00E0E8B2 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B8DAA61CE479BA00E0E8B2 /* Pin+CoreDataProperties.swift */; };
@@ -56,6 +57,7 @@
 		752CAB101CE358D50063E287 /* VirtualTouristUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VirtualTouristUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		752CAB141CE358D50063E287 /* VirtualTouristUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTouristUITests.swift; sourceTree = "<group>"; };
 		752CAB161CE358D50063E287 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75740B851CE4B295001679A0 /* UserDefaultsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserDefaultsUtils.swift; path = VirtualTourist/UserDefaultsUtils.swift; sourceTree = "<group>"; };
 		75B8DAA41CE479BA00E0E8B2 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		75B8DAA51CE479BA00E0E8B2 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		75B8DAA61CE479BA00E0E8B2 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 			children = (
 				75B8DAB11CE47BD800E0E8B2 /* PathUtils.swift */,
 				75B8DAB51CE482BF00E0E8B2 /* UUIDUtils.swift */,
+				75740B851CE4B295001679A0 /* UserDefaultsUtils.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -365,6 +368,7 @@
 				752CAAF21CE358D40063E287 /* AppDelegate.swift in Sources */,
 				75B8DAA81CE479BA00E0E8B2 /* Photo+CoreDataProperties.swift in Sources */,
 				752CAAFA1CE358D50063E287 /* VirtualTourist.xcdatamodeld in Sources */,
+				75740B861CE4B295001679A0 /* UserDefaultsUtils.swift in Sources */,
 				75B8DAA91CE479BA00E0E8B2 /* Photo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
