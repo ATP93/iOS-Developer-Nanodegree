@@ -57,6 +57,37 @@ class TravelLocationsViewController: UIViewController {
 
 extension TravelLocationsViewController {
     
+    // MARK: Public
+    
+    func pinOnLongPressGesture(gestureRecognizer: UIGestureRecognizer) {
+        switch gestureRecognizer.state {
+        case .Began:
+            print("Pin on long press began")
+        case .Ended:
+            print("Pin on long press ended")
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinateFromPoint(gestureRecognizer.locationInView(mapView))
+            mapView.addAnnotation(annotation)
+        default:
+            return
+        }
+    }
+    
+    func pinOnTapGesture(gestureRecognizer: UIGestureRecognizer) {
+        print("Tap gesture")
+        
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinateFromPoint(gestureRecognizer.locationInView(mapView))
+        
+        mapView.addAnnotation(annotation)
+    }
+    
+    // MARK: Private
+    
+    private func coordinateFromPoint(point: CGPoint) -> CLLocationCoordinate2D {
+        return mapView.convertPoint(point, toCoordinateFromView: mapView)
+    }
+    
     private func configureMapView() {
         mapView.delegate = self
         
@@ -64,6 +95,13 @@ extension TravelLocationsViewController {
             mapView.setRegion(UserDefaultsUtils.persistedMapRegion(), animated: false)
         }
         checkLocationAuthorizationStatus()
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(TravelLocationsViewController.pinOnLongPressGesture(_:)))
+        longPressGesture.minimumPressDuration = 1.0
+        mapView.addGestureRecognizer(longPressGesture)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TravelLocationsViewController.pinOnTapGesture(_:)))
+        mapView.addGestureRecognizer(tapGesture)
     }
     
     private func checkLocationAuthorizationStatus() {
