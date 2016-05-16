@@ -33,6 +33,14 @@ class PersistenceCentral {
         return Static.instance
     }
     
+    // MARK: Public
+    
+    var pins: [Pin] {
+        get {
+            return fetchedResultsController.fetchedObjects as? [Pin] ?? [Pin]()
+        }
+    }
+    
     // MARK: Private
     
     private static let coreDataStackManager = CoreDataStackManager.sharedInstance()
@@ -45,19 +53,17 @@ class PersistenceCentral {
             sectionNameKeyPath: nil,
             cacheName: nil)
         
-        // Use try! because an error is returned if the fetch request specified doesn't include
-        // a sort descriptor that uses sectionNameKeyPath.
-        _ = try! fetchedResultsController.performFetch()
-        
         return fetchedResultsController
     }()
     
     //-----------------------------------------------------
-    // MARK: - Core Data Convenience
+    // MARK: - Init
     //-----------------------------------------------------
     
-    func getAllPins() -> [Pin] {
-        return fetchedResultsController.fetchedObjects as? [Pin] ?? [Pin]()
+    init() {
+        // Use try! because an error is returned if the fetch request specified doesn't include
+        // a sort descriptor that uses sectionNameKeyPath.
+        _ = try! fetchedResultsController.performFetch()
     }
     
 }

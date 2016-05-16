@@ -44,8 +44,6 @@ class TravelLocationsViewController: UIViewController {
     
     private var didSelectAnnotationView = false
     
-    private var pins = [Pin]()
-    
     // MARK: Outlets
     @IBOutlet weak var mapView: MKMapView!
     
@@ -58,8 +56,7 @@ class TravelLocationsViewController: UIViewController {
         assert(coreDataStackManager != nil && persistenceCentral != nil)
         
         configureMapView()
-        pins = persistenceCentral.getAllPins()
-        mapView.addAnnotations(pins)
+        mapView.addAnnotations(persistenceCentral.pins)
     }
     
     override func viewWillAppear(animated: Bool) {
