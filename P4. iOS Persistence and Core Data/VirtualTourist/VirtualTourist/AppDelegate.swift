@@ -20,14 +20,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //-----------------------------------------------------
     
     var window: UIWindow?
+    
     private let coreDataStackManager = CoreDataStackManager.sharedInstance()
+    private let persistenceCentral = PersistenceCentral.sharedInstance()
 
     //-----------------------------------------------------
     // MARK: UIApplicationDelegate
     //-----------------------------------------------------
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        spreadCoreDataStack()
+        spreadSharedInstances()
         UserDefaultsUtils.activate()
         
         return true
@@ -42,9 +44,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: Helpers
     //-----------------------------------------------------
     
-    private func spreadCoreDataStack() {
+    private func spreadSharedInstances() {
         let travelLocationsVC = window?.rootViewController as! TravelLocationsViewController
         travelLocationsVC.coreDataStackManager = coreDataStackManager
+        travelLocationsVC.persistenceCentral = persistenceCentral
     }
     
 }

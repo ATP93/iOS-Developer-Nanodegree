@@ -15,11 +15,16 @@ import CoreData
 
 class Photo: NSManagedObject {
     
+    
     //----------------------------------------
-    // MARK: Properties
+    // MARK: Types
     //----------------------------------------
     
-    static let entityName = "Photo"
+    enum Keys: String {
+        case id
+        case createdAt
+        case pin
+    }
 
     //-----------------------------------------
     // MARK: Init
@@ -27,6 +32,21 @@ class Photo: NSManagedObject {
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
+        
+        id = UUIDUtils.generateUUIDString()
+        createdAt = NSDate()
+    }
+    
+}
+
+//--------------------------------------------
+// MARK: - Photo: EntityNamelable
+//--------------------------------------------
+
+extension Photo: EntityNamelable {
+    
+    static var entityName: String {
+        return "Photo"
     }
     
 }

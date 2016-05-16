@@ -17,10 +17,16 @@ import MapKit
 class Pin: NSManagedObject {
     
     //----------------------------------------
-    // MARK: Properties
+    // MARK: Types
     //----------------------------------------
     
-    static let entityName = "Pin"
+    enum Keys: String {
+        case id
+        case latitude
+        case longitude
+        case createdAt
+        case photos
+    }
 
     //----------------------------------------
     // MARK: Init
@@ -28,13 +34,14 @@ class Pin: NSManagedObject {
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
+        
+        id = UUIDUtils.generateUUIDString()
+        createdAt = NSDate()
     }
     
     convenience init(context: NSManagedObjectContext) {
         let entity = NSEntityDescription.entityForName(Pin.entityName, inManagedObjectContext: context)!
         self.init(entity: entity, insertIntoManagedObjectContext: context)
-        
-        id = UUIDUtils.generateUUIDString()
     }
     
     convenience init(locationCoordinate location: CLLocationCoordinate2D, context: NSManagedObjectContext) {
@@ -52,20 +59,19 @@ class Pin: NSManagedObject {
 
 extension Pin: MKAnnotation {
     
-    //--------------------------------------------
-    // MARK: MKAnnotation
-    //--------------------------------------------
-    
     var coordinate: CLLocationCoordinate2D {
-        return locationCoordinate()
+        return CLLocationCoordinate2D(latitude: latitude.doubleValue, longitude: longitude.doubleValue)
     }
     
-    //--------------------------------------------
-    // MARK: Helpers
-    //--------------------------------------------
+}
+//--------------------------------------------
+// MARK: - Pin: EntityNamelable
+//--------------------------------------------
+
+extension Pin: EntityNamelable {
     
-    func locationCoordinate() -> CLLocationCoordinate2D {
-        return CLLocationCoordinate2D(latitude: latitude.doubleValue, longitude: longitude.doubleValue)
+    static var entityName: String {
+        return "Pin"
     }
     
 }

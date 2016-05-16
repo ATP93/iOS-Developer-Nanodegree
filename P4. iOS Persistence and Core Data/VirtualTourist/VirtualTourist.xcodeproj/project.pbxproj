@@ -15,10 +15,12 @@
 		752CAAFF1CE358D50063E287 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 752CAAFD1CE358D50063E287 /* LaunchScreen.storyboard */; };
 		752CAB0A1CE358D50063E287 /* VirtualTouristTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CAB091CE358D50063E287 /* VirtualTouristTests.swift */; };
 		752CAB151CE358D50063E287 /* VirtualTouristUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752CAB141CE358D50063E287 /* VirtualTouristUITests.swift */; };
+		75347B791CE9A35400B61AF4 /* EntityNamelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75347B781CE9A35400B61AF4 /* EntityNamelable.swift */; };
+		75347B7B1CE9A58F00B61AF4 /* PersistenceCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75347B7A1CE9A58F00B61AF4 /* PersistenceCentral.swift */; };
+		75347B821CE9ABA000B61AF4 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75347B801CE9ABA000B61AF4 /* Photo+CoreDataProperties.swift */; };
+		75347B831CE9ABA000B61AF4 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75347B811CE9ABA000B61AF4 /* Pin+CoreDataProperties.swift */; };
 		75740B861CE4B295001679A0 /* UserDefaultsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75740B851CE4B295001679A0 /* UserDefaultsUtils.swift */; };
-		75B8DAA81CE479BA00E0E8B2 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B8DAA41CE479BA00E0E8B2 /* Photo+CoreDataProperties.swift */; };
 		75B8DAA91CE479BA00E0E8B2 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B8DAA51CE479BA00E0E8B2 /* Photo.swift */; };
-		75B8DAAA1CE479BA00E0E8B2 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B8DAA61CE479BA00E0E8B2 /* Pin+CoreDataProperties.swift */; };
 		75B8DAAB1CE479BA00E0E8B2 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B8DAA71CE479BA00E0E8B2 /* Pin.swift */; };
 		75B8DAAF1CE47AA100E0E8B2 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B8DAAE1CE47AA100E0E8B2 /* CoreDataStackManager.swift */; };
 		75B8DAB21CE47BD800E0E8B2 /* PathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B8DAB11CE47BD800E0E8B2 /* PathUtils.swift */; };
@@ -59,10 +61,12 @@
 		752CAB101CE358D50063E287 /* VirtualTouristUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VirtualTouristUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		752CAB141CE358D50063E287 /* VirtualTouristUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualTouristUITests.swift; sourceTree = "<group>"; };
 		752CAB161CE358D50063E287 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75347B781CE9A35400B61AF4 /* EntityNamelable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityNamelable.swift; sourceTree = "<group>"; };
+		75347B7A1CE9A58F00B61AF4 /* PersistenceCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceCentral.swift; sourceTree = "<group>"; };
+		75347B801CE9ABA000B61AF4 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		75347B811CE9ABA000B61AF4 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		75740B851CE4B295001679A0 /* UserDefaultsUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserDefaultsUtils.swift; path = VirtualTourist/UserDefaultsUtils.swift; sourceTree = "<group>"; };
-		75B8DAA41CE479BA00E0E8B2 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		75B8DAA51CE479BA00E0E8B2 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
-		75B8DAA61CE479BA00E0E8B2 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		75B8DAA71CE479BA00E0E8B2 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 		75B8DAAE1CE47AA100E0E8B2 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		75B8DAB11CE47BD800E0E8B2 /* PathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PathUtils.swift; path = VirtualTourist/PathUtils.swift; sourceTree = "<group>"; };
@@ -158,8 +162,10 @@
 			children = (
 				75B8DAAE1CE47AA100E0E8B2 /* CoreDataStackManager.swift */,
 				752CAAF81CE358D50063E287 /* VirtualTourist.xcdatamodeld */,
+				75347B7A1CE9A58F00B61AF4 /* PersistenceCentral.swift */,
 				75B8DAAD1CE47A6F00E0E8B2 /* Pin */,
 				75B8DAAC1CE47A6700E0E8B2 /* Photo */,
+				75347B781CE9A35400B61AF4 /* EntityNamelable.swift */,
 			);
 			name = Model;
 			path = VirtualTourist;
@@ -195,7 +201,7 @@
 		75B8DAAC1CE47A6700E0E8B2 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
-				75B8DAA41CE479BA00E0E8B2 /* Photo+CoreDataProperties.swift */,
+				75347B801CE9ABA000B61AF4 /* Photo+CoreDataProperties.swift */,
 				75B8DAA51CE479BA00E0E8B2 /* Photo.swift */,
 			);
 			name = Photo;
@@ -204,7 +210,7 @@
 		75B8DAAD1CE47A6F00E0E8B2 /* Pin */ = {
 			isa = PBXGroup;
 			children = (
-				75B8DAA61CE479BA00E0E8B2 /* Pin+CoreDataProperties.swift */,
+				75347B811CE9ABA000B61AF4 /* Pin+CoreDataProperties.swift */,
 				75B8DAA71CE479BA00E0E8B2 /* Pin.swift */,
 			);
 			name = Pin;
@@ -365,19 +371,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75347B821CE9ABA000B61AF4 /* Photo+CoreDataProperties.swift in Sources */,
 				75F5670D1CE9587E00BEC4C2 /* LocationUtils.swift in Sources */,
 				75B8DAB61CE482BF00E0E8B2 /* UUIDUtils.swift in Sources */,
 				75B8DAB21CE47BD800E0E8B2 /* PathUtils.swift in Sources */,
 				75B8DAAB1CE479BA00E0E8B2 /* Pin.swift in Sources */,
 				75B8DAAF1CE47AA100E0E8B2 /* CoreDataStackManager.swift in Sources */,
 				752CAAF41CE358D50063E287 /* TravelLocationsViewController.swift in Sources */,
-				75B8DAAA1CE479BA00E0E8B2 /* Pin+CoreDataProperties.swift in Sources */,
 				752CAAF21CE358D40063E287 /* AppDelegate.swift in Sources */,
-				75B8DAA81CE479BA00E0E8B2 /* Photo+CoreDataProperties.swift in Sources */,
+				75347B791CE9A35400B61AF4 /* EntityNamelable.swift in Sources */,
 				752CAAFA1CE358D50063E287 /* VirtualTourist.xcdatamodeld in Sources */,
 				75F5670F1CE95DDB00BEC4C2 /* GCDUtils.swift in Sources */,
 				75740B861CE4B295001679A0 /* UserDefaultsUtils.swift in Sources */,
 				75B8DAA91CE479BA00E0E8B2 /* Photo.swift in Sources */,
+				75347B831CE9ABA000B61AF4 /* Pin+CoreDataProperties.swift in Sources */,
+				75347B7B1CE9A58F00B61AF4 /* PersistenceCentral.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

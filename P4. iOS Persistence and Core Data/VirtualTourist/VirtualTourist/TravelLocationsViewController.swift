@@ -23,6 +23,7 @@ class TravelLocationsViewController: UIViewController {
     
     // MARK: Public
     var coreDataStackManager: CoreDataStackManager!
+    var persistenceCentral: PersistenceCentral!
     
     // MARK: Private
     private static let locationUpdateTimeInterval = 5.0
@@ -37,7 +38,7 @@ class TravelLocationsViewController: UIViewController {
         return locationManager
     }()
     
-    private var didInvokeDidSelectAnnotationView = false
+    private var didSelectAnnotationView = false
     
     private var pins = [Pin]()
     
@@ -50,17 +51,11 @@ class TravelLocationsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        assert(coreDataStackManager != nil)
+        assert(coreDataStackManager != nil && persistenceCentral != nil)
         
         configureMapView()
-        
-        do {
-            pins = try coreDataStackManager.managedObjectContext
-                .executeFetchRequest(NSFetchRequest(entityName: Pin.entityName)) as! [Pin]
-            mapView.addAnnotations(pins)
-        } catch let error as NSError {
-            print("An error occured: \(error.localizedDescription)")
-        }
+        pins = persistenceCentral.getAllPins()
+        mapView.addAnnotations(pins)
     }
     
 }
@@ -83,8 +78,8 @@ extension TravelLocationsViewController {
     }
     
     func pinOnTapGesture(gestureRecognizer: UIGestureRecognizer) {
-        func resetDidInvoke() {
-            didInvokeDidSelectAnnotationView = false
+        func resetDidSelectAnnotationView() {
+            didSelectAnnotationView = false
         }
         
         // Attempt to determine after some time in the future(0.45 sec)
@@ -98,13 +93,13 @@ extension TravelLocationsViewController {
         
         let touchPoint = gestureRecognizer.locationInView(mapView)
         performAfterOnMain(0.45) {
-            guard self.didInvokeDidSelectAnnotationView == false else {
-                resetDidInvoke()
+            guard self.didSelectAnnotationView == false else {
+                resetDidSelectAnnotationView()
                 return
             }
             
             self.addAnnotationFromTouchPoint(touchPoint)
-            resetDidInvoke()
+            resetDidSelectAnnotationView()
         }
     }
     
@@ -177,6 +172,10 @@ extension TravelLocationsViewController: MKMapViewDelegate {
     }
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+        guard annotation.isKindOfClass(MKUserLocation) == false else {
+            return nil
+        }
+        
         let annotationView = MKPinAnnotationView(annotation: annotation,
                                                  reuseIdentifier: TravelLocationsViewController.annotationViewReuseIdentifier)
         annotationView.pinTintColor = MKPinAnnotationView.redPinColor()
@@ -186,7 +185,7 @@ extension TravelLocationsViewController: MKMapViewDelegate {
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        didInvokeDidSelectAnnotationView = true
+        didSelectAnnotationView = true
         print(#function + "\(view)")
     }
     
