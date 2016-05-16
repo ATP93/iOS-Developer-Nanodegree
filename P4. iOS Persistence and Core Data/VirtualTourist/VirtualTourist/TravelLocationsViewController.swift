@@ -25,6 +25,7 @@ class TravelLocationsViewController: UIViewController {
     
     // MARK: Private
     private static let locationUpdateTimeInterval = 5.0
+    private static let annotationViewReuseIdentifier = "PinAnnotationView"
     
     private var currentUserLocation: CLLocation?
     
@@ -65,9 +66,7 @@ extension TravelLocationsViewController {
             print("Pin on long press began")
         case .Ended:
             print("Pin on long press ended")
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinateFromPoint(gestureRecognizer.locationInView(mapView))
-            mapView.addAnnotation(annotation)
+            addAnnotationFromTouchPoint(gestureRecognizer.locationInView(mapView))
         default:
             return
         }
@@ -75,14 +74,16 @@ extension TravelLocationsViewController {
     
     func pinOnTapGesture(gestureRecognizer: UIGestureRecognizer) {
         print("Tap gesture")
-        
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinateFromPoint(gestureRecognizer.locationInView(mapView))
-        
-        mapView.addAnnotation(annotation)
+        addAnnotationFromTouchPoint(gestureRecognizer.locationInView(mapView))
     }
     
     // MARK: Private
+    
+    private func addAnnotationFromTouchPoint(point: CGPoint) {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinateFromPoint(point)
+        mapView.addAnnotation(annotation)
+    }
     
     private func coordinateFromPoint(point: CGPoint) -> CLLocationCoordinate2D {
         return mapView.convertPoint(point, toCoordinateFromView: mapView)
@@ -94,14 +95,15 @@ extension TravelLocationsViewController {
         if !UserDefaultsUtils.isFirstAppLaunch() {
             mapView.setRegion(UserDefaultsUtils.persistedMapRegion(), animated: false)
         }
+        
         checkLocationAuthorizationStatus()
         
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(TravelLocationsViewController.pinOnLongPressGesture(_:)))
-        longPressGesture.minimumPressDuration = 1.0
-        mapView.addGestureRecognizer(longPressGesture)
+        let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(TravelLocationsViewController.pinOnLongPressGesture(_:)))
+        lpgr.minimumPressDuration = 0.75
+        mapView.addGestureRecognizer(lpgr)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TravelLocationsViewController.pinOnTapGesture(_:)))
-        mapView.addGestureRecognizer(tapGesture)
+        let tgr = UITapGestureRecognizer(target: self, action: #selector(TravelLocationsViewController.pinOnTapGesture(_:)))
+        mapView.addGestureRecognizer(tgr)
     }
     
     private func checkLocationAuthorizationStatus() {
@@ -135,6 +137,15 @@ extension TravelLocationsViewController: MKMapViewDelegate {
     
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         UserDefaultsUtils.persistMapRegion(mapView.region)
+    }
+    
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+        let annotationView = MKPinAnnotationView(annotation: annotation,
+                                                 reuseIdentifier: TravelLocationsViewController.annotationViewReuseIdentifier)
+        annotationView.pinTintColor = MKPinAnnotationView.redPinColor()
+        annotationView.animatesDrop = true
+        
+        return annotationView
     }
     
 }
