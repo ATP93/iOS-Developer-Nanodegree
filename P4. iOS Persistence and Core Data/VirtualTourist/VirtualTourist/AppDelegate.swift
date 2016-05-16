@@ -45,7 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //-----------------------------------------------------
     
     private func spreadSharedInstances() {
-        let travelLocationsVC = window?.rootViewController as! TravelLocationsViewController
+        let navigationController = window?.rootViewController as! UINavigationController
+        let travelLocationsVC = navigationController.topViewController as! TravelLocationsViewController
         travelLocationsVC.coreDataStackManager = coreDataStackManager
         travelLocationsVC.persistenceCentral = persistenceCentral
     }

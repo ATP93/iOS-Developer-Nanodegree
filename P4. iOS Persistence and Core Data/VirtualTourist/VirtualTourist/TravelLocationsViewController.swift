@@ -11,6 +11,10 @@ import MapKit
 import CoreData
 import Darwin.C
 
+private enum SegueIdentifier: String {
+    case PinPhotoAlbum
+}
+
 //---------------------------------------------------------
 // MARK: - TravelLocationsViewController: UIViewController
 //---------------------------------------------------------
@@ -56,6 +60,23 @@ class TravelLocationsViewController: UIViewController {
         configureMapView()
         pins = persistenceCentral.getAllPins()
         mapView.addAnnotations(pins)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
+    //-----------------------------------------------------
+    // MARK: - Navigation -
+    //-----------------------------------------------------
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == SegueIdentifier.PinPhotoAlbum.rawValue {
+            let photoAlbumVC = segue.destinationViewController as! PhotoAlbumViewController
+            photoAlbumVC.pin = sender as! Pin
+            photoAlbumVC.coreDataStackManager = coreDataStackManager
+        }
     }
     
 }
@@ -186,7 +207,12 @@ extension TravelLocationsViewController: MKMapViewDelegate {
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
         didSelectAnnotationView = true
-        print(#function + "\(view)")
+        
+        guard let pin = view.annotation as? Pin else {
+            return
+        }
+        print("Did select pin with id: \(pin.id)")
+        performSegueWithIdentifier(SegueIdentifier.PinPhotoAlbum.rawValue, sender: pin)
     }
     
 }
