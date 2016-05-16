@@ -36,6 +36,8 @@ class TravelLocationsViewController: UIViewController {
         return locationManager
     }()
     
+    private var didInvokeDidSelectAnnotationView = false
+    
     // MARK: Outlets
     @IBOutlet weak var mapView: MKMapView!
     
@@ -62,10 +64,7 @@ extension TravelLocationsViewController {
     
     func pinOnLongPressGesture(gestureRecognizer: UIGestureRecognizer) {
         switch gestureRecognizer.state {
-        case .Began:
-            print("Pin on long press began")
         case .Ended:
-            print("Pin on long press ended")
             addAnnotationFromTouchPoint(gestureRecognizer.locationInView(mapView))
         default:
             return
@@ -73,8 +72,20 @@ extension TravelLocationsViewController {
     }
     
     func pinOnTapGesture(gestureRecognizer: UIGestureRecognizer) {
-        print("Tap gesture")
-        addAnnotationFromTouchPoint(gestureRecognizer.locationInView(mapView))
+        func resetDidInvoke() {
+            didInvokeDidSelectAnnotationView = false
+        }
+        
+        let touchPoint = gestureRecognizer.locationInView(mapView)
+        performAfterOnMain(0.45) {
+            guard self.didInvokeDidSelectAnnotationView == false else {
+                resetDidInvoke()
+                return
+            }
+            
+            self.addAnnotationFromTouchPoint(touchPoint)
+            resetDidInvoke()
+        }
     }
     
     // MARK: Private
@@ -146,6 +157,11 @@ extension TravelLocationsViewController: MKMapViewDelegate {
         annotationView.animatesDrop = true
         
         return annotationView
+    }
+    
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        didInvokeDidSelectAnnotationView = true
+        print(#function + "\(view)")
     }
     
 }
