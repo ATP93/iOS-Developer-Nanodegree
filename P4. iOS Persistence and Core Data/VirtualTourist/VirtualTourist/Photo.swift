@@ -14,10 +14,16 @@ import CoreData
 //--------------------------------------------
 
 class Photo: NSManagedObject {
+    
+    //----------------------------------------
+    // MARK: Properties
+    //----------------------------------------
+    
+    static let entityName = "Photo"
 
-    //--------------------------------------------
+    //-----------------------------------------
     // MARK: Init
-    //--------------------------------------------
+    //-----------------------------------------
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)

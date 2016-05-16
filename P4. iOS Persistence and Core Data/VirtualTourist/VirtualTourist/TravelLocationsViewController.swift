@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import CoreData
 import Darwin.C
 
 //---------------------------------------------------------
@@ -38,6 +39,8 @@ class TravelLocationsViewController: UIViewController {
     
     private var didInvokeDidSelectAnnotationView = false
     
+    private var pins = [Pin]()
+    
     // MARK: Outlets
     @IBOutlet weak var mapView: MKMapView!
     
@@ -50,6 +53,14 @@ class TravelLocationsViewController: UIViewController {
         assert(coreDataStackManager != nil)
         
         configureMapView()
+        
+        do {
+            pins = try coreDataStackManager.managedObjectContext
+                .executeFetchRequest(NSFetchRequest(entityName: Pin.entityName)) as! [Pin]
+            mapView.addAnnotations(pins)
+        } catch let error as NSError {
+            print("An error occured: \(error.localizedDescription)")
+        }
     }
     
 }
@@ -76,6 +87,15 @@ extension TravelLocationsViewController {
             didInvokeDidSelectAnnotationView = false
         }
         
+        // Attempt to determine after some time in the future(0.45 sec)
+        // whether the mapView(_:didSelectAnnotationView:) was invoked.
+        // If it was invoked, then we don't need to add a pin location
+        // otherwise add a pin location.
+        //
+        // Use dispatch_after here instead of trying to determine distance between current
+        // touch poin and the nearest pin location, because it's hard to properly
+        // determine by reason of changing zoom level.
+        
         let touchPoint = gestureRecognizer.locationInView(mapView)
         performAfterOnMain(0.45) {
             guard self.didInvokeDidSelectAnnotationView == false else {
@@ -91,9 +111,15 @@ extension TravelLocationsViewController {
     // MARK: Private
     
     private func addAnnotationFromTouchPoint(point: CGPoint) {
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinateFromPoint(point)
-        mapView.addAnnotation(annotation)
+        let coordinate = coordinateFromPoint(point)
+        
+        // Persist dropped pin on the map.
+        let pin = Pin(locationCoordinate: coordinate, context: coreDataStackManager.managedObjectContext)
+        coreDataStackManager.saveContext()
+        
+        print("Add pin with id: \(pin.id)")
+        
+        mapView.addAnnotation(pin)
     }
     
     private func coordinateFromPoint(point: CGPoint) -> CLLocationCoordinate2D {
