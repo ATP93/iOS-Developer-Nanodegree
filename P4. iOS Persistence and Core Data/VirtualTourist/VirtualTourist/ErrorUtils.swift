@@ -50,6 +50,12 @@ extension FlickrApiClient {
     static let ErrorDomain = "\(BaseErrorDomain).Flickr-Api-Client"
     static let ErrorCode = 100
     
-    static let NumberOfPagesForPhotoSearchAuthDomain = "\(ErrorDomain).number-of-pages"
+    static let NumberOfPagesForPhotoSearchErrorDomain = "\(ErrorDomain).number-of-pages"
     static let NumberOfPagesForPhotoSearchErrorCode = 15
+    
+    static let FetchPhotosErrorDomain = "\(ErrorDomain).fetch-photos"
+    static let FetchPhotosErrorCode = 16
+    
+    static let FetchPhotosByCoordinateErrorDomain = "\(ErrorDomain).fetch-photos-by-coordinate"
+    static let FetchPhotosByCoordinateErrorCode = 17
 }

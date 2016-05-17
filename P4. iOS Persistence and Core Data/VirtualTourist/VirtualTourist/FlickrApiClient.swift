@@ -57,29 +57,83 @@ class FlickrApiClient: JsonApiClient {
     // MARK: - Calling Api Endpoints
     //-------------------------------------------------
     
-    func fetchPhotosByCoordinate(coordinate: CLLocationCoordinate2D, completionHandler: FlickPhotoTaskCompletionHandler) {
-        func sendError(error: String) {
-            self.debugLog("Error: \(error)")
-            let error = NSError(
-                domain: FlickrApiClient.NumberOfPagesForPhotoSearchAuthDomain,
-                code: FlickrApiClient.NumberOfPagesForPhotoSearchErrorCode,
-                userInfo: [NSLocalizedDescriptionKey : error]
-            )
-            completionHandler(photos: nil, error: error)
-        }
-        
+    // MARK: Public
+    
+    func fetchPhotosByCoordinate(coordinate: CLLocationCoordinate2D, pageNumber page: Int = 1, itemsPerPage perPage: Int = 100, completionHandler: FlickPhotoTaskCompletionHandler) {
         // GUARD: Are the range is valid?
         guard isCoordinateValid(coordinate.latitude, forRange: Constants.Flickr.SearchLatRange) &&
             isCoordinateValid(coordinate.longitude, forRange: Constants.Flickr.SearchLonRange) else {
-                sendError("Latitude should be [-90, 90].\nLongitude should be [-180, 180].")
+                let errorMessage = "Latitude should be [-90, 90].\nLongitude should be [-180, 180]."
+                debugLog("Error: \(errorMessage)")
+                let error = NSError(
+                    domain: FlickrApiClient.FetchPhotosByCoordinateErrorDomain,
+                    code: FlickrApiClient.FetchPhotosByCoordinateErrorCode,
+                    userInfo: [NSLocalizedDescriptionKey : errorMessage]
+                )
+                completionHandler(photos: nil, error: error)
                 return
         }
         
         var methodParameters = getBaseMethodParameters()
         methodParameters[Constants.FlickrParameterKeys.Method] = Constants.FlickrParameterValues.SearchMethod
+        methodParameters[Constants.FlickrParameterKeys.Extras] = "\(Constants.FlickrParameterValues.ThumbnailURL),\(Constants.FlickrParameterValues.MediumURL)"
+        methodParameters[Constants.FlickrParameterKeys.Page] = page
+        methodParameters[Constants.FlickrParameterKeys.PerPage] = perPage
         methodParameters[Constants.FlickrParameterKeys.BoundingBox] = bboxString(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        
+        fetchPhotosWithMethodParameters(methodParameters, completionHandler: completionHandler)
+    }
+    
+    /// Returns number of pages for a photo search.
+    func numberOfPagesForFlickrPhotoSearch(completionHandler: (Int, NSError?) -> Void) {
+        var methodParameters = getBaseMethodParameters()
+        methodParameters[Constants.FlickrParameterKeys.Method] = Constants.FlickrParameterValues.SearchMethod
         let request = NSURLRequest(URL: urlFromParameters(methodParameters))
         
+        fetchJson(request) { apiClientResult in
+            performOnMain {
+                func sendError(error: String) {
+                    self.debugLog("Error: \(error)")
+                    let error = NSError(
+                        domain: FlickrApiClient.NumberOfPagesForPhotoSearchErrorDomain,
+                        code: FlickrApiClient.NumberOfPagesForPhotoSearchErrorCode,
+                        userInfo: [NSLocalizedDescriptionKey : error]
+                    )
+                    completionHandler(0, error)
+                }
+                
+                switch apiClientResult {
+                case .Error(let error):
+                    sendError(error.localizedDescription)
+                case .Json(let json):
+                    guard let photosDictionary = json[Constants.FlickrResponseKeys.Photos] as? JSONDictionary,
+                        let numberOfPages = photosDictionary[Constants.FlickrResponseKeys.Pages] as? Int else {
+                            sendError("Could't parse recieved JSON object")
+                            return
+                    }
+                    
+                    completionHandler(numberOfPages, nil)
+                default:
+                    sendError(apiClientResult.defaultErrorMessage()!)
+                }
+            }
+        }
+    }
+    
+    // MARK: Private
+    
+    private func fetchPhotosWithMethodParameters(param: MethodParameters, completionHandler: FlickPhotoTaskCompletionHandler) {
+        func sendError(error: String) {
+            debugLog("Error: \(error)")
+            let error = NSError(
+                domain: FlickrApiClient.FetchPhotosErrorDomain,
+                code: FlickrApiClient.FetchPhotosErrorCode,
+                userInfo: [NSLocalizedDescriptionKey : error]
+            )
+            completionHandler(photos: nil, error: error)
+        }
+        
+        let request = NSURLRequest(URL: urlFromParameters(param))
         fetchJson(request) { apiClientResult in
             performOnMain {
                 switch apiClientResult {
@@ -112,42 +166,6 @@ class FlickrApiClient: JsonApiClient {
         }
     }
     
-    /// Returns number of pages for a photo search.
-    func numberOfPagesForFlickrPhotoSearch(completionHandler: (Int, NSError?) -> Void) {
-        var methodParameters = getBaseMethodParameters()
-        methodParameters[Constants.FlickrParameterKeys.Method] = Constants.FlickrParameterValues.SearchMethod
-        let request = NSURLRequest(URL: urlFromParameters(methodParameters))
-        
-        fetchJson(request) { apiClientResult in
-            performOnMain {
-                func sendError(error: String) {
-                    self.debugLog("Error: \(error)")
-                    let error = NSError(
-                        domain: FlickrApiClient.NumberOfPagesForPhotoSearchAuthDomain,
-                        code: FlickrApiClient.NumberOfPagesForPhotoSearchErrorCode,
-                        userInfo: [NSLocalizedDescriptionKey : error]
-                    )
-                    completionHandler(0, error)
-                }
-                
-                switch apiClientResult {
-                case .Error(let error):
-                    sendError(error.localizedDescription)
-                case .Json(let json):
-                    guard let photosDictionary = json[Constants.FlickrResponseKeys.Photos] as? JSONDictionary,
-                        let numberOfPages = photosDictionary[Constants.FlickrResponseKeys.Pages] as? Int else {
-                            sendError("Could't parse recieved JSON object")
-                            return
-                    }
-                    
-                    completionHandler(numberOfPages, nil)
-                default:
-                    sendError(apiClientResult.defaultErrorMessage()!)
-                }
-            }
-        }
-    }
-    
     //-------------------------------------------------
     // MARK: - Helpers
     //-------------------------------------------------
@@ -156,7 +174,6 @@ class FlickrApiClient: JsonApiClient {
         return [
             Constants.FlickrParameterKeys.APIKey: Constants.FlickrParameterValues.APIKey,
             Constants.FlickrParameterKeys.SafeSearch: Constants.FlickrParameterValues.UseSafeSearch,
-            Constants.FlickrParameterKeys.Extras: Constants.FlickrParameterValues.MediumURL,
             Constants.FlickrParameterKeys.Format: Constants.FlickrParameterValues.ResponseFormat,
             Constants.FlickrParameterKeys.NoJSONCallback: Constants.FlickrParameterValues.DisableJSONCallback
         ]

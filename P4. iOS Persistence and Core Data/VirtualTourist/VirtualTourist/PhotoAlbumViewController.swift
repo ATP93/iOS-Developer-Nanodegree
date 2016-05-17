@@ -33,9 +33,9 @@ class PhotoAlbumViewController: UIViewController {
     // MARK: Private
     private static let collectionViewNumColumns = 3
     private static let collectionViewSectionInsets = UIEdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
+    private static let itemsInPhotoCollecton = collectionViewNumColumns * 7
     
     private var photos: [Photo]?
-    private var temporaryContext: NSManagedObjectContext!
     
     //-----------------------------------------------------
     // MARK: - View Life Cycle -
@@ -52,19 +52,16 @@ class PhotoAlbumViewController: UIViewController {
             collectionView.contentInset.bottom = toolbarHeight
         }
         
-        temporaryContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-        temporaryContext.persistentStoreCoordinator = coreDataStackManager.persistentStoreCoordinator
-        
         if pin.photos.count == 0 {
             UIUtils.showNetworkActivityIndicator()
-            flickrApiClient.fetchPhotosByCoordinate(pin.coordinate) { [unowned self] (photosJson, error) in
+            flickrApiClient.fetchPhotosByCoordinate(pin.coordinate, itemsPerPage: PhotoAlbumViewController.itemsInPhotoCollecton) { [unowned self] (photosJson, error) in
                 UIUtils.hideNetworkActivityIndicator()
                 guard error == nil else {
                     self.presentAlertWithTitle("An error occured", message: error!.localizedDescription)
                     return
                 }
                 
-                self.photos = Photo.sanitizedPhotos(photosJson!, context: self.temporaryContext)
+                self.photos = Photo.sanitizedPhotos(photosJson!, parentPin: self.pin, context: self.coreDataStackManager.managedObjectContext)
                 self.collectionView.reloadData()
             }
         } else {

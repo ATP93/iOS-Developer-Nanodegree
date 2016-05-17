@@ -46,6 +46,7 @@ extension FlickrApiClient {
             static let Text = "text"
             static let BoundingBox = "bbox"
             static let Page = "page"
+            static let PerPage = "per_page"
         }
         
         // MARK: Flickr Parameter Values
@@ -57,6 +58,8 @@ extension FlickrApiClient {
             static let DisableJSONCallback = "1" /* 1 means "yes" */
             static let GalleryPhotosMethod = "flickr.galleries.getPhotos"
             static let GalleryID = "5704-72157622566655097"
+            static let ThumbnailURL = "url_t"
+            static let SmallURL = "url_s"
             static let MediumURL = "url_m"
             static let UseSafeSearch = "1"
         }
@@ -69,6 +72,8 @@ extension FlickrApiClient {
             static let Photo = "photo"
             static let Id = "id"
             static let Title = "title"
+            static let ThumbnailURL = "url_t"
+            static let SmallURL = "url_s"
             static let MediumURL = "url_m"
             static let Pages = "pages"
             static let Total = "total"

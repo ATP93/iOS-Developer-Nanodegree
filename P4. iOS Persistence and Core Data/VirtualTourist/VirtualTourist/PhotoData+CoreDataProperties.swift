@@ -1,5 +1,5 @@
 //
-//  Photo+CoreDataProperties.swift
+//  PhotoData+CoreDataProperties.swift
 //  VirtualTourist
 //
 //  Created by Ivan Magda on 17/05/16.
@@ -12,12 +12,11 @@
 import Foundation
 import CoreData
 
-extension Photo {
+extension PhotoData {
 
-    @NSManaged var createdAt: NSDate
     @NSManaged var id: String
-    @NSManaged var title: String?
-    @NSManaged var pin: Pin?
-    @NSManaged var photoData: PhotoData?
+    @NSManaged var photo: Photo?
+    @NSManaged var thumbnail: ThumbnailImage?
+    @NSManaged var medium: MediumImage?
 
 }

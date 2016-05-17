@@ -8,7 +8,19 @@
 
 import Foundation
 
+// Parsing JSON using Oscar Swanros's approach http://swanros.com/how-i-deal-with-json-in-swift/
+// Functional part of this approach described by the Chris Eidhof's
+// in the blog post http://chris.eidhof.nl/post/json-parsing-in-swift/
+
+//----------------------------------------------------------
+// MARK: Typealias
+//----------------------------------------------------------
+
 public typealias JSONDictionary = [String: AnyObject]
+
+//----------------------------------------------------------
+// MARK: - Private Functions
+//----------------------------------------------------------
 
 /// Takes a double optional and removes one level of optional-ness.
 private func flatten<A>(x: A??) -> A? {
@@ -24,15 +36,15 @@ private func >>>= <A, B> (optional: A?, f: A -> B?) -> B? {
     return flatten(optional.map(f))
 }
 
-//---------------------------------
-// MARK: - JSON
-//---------------------------------
+//----------------------------------------------------------
+// MARK: - JSON -
+//----------------------------------------------------------
 
 public class JSON {
     
-    //---------------------------------
+    //------------------------------------------------------
     // MARK: Decode
-    //---------------------------------
+    //------------------------------------------------------
     
     // These functions retrieve data from JSON structures in a type-safe manner,
     // and they're the building blocks.

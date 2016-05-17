@@ -14,17 +14,6 @@ import CoreData
 //--------------------------------------------
 
 class Photo: NSManagedObject {
-    
-    
-    //----------------------------------------
-    // MARK: Types
-    //----------------------------------------
-    
-    enum Keys: String {
-        case id
-        case createdAt
-        case pin
-    }
 
     //-----------------------------------------
     // MARK: Init
@@ -44,21 +33,34 @@ class Photo: NSManagedObject {
         self.init(context: context)
         
         guard let id = JSON.string(json, key: FlickrApiClient.Constants.FlickrResponseKeys.Id),
-        let url = JSON.string(json, key: FlickrApiClient.Constants.FlickrResponseKeys.MediumURL) else {
-            return nil
+            let thumbnailUrl = JSON.string(json, key: FlickrApiClient.Constants.FlickrResponseKeys.ThumbnailURL),
+            let mediumUrl = JSON.string(json, key: FlickrApiClient.Constants.FlickrResponseKeys.MediumURL) else {
+                return nil
         }
         
         self.id = id
-        self.photoPath = url
         self.title = JSON.string(json, key: FlickrApiClient.Constants.FlickrResponseKeys.Title)
+        
+        let thumbnailImage = ThumbnailImage(path: thumbnailUrl, context: context)
+        let mediumImage = MediumImage(path: mediumUrl, context: context)
+        
+        let photoData = PhotoData(context: context)
+        photoData.thumbnail = thumbnailImage
+        photoData.medium = mediumImage
+        
+        self.photoData = photoData
     }
     
     //-----------------------------------------
     // MARK: Methods
     //-----------------------------------------
     
-    class func sanitizedPhotos(json: [JSONDictionary], context: NSManagedObjectContext) -> [Photo]? {
-        return json.flatMap { Photo(json: $0, context: context) }
+    class func sanitizedPhotos(json: [JSONDictionary], parentPin pin: Pin? = nil, context: NSManagedObjectContext) -> [Photo]? {
+        return json.flatMap {
+            let photo = Photo(json: $0, context: context)
+            photo?.pin = pin
+            return photo
+        }
     }
     
 }

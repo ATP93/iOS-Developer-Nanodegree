@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15F34" minimumToolsVersion="Automatic">
+    <entity name="MediumImage" representedClassName=".MediumImage" syncable="YES">
+        <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="path" attributeType="String" syncable="YES"/>
+        <relationship name="photoData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PhotoData" inverseName="medium" inverseEntity="PhotoData" syncable="YES"/>
+    </entity>
     <entity name="Photo" representedClassName=".Photo" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="id" attributeType="String" syncable="YES"/>
-        <attribute name="photoPath" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="photoData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PhotoData" inverseName="photo" inverseEntity="PhotoData" syncable="YES"/>
         <relationship name="pin" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Pin" inverseName="photos" inverseEntity="Pin" syncable="YES"/>
+    </entity>
+    <entity name="PhotoData" representedClassName=".PhotoData" syncable="YES">
+        <attribute name="id" attributeType="String" syncable="YES"/>
+        <relationship name="medium" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MediumImage" inverseName="photoData" inverseEntity="MediumImage" syncable="YES"/>
+        <relationship name="photo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Photo" inverseName="photoData" inverseEntity="Photo" syncable="YES"/>
+        <relationship name="thumbnail" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ThumbnailImage" inverseName="photoData" inverseEntity="ThumbnailImage" syncable="YES"/>
     </entity>
     <entity name="Pin" representedClassName=".Pin" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -14,8 +25,16 @@
         <attribute name="longitude" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <relationship name="photos" toMany="YES" deletionRule="Cascade" destinationEntity="Photo" inverseName="pin" inverseEntity="Photo" syncable="YES"/>
     </entity>
+    <entity name="ThumbnailImage" representedClassName=".ThumbnailImage" syncable="YES">
+        <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="path" attributeType="String" syncable="YES"/>
+        <relationship name="photoData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PhotoData" inverseName="thumbnail" inverseEntity="PhotoData" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="Photo" positionX="-54" positionY="-9" width="128" height="120"/>
-        <element name="Pin" positionX="-225" positionY="-9" width="128" height="118"/>
+        <element name="Photo" positionX="-243" positionY="-171" width="128" height="118"/>
+        <element name="Pin" positionX="-441" positionY="-171" width="128" height="118"/>
+        <element name="PhotoData" positionX="-81" positionY="-171" width="128" height="103"/>
+        <element name="ThumbnailImage" positionX="90" positionY="-90" width="128" height="88"/>
+        <element name="MediumImage" positionX="88" positionY="-234" width="128" height="88"/>
     </elements>
 </model>
