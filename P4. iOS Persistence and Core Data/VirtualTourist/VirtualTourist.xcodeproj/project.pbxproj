@@ -26,6 +26,8 @@
 		75B8DAAF1CE47AA100E0E8B2 /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B8DAAE1CE47AA100E0E8B2 /* CoreDataStackManager.swift */; };
 		75B8DAB21CE47BD800E0E8B2 /* PathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B8DAB11CE47BD800E0E8B2 /* PathUtils.swift */; };
 		75B8DAB61CE482BF00E0E8B2 /* UUIDUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B8DAB51CE482BF00E0E8B2 /* UUIDUtils.swift */; };
+		75EF26551CEA959C00A0A79C /* UIUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EF26541CEA959C00A0A79C /* UIUtils.swift */; };
+		75EF26571CEA988600A0A79C /* PhotoAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EF26561CEA988600A0A79C /* PhotoAlbumCollectionViewCell.swift */; };
 		75F5670D1CE9587E00BEC4C2 /* LocationUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F5670C1CE9587E00BEC4C2 /* LocationUtils.swift */; };
 		75F5670F1CE95DDB00BEC4C2 /* GCDUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F5670E1CE95DDB00BEC4C2 /* GCDUtils.swift */; };
 /* End PBXBuildFile section */
@@ -73,6 +75,8 @@
 		75B8DAAE1CE47AA100E0E8B2 /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
 		75B8DAB11CE47BD800E0E8B2 /* PathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PathUtils.swift; path = VirtualTourist/PathUtils.swift; sourceTree = "<group>"; };
 		75B8DAB51CE482BF00E0E8B2 /* UUIDUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UUIDUtils.swift; path = VirtualTourist/UUIDUtils.swift; sourceTree = "<group>"; };
+		75EF26541CEA959C00A0A79C /* UIUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIUtils.swift; path = VirtualTourist/UIUtils.swift; sourceTree = "<group>"; };
+		75EF26561CEA988600A0A79C /* PhotoAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		75F5670C1CE9587E00BEC4C2 /* LocationUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationUtils.swift; path = VirtualTourist/LocationUtils.swift; sourceTree = "<group>"; };
 		75F5670E1CE95DDB00BEC4C2 /* GCDUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDUtils.swift; path = VirtualTourist/GCDUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -195,6 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				752CAB251CE359C70063E287 /* ViewControllers */,
+				75EF26581CEA988F00A0A79C /* View */,
 				752CAB221CE3596C0063E287 /* Assets */,
 			);
 			name = UI;
@@ -239,8 +244,17 @@
 				75740B851CE4B295001679A0 /* UserDefaultsUtils.swift */,
 				75F5670C1CE9587E00BEC4C2 /* LocationUtils.swift */,
 				75F5670E1CE95DDB00BEC4C2 /* GCDUtils.swift */,
+				75EF26541CEA959C00A0A79C /* UIUtils.swift */,
 			);
 			name = Utils;
+			sourceTree = "<group>";
+		};
+		75EF26581CEA988F00A0A79C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				75EF26561CEA988600A0A79C /* PhotoAlbumCollectionViewCell.swift */,
+			);
+			name = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -379,6 +393,8 @@
 				75B8DAB61CE482BF00E0E8B2 /* UUIDUtils.swift in Sources */,
 				75347B851CE9B02500B61AF4 /* PhotoAlbumViewController.swift in Sources */,
 				75B8DAB21CE47BD800E0E8B2 /* PathUtils.swift in Sources */,
+				75EF26571CEA988600A0A79C /* PhotoAlbumCollectionViewCell.swift in Sources */,
+				75EF26551CEA959C00A0A79C /* UIUtils.swift in Sources */,
 				75B8DAAB1CE479BA00E0E8B2 /* Pin.swift in Sources */,
 				75B8DAAF1CE47AA100E0E8B2 /* CoreDataStackManager.swift in Sources */,
 				752CAAF41CE358D50063E287 /* TravelLocationsViewController.swift in Sources */,

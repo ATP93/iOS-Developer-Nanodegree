@@ -1,0 +1,33 @@
+//
+//  UIUtils.swift
+//  VirtualTourist
+//
+//  Created by Ivan Magda on 17/05/16.
+//  Copyright © 2016 Ivan Magda. All rights reserved.
+//
+
+import UIKit.UIScreen
+import CoreGraphics.CGGeometry
+
+//------------------------------------------------
+// MARK: - UIUtils
+//------------------------------------------------
+
+class UIUtils {
+    
+    private init() {
+    }
+    
+    //---------------------------------------------
+    // MARK: Behavior
+    //---------------------------------------------
+    
+    class func screenBounds() -> CGRect {
+        return UIScreen.mainScreen().bounds
+    }
+    
+    class func screenSize() -> CGSize {
+        return UIScreen.mainScreen().bounds.size
+    }
+    
+}
