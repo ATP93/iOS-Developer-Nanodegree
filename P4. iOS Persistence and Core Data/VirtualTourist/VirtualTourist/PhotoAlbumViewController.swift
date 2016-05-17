@@ -11,6 +11,16 @@ import MapKit
 import CoreData
 
 //---------------------------------------------------------
+// MARK: Types
+//---------------------------------------------------------
+
+private enum UiState {
+    case Default
+    case Download
+    case DoneDownloading
+}
+
+//---------------------------------------------------------
 // MARK: - PhotoAlbumViewController: UIViewController
 //---------------------------------------------------------
 
@@ -44,43 +54,11 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         assert(pin != nil && coreDataStackManager != nil && flickrApiClient != nil)
-        
-        navigationController?.setNavigationBarHidden(false, animated: false)
-        configureMapView()
-        
-        if let toolbarHeight = navigationController?.toolbar.frame.size.height {
-            collectionView.contentInset.bottom = toolbarHeight
-        }
-        
-        if pin.photos.count == 0 {
-            UIUtils.showNetworkActivityIndicator()
-            flickrApiClient.fetchPhotosByCoordinate(pin.coordinate, itemsPerPage: PhotoAlbumViewController.itemsInPhotoCollecton) { [unowned self] (photosJson, error) in
-                UIUtils.hideNetworkActivityIndicator()
-                guard error == nil else {
-                    self.presentAlertWithTitle("An error occured", message: error!.localizedDescription)
-                    return
-                }
-                
-                self.photos = Photo.sanitizedPhotos(photosJson!, parentPin: self.pin, context: self.coreDataStackManager.managedObjectContext)
-                self.collectionView.reloadData()
-            }
-        } else {
-            photos = pin.photos
-        }
+        setup()
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         collectionView?.collectionViewLayout.invalidateLayout()
-    }
-    
-    //-----------------------------------------------------
-    // MARK: - Helpers
-    //-----------------------------------------------------
-    
-    private func configureMapView() {
-        mapView.addAnnotation(pin)
-        let region = MKCoordinateRegion(center: pin.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-        mapView.setRegion(region, animated: false)
     }
     
     //-----------------------------------------------------
@@ -94,10 +72,77 @@ class PhotoAlbumViewController: UIViewController {
 }
 
 //---------------------------------------------------------------
+// MARK: - PhotoAlbumViewController (Setup)
+//---------------------------------------------------------------
+
+extension PhotoAlbumViewController {
+    
+    private func setup() {
+        uiSetup()
+        mapViewSetup()
+        dataSourceSetup()
+    }
+    
+    private func uiSetup() {
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        
+        if let toolbarHeight = navigationController?.toolbar.frame.size.height {
+            collectionView.contentInset.bottom = toolbarHeight
+        }
+        setUiState(.Default)
+    }
+    
+    private func mapViewSetup() {
+        mapView.addAnnotation(pin)
+        let region = MKCoordinateRegion(center: pin.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+        mapView.setRegion(region, animated: false)
+    }
+    
+    private func dataSourceSetup() {
+        // If a pin does't have any photos, then download from images from Flickr.
+        // Otherwise photos will be immediately displayed. No new download is needed.
+        
+        if pin.photos.count == 0 {
+            setUiState(.Download)
+            
+            flickrApiClient.fetchPhotosByCoordinate(pin.coordinate, itemsPerPage: PhotoAlbumViewController.itemsInPhotoCollecton) { [unowned self] (photosJson, error) in
+                self.setUiState(.DoneDownloading)
+                
+                guard error == nil else {
+                    self.presentAlertWithTitle("An error occured", message: error!.localizedDescription)
+                    return
+                }
+                
+                self.photos = Photo.sanitizedPhotos(photosJson!, parentPin: self.pin, context: self.coreDataStackManager.managedObjectContext)
+                self.coreDataStackManager.saveContext()
+                
+                self.collectionView.reloadData()
+            }
+        } else {
+            photos = pin.photos
+        }
+    }
+    
+}
+
+//---------------------------------------------------------------
 // MARK: - PhotoAlbumViewController (UI Functions)
 //---------------------------------------------------------------
 
 extension PhotoAlbumViewController {
+    
+    private func setUiState(state: UiState) {
+        switch state {
+        case .Default:
+            newCollectionBarButtonItem.enabled = true
+        case .Download:
+            UIUtils.showNetworkActivityIndicator()
+            newCollectionBarButtonItem.enabled = false
+        case .DoneDownloading:
+            UIUtils.hideNetworkActivityIndicator()
+            newCollectionBarButtonItem.enabled = true
+        }
+    }
     
     private func presentAlertWithTitle(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
@@ -118,7 +163,46 @@ extension PhotoAlbumViewController: UICollectionViewDataSource {
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PhotoAlbumCollectionViewCell.reuseIdentifier, forIndexPath: indexPath)
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PhotoAlbumCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! PhotoAlbumCollectionViewCell
+        
+        let photo = photos![indexPath.row]
+        let thumbnail = photo.photoData.thumbnail
+        if thumbnail.data == nil {
+            guard let url = NSURL(string: thumbnail.path) else {
+                return cell
+            }
+            
+            cell.activityIndicator.startAnimating()
+            cell.imageView.image = UIImage(named: UIUtils.placeholderImageName)
+            
+            weak var weakCell: PhotoAlbumCollectionViewCell? = cell
+            flickrApiClient.loadImageData(url) { [unowned self] (imageData, error) in
+                weakCell?.activityIndicator.stopAnimating()
+                
+                guard error == nil else {
+                    print("Failed to download an thumbnail image. Error: \(error!.localizedDescription)")
+                    return
+                }
+                
+                thumbnail.data = imageData!
+                self.coreDataStackManager.saveContext()
+                
+                guard let image = UIImage(data: imageData!) else {
+                    return
+                }
+                
+                weakCell?.imageView.image = image
+                self.collectionView.reloadItemsAtIndexPaths([indexPath])
+            }
+        } else {
+            cell.activityIndicator.stopAnimating()
+            
+            guard let image = UIImage(data: thumbnail.data!) else {
+                return cell
+            }
+            cell.imageView.image = image
+        }
+        
         return cell
     }
     

@@ -16,6 +16,7 @@ import CoreLocation.CLLocation
 typealias MethodParameters = [String: AnyObject]
 
 typealias FlickPhotoTaskCompletionHandler = (photos: [JSONDictionary]?, error: NSError?) -> Void
+typealias FlickrImageDownloadingCompletionHandler = (imageData: NSData?, error: NSError?) -> Void
 
 //---------------------------------------------------------
 // MARK: - FlickrApiClient: JsonApiClient
@@ -82,6 +83,31 @@ class FlickrApiClient: JsonApiClient {
         methodParameters[Constants.FlickrParameterKeys.BoundingBox] = bboxString(latitude: coordinate.latitude, longitude: coordinate.longitude)
         
         fetchPhotosWithMethodParameters(methodParameters, completionHandler: completionHandler)
+    }
+    
+    func loadImageData(url: NSURL, completionHandler: FlickrImageDownloadingCompletionHandler) {
+        fetchRawData(NSURLRequest(URL: url)) { apiClientResult in
+            performOnMain {
+                func sendError(error: String) {
+                    self.debugLog("Error: \(error)")
+                    let error = NSError(
+                        domain: FlickrApiClient.LoadImageErrorDomain,
+                        code: FlickrApiClient.LoadImageErrorCode,
+                        userInfo: [NSLocalizedDescriptionKey : error]
+                    )
+                    completionHandler(imageData: nil, error: error)
+                }
+                
+                switch apiClientResult {
+                case .Error(let error):
+                    sendError(error.localizedDescription)
+                case .RawData(let data):
+                    completionHandler(imageData: data, error: nil)
+                default:
+                    sendError(apiClientResult.defaultErrorMessage()!)
+                }
+            }
+        }
     }
     
     /// Returns number of pages for a photo search.

@@ -205,6 +205,8 @@ extension TravelLocationsViewController: MKMapViewDelegate {
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        mapView.deselectAnnotation(view.annotation, animated: false)
+        
         didSelectAnnotationView = true
         
         guard let pin = view.annotation as? Pin else {

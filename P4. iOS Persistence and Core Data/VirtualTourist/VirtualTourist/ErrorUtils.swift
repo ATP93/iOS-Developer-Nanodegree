@@ -58,4 +58,7 @@ extension FlickrApiClient {
     
     static let FetchPhotosByCoordinateErrorDomain = "\(ErrorDomain).fetch-photos-by-coordinate"
     static let FetchPhotosByCoordinateErrorCode = 17
+    
+    static let LoadImageErrorDomain = "\(ErrorDomain).load-image"
+    static let LoadImageErrorCode = 18
 }

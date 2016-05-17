@@ -48,6 +48,7 @@ class PersistenceCentral {
     private lazy var fetchedResultsController: NSFetchedResultsController = {
         let fetchRequest = NSFetchRequest(entityName: Pin.entityName)
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: Pin.Keys.createdAt.rawValue, ascending: false)]
+        fetchRequest.returnsObjectsAsFaults = false
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
             managedObjectContext: PersistenceCentral.coreDataStackManager.managedObjectContext,
             sectionNameKeyPath: nil,

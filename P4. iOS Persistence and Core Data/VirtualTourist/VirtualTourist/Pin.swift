@@ -34,14 +34,13 @@ class Pin: NSManagedObject {
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
-        
-        id = UUIDUtils.generateUUIDString()
-        createdAt = NSDate()
     }
     
     convenience init(context: NSManagedObjectContext) {
         let entity = NSEntityDescription.entityForName(Pin.entityName, inManagedObjectContext: context)!
         self.init(entity: entity, insertIntoManagedObjectContext: context)
+        id = UUIDUtils.generateUUIDString()
+        createdAt = NSDate()
     }
     
     convenience init(locationCoordinate location: CLLocationCoordinate2D, context: NSManagedObjectContext) {

@@ -21,12 +21,12 @@ class PhotoData: NSManagedObject {
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
-        id = UUIDUtils.generateUUIDString()
     }
     
     convenience init(context: NSManagedObjectContext) {
         let entity = NSEntityDescription.entityForName(PhotoData.entityName, inManagedObjectContext: context)!
         self.init(entity: entity, insertIntoManagedObjectContext: context)
+        id = UUIDUtils.generateUUIDString()
     }
 
 }

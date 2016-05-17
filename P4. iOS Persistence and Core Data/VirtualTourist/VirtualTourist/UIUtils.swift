@@ -15,6 +15,16 @@ import CoreGraphics.CGGeometry
 
 class UIUtils {
     
+    //---------------------------------------------
+    // MARK: Properties
+    //---------------------------------------------
+    
+    static let placeholderImageName = "Placeholder"
+    
+    //---------------------------------------------
+    // MARK: Init
+    //---------------------------------------------
+    
     private init() {
     }
     

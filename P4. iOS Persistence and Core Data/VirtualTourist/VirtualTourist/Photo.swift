@@ -21,12 +21,12 @@ class Photo: NSManagedObject {
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
-        createdAt = NSDate()
     }
     
     convenience init(context: NSManagedObjectContext) {
         let entity = NSEntityDescription.entityForName(Photo.entityName, inManagedObjectContext: context)!
         self.init(entity: entity, insertIntoManagedObjectContext: context)
+        createdAt = NSDate()
     }
     
     convenience init?(json: JSONDictionary, context: NSManagedObjectContext) {
