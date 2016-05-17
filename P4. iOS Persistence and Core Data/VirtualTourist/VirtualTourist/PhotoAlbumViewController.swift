@@ -8,6 +8,7 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 //---------------------------------------------------------
 // MARK: - PhotoAlbumViewController: UIViewController
@@ -22,6 +23,7 @@ class PhotoAlbumViewController: UIViewController {
     // MARK: Public
     var pin: Pin!
     var coreDataStackManager: CoreDataStackManager!
+    var flickrApiClient: FlickrApiClient!
     
     // MARK: Outlets
     @IBOutlet weak var mapView: MKMapView!
@@ -32,19 +34,41 @@ class PhotoAlbumViewController: UIViewController {
     private static let collectionViewNumColumns = 3
     private static let collectionViewSectionInsets = UIEdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
     
+    private var photos: [Photo]?
+    private var temporaryContext: NSManagedObjectContext!
+    
     //-----------------------------------------------------
     // MARK: - View Life Cycle -
     //-----------------------------------------------------
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        assert(pin != nil && coreDataStackManager != nil)
+        assert(pin != nil && coreDataStackManager != nil && flickrApiClient != nil)
         
         navigationController?.setNavigationBarHidden(false, animated: false)
         configureMapView()
         
         if let toolbarHeight = navigationController?.toolbar.frame.size.height {
             collectionView.contentInset.bottom = toolbarHeight
+        }
+        
+        temporaryContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        temporaryContext.persistentStoreCoordinator = coreDataStackManager.persistentStoreCoordinator
+        
+        if pin.photos.count == 0 {
+            UIUtils.showNetworkActivityIndicator()
+            flickrApiClient.fetchPhotosByCoordinate(pin.coordinate) { [unowned self] (photosJson, error) in
+                UIUtils.hideNetworkActivityIndicator()
+                guard error == nil else {
+                    self.presentAlertWithTitle("An error occured", message: error!.localizedDescription)
+                    return
+                }
+                
+                self.photos = Photo.sanitizedPhotos(photosJson!, context: self.temporaryContext)
+                self.collectionView.reloadData()
+            }
+        } else {
+            photos = pin.photos
         }
     }
     
@@ -73,13 +97,27 @@ class PhotoAlbumViewController: UIViewController {
 }
 
 //---------------------------------------------------------------
+// MARK: - PhotoAlbumViewController (UI Functions)
+//---------------------------------------------------------------
+
+extension PhotoAlbumViewController {
+    
+    private func presentAlertWithTitle(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
+    }
+    
+}
+
+//---------------------------------------------------------------
 // MARK: - PhotoAlbumViewController: UICollectionViewDataSource -
 //---------------------------------------------------------------
 
 extension PhotoAlbumViewController: UICollectionViewDataSource {
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return photos?.count ?? 0
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {

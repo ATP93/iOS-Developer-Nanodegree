@@ -30,4 +30,16 @@ class UIUtils {
         return UIScreen.mainScreen().bounds.size
     }
     
+    //------------------------------------------------
+    // MARK: Network Indicator
+    //------------------------------------------------
+    
+    class func showNetworkActivityIndicator() {
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+    }
+    
+    class func hideNetworkActivityIndicator() {
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+    }
+    
 }

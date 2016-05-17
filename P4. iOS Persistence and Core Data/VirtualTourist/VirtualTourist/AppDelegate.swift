@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private let coreDataStackManager = CoreDataStackManager.sharedInstance()
     private let persistenceCentral = PersistenceCentral.sharedInstance()
+    private let flickrApiClient = FlickrApiClient.sharedInstance
 
     //-----------------------------------------------------
     // MARK: UIApplicationDelegate
@@ -49,6 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let travelLocationsVC = navigationController.topViewController as! TravelLocationsViewController
         travelLocationsVC.coreDataStackManager = coreDataStackManager
         travelLocationsVC.persistenceCentral = persistenceCentral
+        travelLocationsVC.flickrApiClient = flickrApiClient
     }
     
 }

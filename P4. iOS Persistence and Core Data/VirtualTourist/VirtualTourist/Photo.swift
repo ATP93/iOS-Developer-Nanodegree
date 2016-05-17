@@ -32,9 +32,33 @@ class Photo: NSManagedObject {
     
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {
         super.init(entity: entity, insertIntoManagedObjectContext: context)
-        
-        id = UUIDUtils.generateUUIDString()
         createdAt = NSDate()
+    }
+    
+    convenience init(context: NSManagedObjectContext) {
+        let entity = NSEntityDescription.entityForName(Photo.entityName, inManagedObjectContext: context)!
+        self.init(entity: entity, insertIntoManagedObjectContext: context)
+    }
+    
+    convenience init?(json: JSONDictionary, context: NSManagedObjectContext) {
+        self.init(context: context)
+        
+        guard let id = JSON.string(json, key: FlickrApiClient.Constants.FlickrResponseKeys.Id),
+        let url = JSON.string(json, key: FlickrApiClient.Constants.FlickrResponseKeys.MediumURL) else {
+            return nil
+        }
+        
+        self.id = id
+        self.photoPath = url
+        self.title = JSON.string(json, key: FlickrApiClient.Constants.FlickrResponseKeys.Title)
+    }
+    
+    //-----------------------------------------
+    // MARK: Methods
+    //-----------------------------------------
+    
+    class func sanitizedPhotos(json: [JSONDictionary], context: NSManagedObjectContext) -> [Photo]? {
+        return json.flatMap { Photo(json: $0, context: context) }
     }
     
 }

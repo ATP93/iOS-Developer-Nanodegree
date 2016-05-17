@@ -28,6 +28,7 @@ class TravelLocationsViewController: UIViewController {
     // MARK: Public
     var coreDataStackManager: CoreDataStackManager!
     var persistenceCentral: PersistenceCentral!
+    var flickrApiClient: FlickrApiClient!
     
     // MARK: Private
     private static let locationUpdateTimeInterval = 5.0
@@ -53,7 +54,7 @@ class TravelLocationsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        assert(coreDataStackManager != nil && persistenceCentral != nil)
+        assert(coreDataStackManager != nil && persistenceCentral != nil && flickrApiClient != nil)
         
         configureMapView()
         mapView.addAnnotations(persistenceCentral.pins)
@@ -73,6 +74,7 @@ class TravelLocationsViewController: UIViewController {
             let photoAlbumVC = segue.destinationViewController as! PhotoAlbumViewController
             photoAlbumVC.pin = sender as! Pin
             photoAlbumVC.coreDataStackManager = coreDataStackManager
+            photoAlbumVC.flickrApiClient = flickrApiClient
         }
     }
     
