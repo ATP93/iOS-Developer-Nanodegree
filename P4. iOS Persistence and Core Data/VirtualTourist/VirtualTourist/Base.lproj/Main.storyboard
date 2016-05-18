@@ -129,7 +129,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Qn3-Eu-4lj"/>
                                     <barButtonItem title="New Collection" id="7jS-Pc-nba">
                                         <connections>
-                                            <action selector="newCollectionDidPressed:" destination="2g7-T6-Q99" id="eGg-1j-7MZ"/>
+                                            <action selector="barButtonItemDidPressed:" destination="2g7-T6-Q99" id="qSk-Ac-J76"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="GQq-bG-QKm"/>
@@ -152,9 +152,9 @@
                     </view>
                     <navigationItem key="navigationItem" title="Photo Album" id="E36-q8-xpv"/>
                     <connections>
+                        <outlet property="barButtonItem" destination="7jS-Pc-nba" id="jCZ-dN-SyX"/>
                         <outlet property="collectionView" destination="D7M-jp-wns" id="njD-Fg-WGD"/>
                         <outlet property="mapView" destination="Gou-eB-Pk0" id="uS0-Ou-EJI"/>
-                        <outlet property="newCollectionBarButtonItem" destination="7jS-Pc-nba" id="GkN-XP-lBc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="t3A-Q6-bCt" userLabel="First Responder" sceneMemberID="firstResponder"/>

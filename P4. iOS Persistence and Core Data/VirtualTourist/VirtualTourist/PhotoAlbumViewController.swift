@@ -16,9 +16,9 @@ import CoreData
 
 // MARK: UIState
 private enum UIState {
-    case Default
-    case Download
-    case DoneDownloading
+    case Normal
+    case Downloading
+    case DoneWithDownloading
 }
 
 //---------------------------------------------------------
@@ -39,17 +39,15 @@ class PhotoAlbumViewController: UIViewController {
     // MARK: Outlets
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var newCollectionBarButtonItem: UIBarButtonItem!
+    @IBOutlet weak var barButtonItem: UIBarButtonItem!
     
     // MARK: Private
     private static let collectionViewNumColumns = 3
     private static let collectionViewSectionInsets = UIEdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
     private static let itemsInPhotoCollecton = collectionViewNumColumns * 7
     
-    private var photos: [Photo]?
     private var temporaryContext: NSManagedObjectContext!
-    
-    private var photosIndexPathsToRemove = Set<NSIndexPath>()
+    private var selectedIndexPath = Set<NSIndexPath>()
     
     //-----------------------------------------------------
     // MARK: - View Life Cycle
@@ -65,11 +63,49 @@ class PhotoAlbumViewController: UIViewController {
         collectionView?.collectionViewLayout.invalidateLayout()
     }
     
+    override func setEditing(editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        
+        updateBarButtonItemTitle(animated: animated)
+        updateBarButtonItemEnabledState()
+        
+        if !editing && selectedIndexPath.count > 0 {
+            removeSelectedPictures()
+        }
+    }
+    
     //-----------------------------------------------------
     // MARK: - Actions
     //-----------------------------------------------------
 
-    @IBAction func newCollectionDidPressed(sender: AnyObject) {
+    @IBAction func barButtonItemDidPressed(sender: AnyObject) {
+        if editing {
+            setEditing(false, animated: true)
+        } else {
+            loadNewCollection()
+        }
+    }
+    
+    //-----------------------------------------------------
+    // MARK: - Helpers
+    //-----------------------------------------------------
+    
+    private func removeSelectedPictures() {
+        selectedIndexPath.forEach {
+            coreDataStackManager.managedObjectContext.deleteObject(pin.photos[$0.row])
+            coreDataStackManager.saveContext()
+        }
+        
+        collectionView.performBatchUpdates({
+            self.collectionView.deleteItemsAtIndexPaths(Array(self.selectedIndexPath))
+            }, completion: { finished in
+                if finished {
+                    self.selectedIndexPath.removeAll()
+                }
+        })
+    }
+    
+    private func loadNewCollection() {
         func presentLoadAlbumAlert(title title: String, message: String) {
             let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
@@ -79,8 +115,6 @@ class PhotoAlbumViewController: UIViewController {
             }))
             presentViewController(alert, animated: true, completion: nil)
         }
-        
-        print(#function)
         
         // GUARD: Is there an album details?
         guard let album = pin.albumDetails else {
@@ -103,13 +137,10 @@ class PhotoAlbumViewController: UIViewController {
         loadAlbumWithPageNumber(nextPage)
     }
     
-    //-----------------------------------------------------
-    // MARK: - Helpers
-    //-----------------------------------------------------
-    
     private func loadAlbumWithPageNumber(page: Int) {
+        setUIState(.Downloading)
         flickrApiClient.fetchPhotosByCoordinate(pin.coordinate, pageNumber: page, itemsPerPage: PhotoAlbumViewController.itemsInPhotoCollecton) { [unowned self] (albumJSON, photosJson, error) in
-            self.setUiState(.DoneDownloading)
+            self.setUIState(.DoneWithDownloading)
             
             // Parse album details and update current album properties if it doesn't exist yet
             // or create one in main context.
@@ -127,10 +158,10 @@ class PhotoAlbumViewController: UIViewController {
                 return
             }
             
-            self.photos = Photo.sanitizedPhotos(photosJson!, parentPin: self.pin, context: self.coreDataStackManager.managedObjectContext)
+            let _ = Photo.sanitizedPhotos(photosJson!, parentPin: self.pin, context: self.coreDataStackManager.managedObjectContext)
             self.coreDataStackManager.saveContext()
             
-            self.updateNewCollectionBarButtonEnabledState()
+            self.updateBarButtonItemEnabledState()
             self.collectionView.reloadData()
         }
     }
@@ -160,7 +191,9 @@ extension PhotoAlbumViewController {
         if let toolbarHeight = navigationController?.toolbar.frame.size.height {
             collectionView.contentInset.bottom = toolbarHeight
         }
-        setUiState(.Default)
+        setUIState(.Normal)
+        
+        navigationItem.rightBarButtonItem = editButtonItem()
     }
     
     private func mapViewSetup() {
@@ -177,10 +210,8 @@ extension PhotoAlbumViewController {
         // Otherwise photos will be immediately displayed. No new download is needed.
         
         if pin.photos.count == 0 {
-            setUiState(.Download)
+            setUIState(.Downloading)
             loadAlbumWithPageNumber(1)
-        } else {
-            photos = pin.photos
         }
     }
     
@@ -192,16 +223,16 @@ extension PhotoAlbumViewController {
 
 extension PhotoAlbumViewController {
     
-    private func setUiState(state: UIState) {
+    private func setUIState(state: UIState) {
         switch state {
-        case .Default:
-            updateNewCollectionBarButtonEnabledState()
-        case .Download:
+        case .Normal:
+            updateBarButtonItem()
+        case .Downloading:
             UIUtils.showNetworkActivityIndicator()
-            newCollectionBarButtonItem.enabled = false
-        case .DoneDownloading:
+            barButtonItem.enabled = false
+        case .DoneWithDownloading:
             UIUtils.hideNetworkActivityIndicator()
-            newCollectionBarButtonItem.enabled = true
+            barButtonItem.enabled = true
         }
     }
     
@@ -211,8 +242,28 @@ extension PhotoAlbumViewController {
         presentViewController(alert, animated: true, completion: nil)
     }
     
-    private func updateNewCollectionBarButtonEnabledState() {
-        newCollectionBarButtonItem.enabled = (pin.albumDetails?.pages.integerValue > 0 || pin.photos.count > 0)
+    private func updateBarButtonItem() {
+        updateBarButtonItemEnabledState()
+        updateBarButtonItemTitle()
+    }
+    
+    private func updateBarButtonItemEnabledState() {
+        if editing {
+            barButtonItem.enabled = selectedIndexPath.count > 0
+        } else {
+            barButtonItem.enabled = (pin.albumDetails?.pages.integerValue > 0 || pin.photos.count > 0)
+        }
+    }
+    
+    private func updateBarButtonItemTitle(animated animated: Bool = false) {
+        let newTitle = (editing == true ? "Remove Selected Pictures" : "New Collection")
+        if animated {
+            UIView.animateWithDuration(0.75) {
+                self.barButtonItem.title = newTitle
+            }
+        } else {
+            barButtonItem.title = newTitle
+        }
     }
     
 }
@@ -223,33 +274,42 @@ extension PhotoAlbumViewController {
 
 extension PhotoAlbumViewController: UICollectionViewDataSource {
     
+    // MARK: UICollectionViewDataSource
+    
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photos?.count ?? 0
+        return pin.photos.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PhotoAlbumCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! PhotoAlbumCollectionViewCell
+        configureCell(cell, atIndexPath: indexPath)
         
-        if photosIndexPathsToRemove.contains(indexPath) {
+        return cell
+    }
+    
+    // MARK: Helpers
+    
+    private func configureCell(cell: PhotoAlbumCollectionViewCell, atIndexPath indexPath: NSIndexPath) {
+        if selectedIndexPath.contains(indexPath) {
             cell.setSelectedState(.Selected)
         } else {
             cell.setSelectedState(.NotSelected)
         }
         
-        let photo = photos![indexPath.row]
+        let photo = pin.photos[indexPath.row]
         let thumbnail = photo.photoData.thumbnail
         
         if let data = thumbnail.data {
             cell.activityIndicator.stopAnimating()
             
             guard let image = UIImage(data: data) else {
-                return cell
+                return
             }
             
             cell.imageView.image = image
         } else {
             guard let url = NSURL(string: thumbnail.path) else {
-                return cell
+                return
             }
             
             cell.activityIndicator.startAnimating()
@@ -275,8 +335,6 @@ extension PhotoAlbumViewController: UICollectionViewDataSource {
                 self.collectionView.reloadItemsAtIndexPaths([indexPath])
             }
         }
-        
-        return cell
     }
     
 }
@@ -290,6 +348,11 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         print(#function + " at index: \(indexPath.row)")
         
+        // GUARD: In editing mode?
+        guard editing == true else {
+            return
+        }
+        
         guard let cell = collectionView.cellForItemAtIndexPath(indexPath) as? PhotoAlbumCollectionViewCell else {
             return
         }
@@ -299,14 +362,17 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
             return
         }
         
-        guard photosIndexPathsToRemove.contains(indexPath) == false else {
-            photosIndexPathsToRemove.remove(indexPath)
+        guard selectedIndexPath.contains(indexPath) == false else {
+            selectedIndexPath.remove(indexPath)
             cell.setSelectedState(.NotSelected)
+            updateBarButtonItemEnabledState()
             return
         }
         
-        photosIndexPathsToRemove.insert(indexPath)
+        selectedIndexPath.insert(indexPath)
+        
         cell.setSelectedState(.Selected)
+        updateBarButtonItemEnabledState()
     }
     
 }
