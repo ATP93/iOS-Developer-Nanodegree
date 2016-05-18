@@ -97,9 +97,11 @@ class TravelLocationsViewController: UIViewController {
     //-----------------------------------------------------
     
     @IBAction func editPinsDidPressed(sender: AnyObject) {
-        guard persistenceCentral.pins.count > 0 else {
-            presentAlertWithTitle("Oops 🙄", message: "You could't edit pins. First, try to add one.")
-            return
+        if !isEditingPins {
+            guard persistenceCentral.pins.count > 0 else {
+                presentAlertWithTitle("Oops 🙄", message: "You could't edit pins. First, try to add one.")
+                return
+            }
         }
         
         setEditInfoViewState(isEditingPins == true ? .Normal : .Edit)

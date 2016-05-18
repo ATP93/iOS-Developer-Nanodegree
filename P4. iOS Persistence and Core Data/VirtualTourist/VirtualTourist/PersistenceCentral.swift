@@ -13,7 +13,7 @@ import CoreData
 // MARK: - PersistenceCentral
 //-----------------------------------------------------
 
-class PersistenceCentral {
+class PersistenceCentral: NSObject {
  
     //-----------------------------------------------------
     // MARK: - Properties -
@@ -35,11 +35,7 @@ class PersistenceCentral {
     
     // MARK: Public
     
-    var pins: [Pin] {
-        get {
-            return fetchedResultsController.fetchedObjects as? [Pin] ?? [Pin]()
-        }
-    }
+    var pins = [Pin]()
     
     // MARK: Private
     
@@ -53,6 +49,7 @@ class PersistenceCentral {
             managedObjectContext: PersistenceCentral.coreDataStackManager.managedObjectContext,
             sectionNameKeyPath: nil,
             cacheName: nil)
+        fetchedResultsController.delegate = self
         
         return fetchedResultsController
     }()
@@ -61,10 +58,21 @@ class PersistenceCentral {
     // MARK: - Init
     //-----------------------------------------------------
     
-    init() {
+    override init() {
+        super.init()
+        
         // Use try! because an error is returned if the fetch request specified doesn't include
         // a sort descriptor that uses sectionNameKeyPath.
         _ = try! fetchedResultsController.performFetch()
     }
     
 }
+
+extension PersistenceCentral: NSFetchedResultsControllerDelegate {
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        pins = controller.fetchedObjects as? [Pin] ?? [Pin]()
+    }
+    
+}
+
