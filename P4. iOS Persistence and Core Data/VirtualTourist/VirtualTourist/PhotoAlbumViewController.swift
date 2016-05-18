@@ -49,6 +49,8 @@ class PhotoAlbumViewController: UIViewController {
     private var photos: [Photo]?
     private var temporaryContext: NSManagedObjectContext!
     
+    private var photosIndexPathsToRemove = Set<NSIndexPath>()
+    
     //-----------------------------------------------------
     // MARK: - View Life Cycle
     //-----------------------------------------------------
@@ -88,7 +90,7 @@ class PhotoAlbumViewController: UIViewController {
         
         let pages = album.pages.integerValue
         guard pages > 0 else {
-            presentLoadAlbumAlert(title: "No photos 😩", message: "Try again to load?")
+            presentLoadAlbumAlert(title: "There's no photos 😩", message: "Try again to load?")
             return
         }
         
@@ -228,6 +230,12 @@ extension PhotoAlbumViewController: UICollectionViewDataSource {
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PhotoAlbumCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! PhotoAlbumCollectionViewCell
         
+        if photosIndexPathsToRemove.contains(indexPath) {
+            cell.setSelectedState(.Selected)
+        } else {
+            cell.setSelectedState(.NotSelected)
+        }
+        
         let photo = photos![indexPath.row]
         let thumbnail = photo.photoData.thumbnail
         
@@ -281,6 +289,24 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         print(#function + " at index: \(indexPath.row)")
+        
+        guard let cell = collectionView.cellForItemAtIndexPath(indexPath) as? PhotoAlbumCollectionViewCell else {
+            return
+        }
+        
+        // GUARD: Image already downloaded?
+        guard cell.activityIndicator.isAnimating() == false else {
+            return
+        }
+        
+        guard photosIndexPathsToRemove.contains(indexPath) == false else {
+            photosIndexPathsToRemove.remove(indexPath)
+            cell.setSelectedState(.NotSelected)
+            return
+        }
+        
+        photosIndexPathsToRemove.insert(indexPath)
+        cell.setSelectedState(.Selected)
     }
     
 }
