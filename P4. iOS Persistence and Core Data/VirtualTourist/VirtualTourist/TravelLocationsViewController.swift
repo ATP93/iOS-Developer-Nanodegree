@@ -47,6 +47,7 @@ class TravelLocationsViewController: UIViewController {
     
     // MARK: Outlets
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var editPinsButton: RoundedButton!
     
     //-----------------------------------------------------
     // MARK: - View Life Cycle -
@@ -76,6 +77,14 @@ class TravelLocationsViewController: UIViewController {
             photoAlbumVC.coreDataStackManager = coreDataStackManager
             photoAlbumVC.flickrApiClient = flickrApiClient
         }
+    }
+    
+    //-----------------------------------------------------
+    // MARK: - Actions -
+    //-----------------------------------------------------
+    
+    @IBAction func editPinsDidPressed(sender: AnyObject) {
+        print(#function)
     }
     
 }
