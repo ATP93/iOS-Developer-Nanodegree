@@ -21,6 +21,11 @@ private enum UIState {
     case DoneWithDownloading
 }
 
+// MARK: SegueIdentifier: String
+private enum SegueIdentifier: String {
+    case PhotoDetail
+}
+
 //---------------------------------------------------------
 // MARK: - PhotoAlbumViewController: UIViewController -
 //---------------------------------------------------------
@@ -71,6 +76,21 @@ class PhotoAlbumViewController: UIViewController {
         
         if !editing && selectedIndexPath.count > 0 {
             removeSelectedPictures()
+        }
+    }
+    
+    //-----------------------------------------------------
+    // MARK: - Navigation
+    //-----------------------------------------------------
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == SegueIdentifier.PhotoDetail.rawValue {
+            let photoDetailVC = segue.destinationViewController as! PhotoDetailViewController
+            photoDetailVC.coreDataStackManager = coreDataStackManager
+            photoDetailVC.flickrApiClient = flickrApiClient
+            
+            let indexPath = sender as! NSIndexPath
+            photoDetailVC.photo = pin.photos[indexPath.row]
         }
     }
     
@@ -218,7 +238,7 @@ extension PhotoAlbumViewController {
 }
 
 //---------------------------------------------------------------
-// MARK: - PhotoAlbumViewController (UI Functions)
+// MARK: - PhotoAlbumViewController (UI Functions) -
 //---------------------------------------------------------------
 
 extension PhotoAlbumViewController {
@@ -348,8 +368,8 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         print(#function + " at index: \(indexPath.row)")
         
-        // GUARD: In editing mode?
         guard editing == true else {
+            performSegueWithIdentifier(SegueIdentifier.PhotoDetail.rawValue, sender: indexPath)
             return
         }
         

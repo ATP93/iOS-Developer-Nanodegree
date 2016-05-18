@@ -155,11 +155,64 @@
                         <outlet property="barButtonItem" destination="7jS-Pc-nba" id="jCZ-dN-SyX"/>
                         <outlet property="collectionView" destination="D7M-jp-wns" id="njD-Fg-WGD"/>
                         <outlet property="mapView" destination="Gou-eB-Pk0" id="uS0-Ou-EJI"/>
+                        <segue destination="kAA-Rs-LnJ" kind="show" identifier="PhotoDetail" id="zQH-1q-Hur"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="t3A-Q6-bCt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1303" y="350"/>
+        </scene>
+        <!--Detail-->
+        <scene sceneID="9SZ-1S-lnr">
+            <objects>
+                <viewController id="kAA-Rs-LnJ" customClass="PhotoDetailViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ZNR-g4-2gI"/>
+                        <viewControllerLayoutGuide type="bottom" id="LMx-pe-Rlf"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kac-QB-XIX">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="ZwR-b8-IjU">
+                                <rect key="frame" x="142" y="266" width="37" height="37"/>
+                                <color key="color" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </activityIndicatorView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="j2L-Sm-lzc">
+                                <rect key="frame" x="20" y="80" width="280" height="472"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="Qe8-Yt-8am">
+                                        <rect key="frame" x="0.0" y="0.0" width="280" height="375"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="afV-CB-IyU">
+                                        <rect key="frame" x="0.0" y="375" width="280" height="97"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="21"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="LMx-pe-Rlf" firstAttribute="top" secondItem="j2L-Sm-lzc" secondAttribute="bottom" constant="16" id="DEo-Jh-bko"/>
+                            <constraint firstItem="ZwR-b8-IjU" firstAttribute="centerY" secondItem="kac-QB-XIX" secondAttribute="centerY" id="DuT-tQ-8gm"/>
+                            <constraint firstAttribute="trailing" secondItem="j2L-Sm-lzc" secondAttribute="trailing" constant="20" symbolic="YES" id="Fe8-5K-hk9"/>
+                            <constraint firstItem="j2L-Sm-lzc" firstAttribute="top" secondItem="ZNR-g4-2gI" secondAttribute="bottom" constant="16" id="SZk-eh-n5e"/>
+                            <constraint firstItem="j2L-Sm-lzc" firstAttribute="leading" secondItem="kac-QB-XIX" secondAttribute="leading" constant="20" symbolic="YES" id="kn6-gH-azV"/>
+                            <constraint firstItem="ZwR-b8-IjU" firstAttribute="centerX" secondItem="kac-QB-XIX" secondAttribute="centerX" id="np1-Hg-tk6"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Detail" id="gUu-Fy-T7V"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="ZwR-b8-IjU" id="0cz-oo-IZ7"/>
+                        <outlet property="imageView" destination="Qe8-Yt-8am" id="toe-Lm-Na5"/>
+                        <outlet property="label" destination="afV-CB-IyU" id="V2i-vs-cv8"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="scl-8C-Dqy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1730" y="350"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="hgf-lA-Iyw">
