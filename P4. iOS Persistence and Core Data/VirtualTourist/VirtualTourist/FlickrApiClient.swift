@@ -15,7 +15,7 @@ import CoreLocation.CLLocation
 
 typealias MethodParameters = [String: AnyObject]
 
-typealias FlickPhotoTaskCompletionHandler = (photos: [JSONDictionary]?, error: NSError?) -> Void
+typealias FlickPhotoTaskCompletionHandler = (album: JSONDictionary?, photos: [JSONDictionary]?, error: NSError?) -> Void
 typealias FlickrImageDownloadingCompletionHandler = (imageData: NSData?, error: NSError?) -> Void
 
 //---------------------------------------------------------
@@ -71,7 +71,7 @@ class FlickrApiClient: JsonApiClient {
                     code: FlickrApiClient.FetchPhotosByCoordinateErrorCode,
                     userInfo: [NSLocalizedDescriptionKey : errorMessage]
                 )
-                completionHandler(photos: nil, error: error)
+                completionHandler(album: nil, photos: nil, error: error)
                 return
         }
         
@@ -156,7 +156,7 @@ class FlickrApiClient: JsonApiClient {
                 code: FlickrApiClient.FetchPhotosErrorCode,
                 userInfo: [NSLocalizedDescriptionKey : error]
             )
-            completionHandler(photos: nil, error: error)
+            completionHandler(album: nil, photos: nil, error: error)
         }
         
         let request = NSURLRequest(URL: urlFromParameters(param))
@@ -184,7 +184,13 @@ class FlickrApiClient: JsonApiClient {
                         return
                     }
                     
-                    completionHandler(photos: photoArray, error: nil)
+                    var albumDictionary = JSONDictionary()
+                    albumDictionary[Constants.FlickrResponseKeys.Page] = photosDictionary[Constants.FlickrParameterKeys.Page]
+                    albumDictionary[Constants.FlickrResponseKeys.Pages] = photosDictionary[Constants.FlickrResponseKeys.Pages]
+                    albumDictionary[Constants.FlickrResponseKeys.PerPage] = photosDictionary[Constants.FlickrResponseKeys.PerPage]
+                    albumDictionary[Constants.FlickrResponseKeys.Total] = photosDictionary[Constants.FlickrResponseKeys.Total]
+                    
+                    completionHandler(album: albumDictionary, photos: photoArray, error: nil)
                 default:
                     sendError(apiClientResult.defaultErrorMessage()!)
                 }

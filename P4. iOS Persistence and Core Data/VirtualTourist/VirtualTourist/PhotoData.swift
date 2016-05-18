@@ -32,7 +32,7 @@ class PhotoData: NSManagedObject {
 }
 
 //------------------------------------------------------------
-// MARK: - PhotoData: EntityNamelable
+// MARK: - PhotoData: EntityNamelable - 
 //------------------------------------------------------------
 
 extension PhotoData: EntityNamelable {

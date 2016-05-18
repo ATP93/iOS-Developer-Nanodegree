@@ -32,7 +32,7 @@ class MediumImage: NSManagedObject {
 }
 
 //------------------------------------------------------------
-// MARK: - MediumImage: EntityNamelable
+// MARK: - MediumImage: EntityNamelable - 
 //------------------------------------------------------------
 
 extension MediumImage: EntityNamelable {

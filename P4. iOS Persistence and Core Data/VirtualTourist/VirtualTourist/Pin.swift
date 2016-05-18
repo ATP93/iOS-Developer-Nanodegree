@@ -63,8 +63,9 @@ extension Pin: MKAnnotation {
     }
     
 }
+
 //--------------------------------------------
-// MARK: - Pin: EntityNamelable
+// MARK: - Pin: EntityNamelable -
 //--------------------------------------------
 
 extension Pin: EntityNamelable {

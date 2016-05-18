@@ -12,6 +12,14 @@
         <relationship name="photoData" maxCount="1" deletionRule="Nullify" destinationEntity="PhotoData" inverseName="photo" inverseEntity="PhotoData" syncable="YES"/>
         <relationship name="pin" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Pin" inverseName="photos" inverseEntity="Pin" syncable="YES"/>
     </entity>
+    <entity name="PhotoAlbumDetails" representedClassName=".PhotoAlbumDetails" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="page" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="pages" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="perPage" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="total" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="pin" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Pin" inverseName="albumDetails" inverseEntity="Pin" syncable="YES"/>
+    </entity>
     <entity name="PhotoData" representedClassName=".PhotoData" syncable="YES">
         <attribute name="id" attributeType="String" syncable="YES"/>
         <relationship name="medium" maxCount="1" deletionRule="Nullify" destinationEntity="MediumImage" inverseName="photoData" inverseEntity="MediumImage" syncable="YES"/>
@@ -23,6 +31,7 @@
         <attribute name="id" attributeType="String" syncable="YES"/>
         <attribute name="latitude" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="longitude" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="albumDetails" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PhotoAlbumDetails" inverseName="pin" inverseEntity="PhotoAlbumDetails" syncable="YES"/>
         <relationship name="photos" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Photo" inverseName="pin" inverseEntity="Photo" syncable="YES"/>
     </entity>
     <entity name="ThumbnailImage" representedClassName=".ThumbnailImage" syncable="YES">
@@ -31,10 +40,11 @@
         <relationship name="photoData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PhotoData" inverseName="thumbnail" inverseEntity="PhotoData" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Photo" positionX="-243" positionY="-171" width="128" height="118"/>
-        <element name="Pin" positionX="-441" positionY="-171" width="128" height="118"/>
-        <element name="PhotoData" positionX="-81" positionY="-171" width="128" height="103"/>
-        <element name="ThumbnailImage" positionX="90" positionY="-90" width="128" height="88"/>
-        <element name="MediumImage" positionX="88" positionY="-234" width="128" height="88"/>
+        <element name="MediumImage" positionX="79" positionY="-171" width="128" height="88"/>
+        <element name="Photo" positionX="-261" positionY="-108" width="128" height="118"/>
+        <element name="PhotoData" positionX="-90" positionY="-108" width="128" height="103"/>
+        <element name="Pin" positionX="-441" positionY="-171" width="128" height="133"/>
+        <element name="ThumbnailImage" positionX="81" positionY="-27" width="128" height="88"/>
+        <element name="PhotoAlbumDetails" positionX="-261" positionY="-270" width="128" height="133"/>
     </elements>
 </model>

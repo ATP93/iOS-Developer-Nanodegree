@@ -75,7 +75,9 @@ extension FlickrApiClient {
             static let ThumbnailURL = "url_t"
             static let SmallURL = "url_s"
             static let MediumURL = "url_m"
+            static let Page = "page"
             static let Pages = "pages"
+            static let PerPage = "perpage"
             static let Total = "total"
         }
         

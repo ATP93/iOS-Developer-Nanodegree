@@ -30,13 +30,13 @@ class Photo: NSManagedObject {
     }
     
     convenience init?(json: JSONDictionary, context: NSManagedObjectContext) {
-        self.init(context: context)
-        
         guard let id = JSON.string(json, key: FlickrApiClient.Constants.FlickrResponseKeys.Id),
             let thumbnailUrl = JSON.string(json, key: FlickrApiClient.Constants.FlickrResponseKeys.ThumbnailURL),
             let mediumUrl = JSON.string(json, key: FlickrApiClient.Constants.FlickrResponseKeys.MediumURL) else {
                 return nil
         }
+        
+        self.init(context: context)
         
         self.id = id
         self.title = JSON.string(json, key: FlickrApiClient.Constants.FlickrResponseKeys.Title)
@@ -66,7 +66,7 @@ class Photo: NSManagedObject {
 }
 
 //--------------------------------------------
-// MARK: - Photo: EntityNamelable
+// MARK: - Photo: EntityNamelable -
 //--------------------------------------------
 
 extension Photo: EntityNamelable {

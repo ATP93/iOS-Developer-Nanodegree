@@ -32,7 +32,7 @@ class ThumbnailImage: NSManagedObject {
 }
 
 //------------------------------------------------------------
-// MARK: - ThumbnailImage: EntityNamelable
+// MARK: - ThumbnailImage: EntityNamelable - 
 //------------------------------------------------------------
 
 extension ThumbnailImage: EntityNamelable {

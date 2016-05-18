@@ -11,23 +11,24 @@ import MapKit
 import CoreData
 
 //---------------------------------------------------------
-// MARK: Types
+// MARK: - Types
 //---------------------------------------------------------
 
-private enum UiState {
+// MARK: UIState
+private enum UIState {
     case Default
     case Download
     case DoneDownloading
 }
 
 //---------------------------------------------------------
-// MARK: - PhotoAlbumViewController: UIViewController
+// MARK: - PhotoAlbumViewController: UIViewController -
 //---------------------------------------------------------
 
 class PhotoAlbumViewController: UIViewController {
     
     //-----------------------------------------------------
-    // MARK: - Properties -
+    // MARK: - Properties
     //-----------------------------------------------------
     
     // MARK: Public
@@ -48,7 +49,7 @@ class PhotoAlbumViewController: UIViewController {
     private var photos: [Photo]?
     
     //-----------------------------------------------------
-    // MARK: - View Life Cycle -
+    // MARK: - View Life Cycle
     //-----------------------------------------------------
 
     override func viewDidLoad() {
@@ -72,7 +73,7 @@ class PhotoAlbumViewController: UIViewController {
 }
 
 //---------------------------------------------------------------
-// MARK: - PhotoAlbumViewController (Setup)
+// MARK: - PhotoAlbumViewController (Setup) -
 //---------------------------------------------------------------
 
 extension PhotoAlbumViewController {
@@ -99,18 +100,22 @@ extension PhotoAlbumViewController {
     }
     
     private func dataSourceSetup() {
-        // If a pin does't have any photos, then download from images from Flickr.
+        // If a pin does't have any photos, then download images from Flickr.
         // Otherwise photos will be immediately displayed. No new download is needed.
         
         if pin.photos.count == 0 {
             setUiState(.Download)
             
-            flickrApiClient.fetchPhotosByCoordinate(pin.coordinate, itemsPerPage: PhotoAlbumViewController.itemsInPhotoCollecton) { [unowned self] (photosJson, error) in
+            flickrApiClient.fetchPhotosByCoordinate(pin.coordinate, itemsPerPage: PhotoAlbumViewController.itemsInPhotoCollecton) { [unowned self] (albumJSON, photosJson, error) in
                 self.setUiState(.DoneDownloading)
                 
                 guard error == nil else {
                     self.presentAlertWithTitle("An error occured", message: error!.localizedDescription)
                     return
+                }
+                
+                if let album = PhotoAlbumDetails(json: albumJSON!, context: self.coreDataStackManager.managedObjectContext) {
+                    album.pin = self.pin
                 }
                 
                 self.photos = Photo.sanitizedPhotos(photosJson!, parentPin: self.pin, context: self.coreDataStackManager.managedObjectContext)
@@ -131,7 +136,7 @@ extension PhotoAlbumViewController {
 
 extension PhotoAlbumViewController {
     
-    private func setUiState(state: UiState) {
+    private func setUiState(state: UIState) {
         switch state {
         case .Default:
             newCollectionBarButtonItem.enabled = true
@@ -221,7 +226,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate {
 }
 
 //---------------------------------------------------------------------------
-// MARK: - PhotoAlbumViewController: UICollectionViewDelegateFlowLayout
+// MARK: - PhotoAlbumViewController: UICollectionViewDelegateFlowLayout -
 //---------------------------------------------------------------------------
 
 extension PhotoAlbumViewController: UICollectionViewDelegateFlowLayout {
