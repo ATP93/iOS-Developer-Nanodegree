@@ -11,8 +11,19 @@ import MapKit
 import CoreData
 import Darwin.C
 
+//---------------------------------------------------------
+// MARK: - Types
+//---------------------------------------------------------
+
+// MARK: SegueIdentifier: String
 private enum SegueIdentifier: String {
     case PinPhotoAlbum
+}
+
+// MARK: PinEditState
+private enum PinEditState {
+    case Edit
+    case Normal
 }
 
 //---------------------------------------------------------
@@ -44,10 +55,12 @@ class TravelLocationsViewController: UIViewController {
     }()
     
     private var didSelectAnnotationView = false
+    private var isEditingPins = false
     
     // MARK: Outlets
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var editPinsButton: RoundedButton!
+    @IBOutlet weak var editInfoView: UIView!
     
     //-----------------------------------------------------
     // MARK: - View Life Cycle -
@@ -84,7 +97,45 @@ class TravelLocationsViewController: UIViewController {
     //-----------------------------------------------------
     
     @IBAction func editPinsDidPressed(sender: AnyObject) {
-        print(#function)
+        guard persistenceCentral.pins.count > 0 else {
+            presentAlertWithTitle("Oops 🙄", message: "You could't edit pins. First, try to add one.")
+            return
+        }
+        
+        setEditInfoViewState(isEditingPins == true ? .Normal : .Edit)
+    }
+    
+}
+
+//---------------------------------------------------------------
+// MARK: - TravelLocationsViewController (UI Functions) -
+//---------------------------------------------------------------
+
+extension TravelLocationsViewController {
+    
+    private func presentAlertWithTitle(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    private func setEditInfoViewState(state: PinEditState) {
+        func updateOriginWithValue(value: CGFloat) {
+            UIView.animateWithDuration(0.25, delay: 0.0, options: .CurveEaseInOut, animations: {
+                self.view.frame.origin.y = value
+                }, completion: nil)
+        }
+        
+        switch state {
+        case .Edit:
+            updateOriginWithValue(editInfoView.bounds.height * -1.0)
+            editPinsButton.setImage(UIImage(named: UIUtils.checkmarkImageName), forState: .Normal)
+            isEditingPins = true
+        case .Normal:
+            updateOriginWithValue(0.0)
+            editPinsButton.setImage(UIImage(named: UIUtils.editImageName), forState: .Normal)
+            isEditingPins = false
+        }
     }
     
 }
@@ -214,15 +265,24 @@ extension TravelLocationsViewController: MKMapViewDelegate {
     }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        mapView.deselectAnnotation(view.annotation, animated: false)
-        
         didSelectAnnotationView = true
+        mapView.deselectAnnotation(view.annotation, animated: false)
         
         guard let pin = view.annotation as? Pin else {
             return
         }
         print("Did select pin with id: \(pin.id)")
-        performSegueWithIdentifier(SegueIdentifier.PinPhotoAlbum.rawValue, sender: pin)
+        
+        if isEditingPins {
+            coreDataStackManager.managedObjectContext.deleteObject(pin)
+            coreDataStackManager.saveContext()
+            
+            mapView.removeAnnotation(pin)
+            
+            print("Pin successfully deleted")
+        } else {
+            performSegueWithIdentifier(SegueIdentifier.PinPhotoAlbum.rawValue, sender: pin)
+        }
     }
     
 }

@@ -32,6 +32,23 @@
                                     <action selector="editPinsDidPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3yd-pL-844"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P6T-3j-Sms" userLabel="EditInfoView">
+                                <rect key="frame" x="0.0" y="568" width="320" height="64"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap Pins to Delete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5NG-Ni-wpk">
+                                        <rect key="frame" x="83" y="21" width="154" height="23"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.80000000000000004" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="5NG-Ni-wpk" firstAttribute="centerY" secondItem="P6T-3j-Sms" secondAttribute="centerY" id="ATB-fa-c91"/>
+                                    <constraint firstItem="5NG-Ni-wpk" firstAttribute="centerX" secondItem="P6T-3j-Sms" secondAttribute="centerX" id="Sgz-Qk-dTC"/>
+                                    <constraint firstAttribute="height" constant="64" id="WIe-9g-k6Q"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -39,13 +56,16 @@
                             <constraint firstAttribute="trailing" secondItem="lIa-xS-46y" secondAttribute="trailing" constant="16" id="7GW-oy-yxb"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="lIa-xS-46y" secondAttribute="bottom" constant="16" id="8YJ-pW-sRz"/>
                             <constraint firstItem="pQF-gO-HkN" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="CvS-Q5-1VJ"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="P6T-3j-Sms" secondAttribute="bottom" constant="-64" id="EjK-Dz-Vsx"/>
+                            <constraint firstAttribute="trailing" secondItem="P6T-3j-Sms" secondAttribute="trailing" id="JMC-rr-oVQ"/>
                             <constraint firstAttribute="trailing" secondItem="pQF-gO-HkN" secondAttribute="trailing" id="PRw-xt-KrJ"/>
+                            <constraint firstItem="P6T-3j-Sms" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="gC9-8d-gRA"/>
                             <constraint firstAttribute="bottomMargin" secondItem="pQF-gO-HkN" secondAttribute="bottom" id="rXU-2z-n9d"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ui4-5m-5oA"/>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
+                        <outlet property="editInfoView" destination="P6T-3j-Sms" id="gLZ-rw-KLe"/>
                         <outlet property="editPinsButton" destination="lIa-xS-46y" id="F6C-23-kCl"/>
                         <outlet property="mapView" destination="pQF-gO-HkN" id="cTB-aL-F4g"/>
                         <segue destination="2g7-T6-Q99" kind="show" identifier="PinPhotoAlbum" id="ddT-Ek-Vwl"/>

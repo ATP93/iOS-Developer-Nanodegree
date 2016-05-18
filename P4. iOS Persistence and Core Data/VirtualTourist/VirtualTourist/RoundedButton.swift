@@ -20,22 +20,22 @@ class RoundedButton: UIButton {
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
-        themeBorderedButton()
+        themeRoundedButton()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        themeBorderedButton()
+        themeRoundedButton()
     }
     
     //-----------------------------------------------
     // MARK: Helpers
     //-----------------------------------------------
     
-    private func themeBorderedButton() {
+    private func themeRoundedButton() {
         layer.masksToBounds = true
         layer.cornerRadius = bounds.height / 2.0
-        backgroundColor = backgroundColor?.colorWithAlphaComponent(0.75)
+        backgroundColor = backgroundColor?.colorWithAlphaComponent(0.85)
     }
     
 }

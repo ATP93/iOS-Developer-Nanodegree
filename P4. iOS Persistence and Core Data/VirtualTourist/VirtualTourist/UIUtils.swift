@@ -20,6 +20,8 @@ class UIUtils {
     //---------------------------------------------
     
     static let placeholderImageName = "Placeholder"
+    static let checkmarkImageName = "Checkmark"
+    static let editImageName = "Edit"
     
     //---------------------------------------------
     // MARK: Init
