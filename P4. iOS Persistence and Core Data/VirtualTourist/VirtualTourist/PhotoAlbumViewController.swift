@@ -67,7 +67,67 @@ class PhotoAlbumViewController: UIViewController {
     //-----------------------------------------------------
 
     @IBAction func newCollectionDidPressed(sender: AnyObject) {
+        func presentLoadAlbumAlert(title title: String, message: String) {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Try Again", style: .Default, handler: { action in
+                self.clearDataSource()
+                self.loadAlbumWithPageNumber(1)
+            }))
+            presentViewController(alert, animated: true, completion: nil)
+        }
+        
         print(#function)
+        
+        // GUARD: Is there an album details?
+        guard let album = pin.albumDetails else {
+            presentLoadAlbumAlert(title: "Oops", message: "We could't find details about your photo album. Try again to load information?")
+            return
+        }
+        
+        let pages = album.pages.integerValue
+        guard pages > 0 else {
+            presentLoadAlbumAlert(title: "No photos 😩", message: "Try again to load?")
+            return
+        }
+        
+        var nextPage = album.page.integerValue + 1
+        if nextPage > pages {
+            nextPage = 1
+        }
+        
+        clearDataSource()
+        loadAlbumWithPageNumber(nextPage)
+    }
+    
+    //-----------------------------------------------------
+    // MARK: - Helpers
+    //-----------------------------------------------------
+    
+    private func loadAlbumWithPageNumber(page: Int) {
+        flickrApiClient.fetchPhotosByCoordinate(pin.coordinate, pageNumber: page, itemsPerPage: PhotoAlbumViewController.itemsInPhotoCollecton) { [unowned self] (albumJSON, photosJson, error) in
+            self.setUiState(.DoneDownloading)
+            
+            if let albumJSON = albumJSON, let album = PhotoAlbumDetails(json: albumJSON, context: self.coreDataStackManager.managedObjectContext) {
+                album.pin = self.pin
+            }
+            
+            guard error == nil else {
+                self.presentAlertWithTitle("An error occured", message: error!.localizedDescription)
+                return
+            }
+            
+            self.photos = Photo.sanitizedPhotos(photosJson!, parentPin: self.pin, context: self.coreDataStackManager.managedObjectContext)
+            self.coreDataStackManager.saveContext()
+            
+            self.updateNewCollectionBarButtonEnabledState()
+            self.collectionView.reloadData()
+        }
+    }
+    
+    private func clearDataSource() {
+        pin.deletePhotos(coreDataStackManager.managedObjectContext)
+        coreDataStackManager.saveContext()
     }
     
 }
@@ -105,24 +165,7 @@ extension PhotoAlbumViewController {
         
         if pin.photos.count == 0 {
             setUiState(.Download)
-            
-            flickrApiClient.fetchPhotosByCoordinate(pin.coordinate, itemsPerPage: PhotoAlbumViewController.itemsInPhotoCollecton) { [unowned self] (albumJSON, photosJson, error) in
-                self.setUiState(.DoneDownloading)
-                
-                guard error == nil else {
-                    self.presentAlertWithTitle("An error occured", message: error!.localizedDescription)
-                    return
-                }
-                
-                if let album = PhotoAlbumDetails(json: albumJSON!, context: self.coreDataStackManager.managedObjectContext) {
-                    album.pin = self.pin
-                }
-                
-                self.photos = Photo.sanitizedPhotos(photosJson!, parentPin: self.pin, context: self.coreDataStackManager.managedObjectContext)
-                self.coreDataStackManager.saveContext()
-                
-                self.collectionView.reloadData()
-            }
+            loadAlbumWithPageNumber(1)
         } else {
             photos = pin.photos
         }
@@ -139,7 +182,7 @@ extension PhotoAlbumViewController {
     private func setUiState(state: UIState) {
         switch state {
         case .Default:
-            newCollectionBarButtonItem.enabled = true
+            updateNewCollectionBarButtonEnabledState()
         case .Download:
             UIUtils.showNetworkActivityIndicator()
             newCollectionBarButtonItem.enabled = false
@@ -153,6 +196,11 @@ extension PhotoAlbumViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
         presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    private func updateNewCollectionBarButtonEnabledState() {
+        newCollectionBarButtonItem.enabled = (pin.albumDetails?.pages.integerValue > 0
+            || pin.photos.count > 0)
     }
     
 }

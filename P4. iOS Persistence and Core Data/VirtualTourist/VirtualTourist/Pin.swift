@@ -49,6 +49,10 @@ class Pin: NSManagedObject {
         latitude  = location.latitude
         longitude = location.longitude
     }
+    
+    func deletePhotos(context: NSManagedObjectContext) {
+        photos.forEach { context.deleteObject($0) }
+    }
 
 }
 
