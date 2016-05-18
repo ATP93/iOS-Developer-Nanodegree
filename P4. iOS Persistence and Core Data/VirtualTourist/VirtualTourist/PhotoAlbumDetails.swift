@@ -59,6 +59,22 @@ class PhotoAlbumDetails: NSManagedObject {
         self.total = total
     }
     
+    convenience init(album: PhotoAlbumDetails, context: NSManagedObjectContext) {
+        self.init(context: context)
+        copyValues(album)
+    }
+    
+    //--------------------------------------------------
+    // MARK: Methods
+    //--------------------------------------------------
+    
+    func copyValues(album: PhotoAlbumDetails) {
+        page = album.page
+        pages = album.pages
+        perPage = album.perPage
+        total = album.total
+    }
+    
 }
 
 //---------------------------------------------

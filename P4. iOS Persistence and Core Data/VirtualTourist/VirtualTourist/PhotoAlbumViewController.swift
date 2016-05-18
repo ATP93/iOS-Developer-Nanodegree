@@ -47,6 +47,7 @@ class PhotoAlbumViewController: UIViewController {
     private static let itemsInPhotoCollecton = collectionViewNumColumns * 7
     
     private var photos: [Photo]?
+    private var temporaryContext: NSManagedObjectContext!
     
     //-----------------------------------------------------
     // MARK: - View Life Cycle
@@ -108,8 +109,15 @@ class PhotoAlbumViewController: UIViewController {
         flickrApiClient.fetchPhotosByCoordinate(pin.coordinate, pageNumber: page, itemsPerPage: PhotoAlbumViewController.itemsInPhotoCollecton) { [unowned self] (albumJSON, photosJson, error) in
             self.setUiState(.DoneDownloading)
             
-            if let albumJSON = albumJSON, let album = PhotoAlbumDetails(json: albumJSON, context: self.coreDataStackManager.managedObjectContext) {
-                album.pin = self.pin
+            // Parse album details and update current album properties if it doesn't exist yet
+            // or create one in main context.
+            if let albumJSON = albumJSON, let tempAlbum = PhotoAlbumDetails(json: albumJSON, context: self.temporaryContext) {
+                if let album = self.pin.albumDetails {
+                    album.copyValues(tempAlbum)
+                } else {
+                    self.pin.albumDetails = PhotoAlbumDetails(album: tempAlbum, context: self.coreDataStackManager.managedObjectContext)
+                }
+                self.coreDataStackManager.saveContext()
             }
             
             guard error == nil else {
@@ -160,6 +168,9 @@ extension PhotoAlbumViewController {
     }
     
     private func dataSourceSetup() {
+        temporaryContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        temporaryContext.persistentStoreCoordinator = coreDataStackManager.persistentStoreCoordinator
+        
         // If a pin does't have any photos, then download images from Flickr.
         // Otherwise photos will be immediately displayed. No new download is needed.
         
@@ -199,8 +210,7 @@ extension PhotoAlbumViewController {
     }
     
     private func updateNewCollectionBarButtonEnabledState() {
-        newCollectionBarButtonItem.enabled = (pin.albumDetails?.pages.integerValue > 0
-            || pin.photos.count > 0)
+        newCollectionBarButtonItem.enabled = (pin.albumDetails?.pages.integerValue > 0 || pin.photos.count > 0)
     }
     
 }
@@ -220,7 +230,16 @@ extension PhotoAlbumViewController: UICollectionViewDataSource {
         
         let photo = photos![indexPath.row]
         let thumbnail = photo.photoData.thumbnail
-        if thumbnail.data == nil {
+        
+        if let data = thumbnail.data {
+            cell.activityIndicator.stopAnimating()
+            
+            guard let image = UIImage(data: data) else {
+                return cell
+            }
+            
+            cell.imageView.image = image
+        } else {
             guard let url = NSURL(string: thumbnail.path) else {
                 return cell
             }
@@ -247,13 +266,6 @@ extension PhotoAlbumViewController: UICollectionViewDataSource {
                 weakCell?.imageView.image = image
                 self.collectionView.reloadItemsAtIndexPaths([indexPath])
             }
-        } else {
-            cell.activityIndicator.stopAnimating()
-            
-            guard let image = UIImage(data: thumbnail.data!) else {
-                return cell
-            }
-            cell.imageView.image = image
         }
         
         return cell
