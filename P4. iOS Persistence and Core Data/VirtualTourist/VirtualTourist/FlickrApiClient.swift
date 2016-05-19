@@ -31,27 +31,21 @@ class FlickrApiClient: JsonApiClient {
     // MARK: Shared Instance
     
     /**
-     *  This class variable provides an easy way to get access
+     *  This class constant provides an easy way to get access
      *  to a shared instance of the FlickrApiClient class.
      */
-    class var sharedInstance: FlickrApiClient {
-        struct Static {
-            static var instance: FlickrApiClient?
-            static var token: dispatch_once_t = 0
-        }
+    static let sharedInstance = FlickrApiClient(configuration: .defaultSessionConfiguration())
+    
+    //-------------------------------------------------
+    // MARK: - Init
+    //-------------------------------------------------
+    
+    override private init(configuration: NSURLSessionConfiguration) {
+        super.init(configuration: configuration)
+        configuration.timeoutIntervalForRequest  = 30.0
+        configuration.timeoutIntervalForResource = 60.0
         
-        dispatch_once(&Static.token) {
-            let config = NSURLSessionConfiguration.defaultSessionConfiguration()
-            config.timeoutIntervalForRequest  = 30.0
-            config.timeoutIntervalForResource = 60.0
-            
-            let client = FlickrApiClient(configuration: config)
-            client.loggingEnabled = true
-            
-            Static.instance = client
-        }
-        
-        return Static.instance!
+        loggingEnabled = true
     }
     
     //-------------------------------------------------
