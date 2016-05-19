@@ -44,9 +44,11 @@ class PhotoAlbumCollectionViewCell: UICollectionViewCell {
         switch state {
         case .Selected:
             selectedView.backgroundColor = PhotoAlbumCollectionViewCell.selectedColor
+            selectedView.alpha = 1.0
             selectedView.hidden = false
         case .NotSelected:
             selectedView.backgroundColor = .clearColor()
+            selectedView.alpha = 0.0
             selectedView.hidden = true
         }
     }

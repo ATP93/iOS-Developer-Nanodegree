@@ -113,16 +113,13 @@ class PhotoAlbumViewController: UIViewController {
     private func removeSelectedPictures() {
         selectedIndexPath.forEach {
             coreDataStackManager.managedObjectContext.deleteObject(pin.photos[$0.row])
-            coreDataStackManager.saveContext()
         }
+        coreDataStackManager.saveContext()
         
         collectionView.performBatchUpdates({
             self.collectionView.deleteItemsAtIndexPaths(Array(self.selectedIndexPath))
-            }, completion: { finished in
-                if finished {
-                    self.selectedIndexPath.removeAll()
-                }
-        })
+            self.selectedIndexPath.removeAll()
+            }, completion: nil)
     }
     
     private func loadNewCollection() {
