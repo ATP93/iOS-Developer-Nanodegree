@@ -64,14 +64,27 @@ class PersistenceCentral: NSObject {
         // Use try! because an error is returned if the fetch request specified doesn't include
         // a sort descriptor that uses sectionNameKeyPath.
         _ = try! fetchedResultsController.performFetch()
+        updatePins()
     }
     
 }
 
+//-----------------------------------------------------------------
+// MARK: - PersistenceCentral: NSFetchedResultsControllerDelegate -
+//-----------------------------------------------------------------
+
 extension PersistenceCentral: NSFetchedResultsControllerDelegate {
+
+    // MARK: NSFetchedResultsControllerDelegate
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        pins = controller.fetchedObjects as? [Pin] ?? [Pin]()
+        updatePins()
+    }
+    
+    // MARK: Helpers
+    
+    private func updatePins() {
+        pins = fetchedResultsController.fetchedObjects as? [Pin] ?? [Pin]()
     }
     
 }
