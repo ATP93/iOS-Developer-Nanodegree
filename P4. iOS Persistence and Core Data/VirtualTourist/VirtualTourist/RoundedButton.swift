@@ -15,6 +15,12 @@ import UIKit
 class RoundedButton: UIButton {
     
     //-----------------------------------------------
+    // MARK: Properties
+    //-----------------------------------------------
+    
+    private static let colorAlphaComponent: CGFloat = 0.85
+    
+    //-----------------------------------------------
     // MARK: Init
     //-----------------------------------------------
     
@@ -35,7 +41,9 @@ class RoundedButton: UIButton {
     private func themeRoundedButton() {
         layer.masksToBounds = true
         layer.cornerRadius = bounds.height / 2.0
-        backgroundColor = backgroundColor?.colorWithAlphaComponent(0.85)
+        layer.borderWidth = 0.5
+        layer.borderColor = UIColor.blackColor().colorWithAlphaComponent(RoundedButton.colorAlphaComponent).CGColor
+        backgroundColor = backgroundColor?.colorWithAlphaComponent(RoundedButton.colorAlphaComponent)
     }
     
 }
