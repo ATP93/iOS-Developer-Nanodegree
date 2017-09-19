@@ -1,4 +1,7 @@
 # iOS Developer Nanodegree Programm
+
+[![codebeat badge](https://codebeat.co/badges/c092ece8-8fb3-4213-a791-a348e6d3b88d)](https://codebeat.co/projects/github-com-vanyaland-ios-developer-nanodegree-master)
+
 Learn how to program apps for the iPhone and iPad.
 
 Being an iOS Developer is a remarkable occupation, and [Udacity](https://www.udacity.com/) designed this [Nanodegree program](https://www.udacity.com/course/ios-developer-nanodegree--nd003)
