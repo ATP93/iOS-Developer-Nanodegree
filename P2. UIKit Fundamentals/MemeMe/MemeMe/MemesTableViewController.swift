@@ -54,7 +54,9 @@ class MemesTableViewController: UITableViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    
     tableView.reloadData()
+    navigationItem.leftBarButtonItem?.isEnabled = !isEmptyDataSource
   }
   
   // MARK: Navigation
@@ -122,6 +124,7 @@ class MemesTableViewController: UITableViewController {
       
       if isEmptyDataSource {
         tableView.reloadSections(IndexSet(integer: 0), with: .fade)
+        setEditing(false, animated: true)
       } else {
         tableView.deleteRows(at: [indexPath], with: .fade)
       }
@@ -168,6 +171,7 @@ extension MemesTableViewController: MemeViewControllerDelegate {
     memesPersistence.memes.remove(at: index)
     memesPersistence.saveMemes()
     tableView.reloadData()
+    navigationItem.leftBarButtonItem?.isEnabled = !isEmptyDataSource
   }
   
 }

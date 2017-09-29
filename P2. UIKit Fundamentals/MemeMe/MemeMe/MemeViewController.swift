@@ -252,8 +252,8 @@ extension MemeViewController {
                                          style: .plain,
                                          target: self,
                                          action: #selector(dismiss as () -> Void))
-      navigationItem.leftBarButtonItem = shareMemeButton
-      navigationItem.rightBarButtonItem = cancelButton
+      navigationItem.leftBarButtonItem = cancelButton
+      navigationItem.rightBarButtonItem = shareMemeButton
     case .showMeme:
       navigationItem.rightBarButtonItem = shareMemeButton
       

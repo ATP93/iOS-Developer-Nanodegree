@@ -36,6 +36,6 @@ class MemeCollectionViewEmptyDataSourceCell: UICollectionViewCell {
   /// Cell reuse identifier.
   static let reuseIdentifier = "EmptyDataSourceCell"
   
-  static let defaultHeight: CGFloat = 124.0
+  static let defaultHeight: CGFloat = 110.0
   
 }

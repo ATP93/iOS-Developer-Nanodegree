@@ -128,14 +128,18 @@ extension MemesCollectionViewController: UICollectionViewDelegateFlowLayout {
     let screenWidth = screenSize().width
     let sectionInset = delegateFlowLayout.collectionView!(collectionView, layout: flowLayout, insetForSectionAt: indexPath.section)
     
+    if isEmptyDataSource {
+      return CGSize(width: screenSize().width - (sectionInset.left + sectionInset.right) * 2,
+                    height: MemeCollectionViewEmptyDataSourceCell.defaultHeight)
+    }
+    
     let itemSpacing = delegateFlowLayout.collectionView!(collectionView, layout: flowLayout, minimumInteritemSpacingForSectionAt: indexPath.section)
     var totalItemsSpacing = itemSpacing * (CGFloat(MemesCollectionViewController.numberOfMemesPerLine - 1))
     totalItemsSpacing = max(itemSpacing, totalItemsSpacing)
     
     let width = (screenWidth - (sectionInset.left + sectionInset.right + totalItemsSpacing)) / CGFloat(MemesCollectionViewController.numberOfMemesPerLine)
-    let height = (isEmptyDataSource ? MemeCollectionViewEmptyDataSourceCell.defaultHeight : width)
     
-    return CGSize(width: width, height: height)
+    return CGSize(width: width, height: width)
   }
   
   
