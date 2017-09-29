@@ -1,221 +1,205 @@
-//
-//  ViewController.swift
-//  PitchPerfect
-//
-//  Created by Ivan Magda on 03.04.16.
-//  Copyright © 2016 Ivan Magda. All rights reserved.
-//
+/**
+ * Copyright (c) 2017 Ivan Magda
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 import UIKit
 import AVFoundation
 
-//------------------------------------------------
+private let recordedAudioFileName = "recordedVoice.wav"
+
 // MARK: SegueIdentifier: String
-//------------------------------------------------
 
 private enum SegueIdentifier: String {
-    case PlayRecord = "playRecord"
+  case playRecord = "playRecord"
 }
 
-//------------------------------------------------
 // MARK: - RecordViewController: UIViewController
-//------------------------------------------------
 
 class RecordViewController: UIViewController {
+  
+  // MARK: Properties
+  
+  fileprivate var audioRecorder: AVAudioRecorder!
+  fileprivate var shouldSegueToSoundPlayer = false
+  
+  // MARK: Outlets
+  
+  @IBOutlet weak var recordingLabel: UILabel!
+  @IBOutlet weak var recordButton: UIButton!
+  @IBOutlet weak var stopRecordingButton: UIButton!
+  
+  // MARK: View Life Cycle
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    setup()
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
     
-    //---------------------------------------------
-    // MARK: Properties
-    //---------------------------------------------
-    
-    private static let RecordedAudioFileName = "recordedVoice.wav"
-    
-    private var audioRecorder: AVAudioRecorder!
-    private var shouldSegueToSoundPlayer = false
-    
-    //---------------------------------------------
-    // MARK: Outlets
-    //---------------------------------------------
-    
-    @IBOutlet weak var recordingLabel: UILabel!
-    @IBOutlet weak var recordButton: UIButton!
-    @IBOutlet weak var stopRecordingButton: UIButton!
-    
-    //---------------------------------------------
-    // MARK: View Life Cycle
-    //---------------------------------------------
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setup()
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
+    if shouldSegueToSoundPlayer {
+      do {
+        let audioRecorder = try AVAudioRecorder(url: audioFileURL()!, settings: [:])
+        performSegue(withIdentifier: SegueIdentifier.playRecord.rawValue, sender: audioRecorder)
         
-        if shouldSegueToSoundPlayer {
-            do {
-                let audioRecorder = try AVAudioRecorder(URL: audioFileURL()!, settings: [:])
-                performSegueWithIdentifier(SegueIdentifier.PlayRecord.rawValue, sender: audioRecorder)
-                
-                shouldSegueToSoundPlayer = false
-            } catch let e as NSError {
-                print("An error occured: \(e.localizedDescription)")
-            }
-        }
+        shouldSegueToSoundPlayer = false
+      } catch let e as NSError {
+        print("An error occured: \(e.localizedDescription)")
+      }
     }
-    
-    //---------------------------------------------
-    // MARK: Navigation
-    //---------------------------------------------
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == SegueIdentifier.PlayRecord.rawValue {
-            guard let playRecordViewController = segue.destinationViewController as? PlayRecordViewController,
-                let audioRecorder = sender as? AVAudioRecorder else {
-                return
-            }
-            
-            playRecordViewController.recordedAudioURL = audioRecorder.url
-        }
+  }
+  
+  // MARK: Navigation
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if segue.identifier == SegueIdentifier.playRecord.rawValue {
+      guard let playRecordViewController = segue.destination as? PlayRecordViewController,
+        let audioRecorder = sender as? AVAudioRecorder else {
+          return
+      }
+      
+      playRecordViewController.recordedAudioURL = audioRecorder.url
     }
+  }
+  
+  // MARK: Helpers
+  
+  fileprivate func setup() {
+    configureUI(.notPlaying)
     
-    //------------------------------------------------
-    // MARK: Helpers
-    //------------------------------------------------
-    
-    private func setup() {
-        configureUI(.NotPlaying)
-        
-        if let audioFilePath = audioFileURL()?.path {
-            shouldSegueToSoundPlayer = NSFileManager.defaultManager().fileExistsAtPath(audioFilePath)
-        }
+    if let audioFilePath = audioFileURL()?.path {
+      shouldSegueToSoundPlayer = FileManager.default.fileExists(atPath: audioFilePath)
     }
-    
-    //------------------------------------------------
-    // MARK: Actions
-    //------------------------------------------------
-
-    @IBAction func recordAudioDidPressed(sender: AnyObject) {
-        configureUI(.Playing)
-        startRecording()
-    }
-    
-    @IBAction func stopRecordingDidPressed(sender: AnyObject) {
-        configureUI(.NotPlaying)
-        stopRecording()
-    }
-    
+  }
+  
+  // MARK: Actions
+  
+  @IBAction func recordAudioDidPressed(_ sender: AnyObject) {
+    configureUI(.playing)
+    startRecording()
+  }
+  
+  @IBAction func stopRecordingDidPressed(_ sender: AnyObject) {
+    configureUI(.notPlaying)
+    stopRecording()
+  }
+  
 }
 
-//---------------------------------------
 // MARK: - ViewController (Configure UI)
-//---------------------------------------
 
 extension RecordViewController {
-    
-    //---------------------------------------
-    // MARK: Types
-    //---------------------------------------
-    
-    private enum PlayingState {
-        case Playing
-        case NotPlaying
+  
+  // MARK: Types
+  
+  fileprivate enum PlayingState {
+    case playing
+    case notPlaying
+  }
+  
+  // MARK: UI Functions
+  
+  fileprivate func configureUI(_ state: PlayingState) {
+    switch state {
+    case .playing:
+      recordingLabel.text = "Recording in progress..."
+      setControlEnabled(stopRecordingButton, enabled: true)
+      setControlEnabled(recordButton, enabled: false)
+    case .notPlaying:
+      recordingLabel.text = "Tap to Record"
+      setControlEnabled(stopRecordingButton, enabled: false)
+      setControlEnabled(recordButton, enabled: true)
     }
-    
-    //---------------------------------------
-    // MARK: UI Functions
-    //---------------------------------------
-    
-    private func configureUI(state: PlayingState) {
-        switch state {
-        case .Playing:
-            recordingLabel.text = "Recording in progress..."
-            setControlEnabled(stopRecordingButton, enabled: true)
-            setControlEnabled(recordButton, enabled: false)
-        case .NotPlaying:
-            recordingLabel.text = "Tap to Record"
-            setControlEnabled(stopRecordingButton, enabled: false)
-            setControlEnabled(recordButton, enabled: true)
-        }
-    }
-    
-    private func setControlEnabled(control: UIControl, enabled: Bool) {
-        control.enabled = enabled
-    }
-    
-    private func showAlertWithTitle(title: String?, message: String?) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: .Cancel, handler: nil))
-        presentViewController(alert, animated: true, completion: nil)
-    }
-    
+  }
+  
+  fileprivate func setControlEnabled(_ control: UIControl, enabled: Bool) {
+    control.isEnabled = enabled
+  }
+  
+  fileprivate func showAlertWithTitle(_ title: String?, message: String?) {
+    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
+    present(alert, animated: true, completion: nil)
+  }
+  
 }
 
-//-------------------------------------------------
 // MARK: - ViewController: AVAudioRecorderDelegate
-//-------------------------------------------------
 
 extension RecordViewController: AVAudioRecorderDelegate {
-    
-    func audioRecorderEncodeErrorDidOccur(recorder: AVAudioRecorder, error: NSError?) {
-        if let error = error {
-            print("Audio recorder, error during recording: \(error.localizedDescription).")
-        }
+  
+  func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: Error?) {
+    if let error = error {
+      print("Audio recorder, error during recording: \(error.localizedDescription).")
     }
-    
-    func audioRecorderDidFinishRecording(recorder: AVAudioRecorder, successfully flag: Bool) {
-        if flag {
-            performSegueWithIdentifier(SegueIdentifier.PlayRecord.rawValue, sender: recorder)
-        } else {
-            print("Finished recording with failure.")
-        }
+  }
+  
+  func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+    if flag {
+      performSegue(withIdentifier: SegueIdentifier.playRecord.rawValue, sender: recorder)
+    } else {
+      print("Finished recording with failure.")
     }
-    
-    //---------------------------------------------
-    // MARK: Helpers
-    //---------------------------------------------
-    
-    private func startRecording() {
-        let filePath = audioFileURL()
-        let session = AVAudioSession.sharedInstance()
-        do {
-            try session.setCategory(AVAudioSessionCategoryPlayAndRecord)
-            
-            guard filePath != nil else {
-                showAlertWithTitle("An error occured", message: "Please try again later.")
-                return
-            }
-            
-            debugPrint(filePath!)
-            
-            audioRecorder = try AVAudioRecorder(URL: filePath!, settings: [:])
-            audioRecorder.delegate = self
-            audioRecorder.meteringEnabled = true
-            audioRecorder.prepareToRecord()
-            audioRecorder.record()
-        } catch let exception as NSError {
-            showAlertWithTitle("An error occured", message: exception.localizedDescription)
-        }
+  }
+  
+  // MARK: Helpers
+  
+  fileprivate func startRecording() {
+    let filePath = audioFileURL()
+    let session = AVAudioSession.sharedInstance()
+    do {
+      try session.setCategory(AVAudioSessionCategoryPlayAndRecord)
+      
+      guard filePath != nil else {
+        showAlertWithTitle("An error occured", message: "Please try again later.")
+        return
+      }
+      
+      debugPrint(filePath!)
+      
+      audioRecorder = try AVAudioRecorder(url: filePath!, settings: [:])
+      audioRecorder.delegate = self
+      audioRecorder.isMeteringEnabled = true
+      audioRecorder.prepareToRecord()
+      audioRecorder.record()
+    } catch let exception as NSError {
+      showAlertWithTitle("An error occured", message: exception.localizedDescription)
     }
-    
-    private func stopRecording() {
-        do {
-            audioRecorder.stop()
-            try AVAudioSession.sharedInstance().setActive(false)
-        } catch let exception as NSError {
-            showAlertWithTitle("Failed to stop recording", message: exception.localizedDescription)
-        }
+  }
+  
+  fileprivate func stopRecording() {
+    do {
+      audioRecorder.stop()
+      try AVAudioSession.sharedInstance().setActive(false)
+    } catch let exception as NSError {
+      showAlertWithTitle("Failed to stop recording", message: exception.localizedDescription)
     }
+  }
+  
+  fileprivate func audioFileURL() -> URL? {
+    let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+    let recordingName = recordedAudioFileName
     
-    private func audioFileURL() -> NSURL? {
-        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-        
-        let recordingName = RecordViewController.RecordedAudioFileName
-        let pathArray = [dirPath, recordingName]
-        let filePath = NSURL.fileURLWithPathComponents(pathArray)
-        
-        return filePath
-    }
-    
+    return URL(fileURLWithPath: "\(dirPath)/\(recordingName)")
+  }
+  
 }
-
