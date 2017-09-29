@@ -115,7 +115,7 @@ extension PlayRecordViewController {
       }
       
       // schedule a stop timer for when audio finishes playing
-      self.stopTimer = Timer(timeInterval: delayInSeconds, target: self, selector: #selector(PlayRecordViewController.stopAudio), userInfo: nil, repeats: false)
+      self.stopTimer = Timer(timeInterval: delayInSeconds, target: self, selector: #selector(self.stopAudio), userInfo: nil, repeats: false)
       RunLoop.main.add(self.stopTimer!, forMode: RunLoopMode.defaultRunLoopMode)
     }
     
@@ -130,7 +130,7 @@ extension PlayRecordViewController {
     audioPlayerNode.play()
   }
   
-  func stopAudio() {
+  @objc func stopAudio() {
     if let stopTimer = stopTimer {
       stopTimer.invalidate()
     }
@@ -157,7 +157,7 @@ extension PlayRecordViewController {
   
   // MARK: UI Functions
   
-  func configureUI(_ playState: PlayingState) {
+  private func configureUI(_ playState: PlayingState) {
     switch(playState) {
     case .playing:
       setPlayButtonsEnabled(false)

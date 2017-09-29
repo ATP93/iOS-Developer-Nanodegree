@@ -37,8 +37,8 @@ class RecordViewController: UIViewController {
   
   // MARK: Properties
   
-  fileprivate var audioRecorder: AVAudioRecorder!
-  fileprivate var shouldSegueToSoundPlayer = false
+  private var audioRecorder: AVAudioRecorder!
+  private var shouldSegueToSoundPlayer = false
   
   // MARK: Outlets
   
@@ -83,7 +83,7 @@ class RecordViewController: UIViewController {
   
   // MARK: Helpers
   
-  fileprivate func setup() {
+  private func setup() {
     configureUI(.notPlaying)
     
     if let audioFilePath = audioFileURL()?.path {
@@ -111,14 +111,14 @@ extension RecordViewController {
   
   // MARK: Types
   
-  fileprivate enum PlayingState {
+  private enum PlayingState {
     case playing
     case notPlaying
   }
   
   // MARK: UI Functions
   
-  fileprivate func configureUI(_ state: PlayingState) {
+  private func configureUI(_ state: PlayingState) {
     switch state {
     case .playing:
       recordingLabel.text = "Recording in progress..."
@@ -131,11 +131,11 @@ extension RecordViewController {
     }
   }
   
-  fileprivate func setControlEnabled(_ control: UIControl, enabled: Bool) {
+  private func setControlEnabled(_ control: UIControl, enabled: Bool) {
     control.isEnabled = enabled
   }
   
-  fileprivate func showAlertWithTitle(_ title: String?, message: String?) {
+  private func showAlertWithTitle(_ title: String?, message: String?) {
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
     present(alert, animated: true, completion: nil)
@@ -163,7 +163,7 @@ extension RecordViewController: AVAudioRecorderDelegate {
   
   // MARK: Helpers
   
-  fileprivate func startRecording() {
+  private func startRecording() {
     let filePath = audioFileURL()
     let session = AVAudioSession.sharedInstance()
     do {
@@ -186,7 +186,7 @@ extension RecordViewController: AVAudioRecorderDelegate {
     }
   }
   
-  fileprivate func stopRecording() {
+  private func stopRecording() {
     do {
       audioRecorder.stop()
       try AVAudioSession.sharedInstance().setActive(false)
@@ -195,7 +195,7 @@ extension RecordViewController: AVAudioRecorderDelegate {
     }
   }
   
-  fileprivate func audioFileURL() -> URL? {
+  private func audioFileURL() -> URL? {
     let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
     let recordingName = recordedAudioFileName
     
